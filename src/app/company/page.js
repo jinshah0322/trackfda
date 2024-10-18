@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Loading from "@/components/loading";
 import Search from "@/components/search"; // Import the Search component
 import Limit from "@/components/limit"; // Import the Limit component
+import Pagination from "@/components/pagination"; // Import the Pagination component
 
 async function getUsers(page, limit, searchTerm = "") {
   let response = await fetch(
@@ -53,7 +54,7 @@ export default function Page() {
         limit={limit}
         onLimitChange={(newLimit) => {
           setLimit(newLimit);
-          setPage(1); // Reset to the first page on limit change
+          setPage(1); 
         }}
       />
 
@@ -82,23 +83,11 @@ export default function Page() {
         </tbody>
       </table>
 
-      <div style={{ marginTop: "20px" }}>
-        <button
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={page === 1}
-        >
-          Previous
-        </button>
-        <span style={{ margin: "0 10px" }}>
-          Page {page} of {totalPages}
-        </span>
-        <button
-          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={page === totalPages}
-        >
-          Next
-        </button>
-      </div>
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={(newPage) => setPage(newPage)} // Set the new page when the page changes
+      />
     </div>
   );
 }
