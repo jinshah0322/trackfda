@@ -1,4 +1,4 @@
-import '../style.css'
+import '@/app/style.css'
 export default function Loading() {
     return (
       <div className='loaderContainer'>

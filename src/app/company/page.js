@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Loading from "./loading";
-async function getUsers(page, limit) {
-  let response = await fetch(`http://localhost:3000/api/company?page=${page}&limit=${limit}`);
+import Loading from "@/components/loading";
+import Search from "@/components/search"; 
+
+async function getUsers(page, limit, searchTerm = "") {
+  let response = await fetch(`http://localhost:3000/api/company?page=${page}&limit=${limit}&search=${searchTerm}`);
   return await response.json();
 }
 
@@ -13,17 +15,18 @@ export default function Page() {
   const [page, setPage] = useState(1);
   const limit = 10; 
   const [isLoading, setIsLoading] = useState(true); 
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true); 
-      const result = await getUsers(page, limit);
+      const result = await getUsers(page, limit, searchTerm); // Include search term in API call
       setData(result.data);
       setTotalCount(result.totalCount);
       setIsLoading(false);
     };
     fetchData();
-  }, [page]);
+  }, [page, searchTerm]); // Depend on searchTerm as well
 
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -34,6 +37,13 @@ export default function Page() {
   return (
     <div>
       <h1>User List</h1>
+      
+      {/* Use the Search component */}
+      <Search searchTerm={searchTerm} onSearch={(term) => {
+        setSearchTerm(term);
+        setPage(1); // Reset to the first page on search
+      }} />
+
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
