@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/loading";
-import Search from "@/components/search"; // Import the Search component
-import Limit from "@/components/limit"; // Import the Limit component
-import Pagination from "@/components/pagination"; // Import the Pagination component
+import Search from "@/components/search";
+import Limit from "@/components/limit";
+import Pagination from "@/components/pagination";
 
-async function getUsers(page, limit, searchTerm = "") {
+async function getCompanies(page, limit, searchTerm = "") {
   let response = await fetch(
     `http://localhost:3000/api/company?page=${page}&limit=${limit}&search=${searchTerm}`
   );
@@ -17,20 +17,20 @@ export default function Page() {
   const [data, setData] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10); // State for limit
+  const [limit, setLimit] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const result = await getUsers(page, limit, searchTerm); // Include limit in API call
+      const result = await getCompanies(page, limit, searchTerm);
       setData(result.data);
       setTotalCount(result.totalCount);
       setIsLoading(false);
     };
     fetchData();
-  }, [page, limit, searchTerm]); // Depend on limit as well
+  }, [page, limit, searchTerm]);
 
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -40,7 +40,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1>User List</h1>
+      <h1>Company List</h1>
 
       <Search
         searchTerm={searchTerm}
@@ -86,7 +86,7 @@ export default function Page() {
       <Pagination
         page={page}
         totalPages={totalPages}
-        onPageChange={(newPage) => setPage(newPage)} // Set the new page when the page changes
+        onPageChange={(newPage) => setPage(newPage)}
       />
     </div>
   );

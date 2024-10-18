@@ -1,4 +1,3 @@
-// components/Limit.js
 import { useState } from "react";
 
 export default function Limit({ limit, onLimitChange }) {

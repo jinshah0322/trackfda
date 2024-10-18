@@ -4,12 +4,12 @@ import { query } from '../../../../lib/db';
 export async function GET(req) {
   try {
     const url = new URL(req.url);
-    const page = parseInt(url.searchParams.get('page')) || 1; // Default to page 1
-    const limit = parseInt(url.searchParams.get('limit')) || 10; // Default to 10 items per page
-    const offset = (page - 1) * limit; // Calculate offset for pagination
-    const search = url.searchParams.get('search') || ""; // Get the search term
+    const page = parseInt(url.searchParams.get('page')) || 1;
+    const limit = parseInt(url.searchParams.get('limit')) || 10;
+    const offset = (page - 1) * limit;
+    const search = url.searchParams.get('search') || "";
 
-    // Modify the query to include search term filtering
+    //Get all the distinct company names
     const { rows } = await query(`
       SELECT DISTINCT co.legal_name AS Company, COUNT(wl.id) AS WarningLettersIssued 
       FROM (
@@ -23,7 +23,7 @@ export async function GET(req) {
       ) AS co 
       LEFT JOIN warningletters wl ON co.legal_name = wl.companyname 
       WHERE LOWER(co.legal_name) LIKE LOWER($1) -- Search filter
-      GROUP BY co.legal_name 
+      GROUP BY co.legal_name ORDER BY co.legal_name
       LIMIT $2 OFFSET $3
     `, [`%${search}%`, limit, offset]);
 

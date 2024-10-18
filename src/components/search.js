@@ -1,4 +1,3 @@
-// components/Search.js
 import { useState } from "react";
 
 export default function Search({ searchTerm, onSearch }) {
