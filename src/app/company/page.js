@@ -65,7 +65,10 @@ export default function Page() {
               Company
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Warning Letters Issued
+              Number of facility
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Warning letters Issued
             </th>
           </tr>
         </thead>
@@ -73,10 +76,13 @@ export default function Page() {
           {data.map((item, index) => (
             <tr key={index}>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.company}
+                {item.legal_name}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.warninglettersissued}
+                {item.fei_number_count}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.warning_letter_count}
               </td>
             </tr>
           ))}

@@ -11,38 +11,28 @@ export async function GET(req) {
 
     //Get all the distinct company names
     const { rows } = await query(`
-      SELECT DISTINCT co.legal_name AS Company, COUNT(wl.id) AS WarningLettersIssued 
-      FROM (
-        SELECT legal_name FROM inspection_details WHERE product_type = 'Drugs' 
-        UNION 
-        SELECT legal_name FROM compliance_actions WHERE product_type = 'Drugs' 
-        UNION 
-        SELECT legal_name FROM inspection_details WHERE product_type = 'Drugs' 
-        UNION 
-        SELECT companyname AS legal_name FROM warningletters
-      ) AS co 
-      LEFT JOIN warningletters wl ON co.legal_name = wl.companyname 
-      WHERE LOWER(co.legal_name) LIKE LOWER($1) -- Search filter
-      GROUP BY co.legal_name ORDER BY co.legal_name
+      SELECT cd.legal_name, COUNT(DISTINCT cd.fei_number) AS fei_number_count, COUNT(wld.marcscmsno) AS warning_letter_count 
+      FROM company_details cd
+      LEFT JOIN compliance_actions ca ON cd.fei_number = ca.fei_number
+      LEFT JOIN warninglettersdetails wld ON ca.case_injunction_id = wld.marcscmsno
+      WHERE lower(cd.legal_name) like lower($1)
+      GROUP BY cd.legal_name
+      ORDER BY cd.legal_name
       LIMIT $2 OFFSET $3
     `, [`%${search}%`, limit, offset]);
 
     // Count total records for pagination with the same search filter
     const { rows: totalRows } = await query(`
-      SELECT COUNT(DISTINCT co.legal_name) AS total 
-      FROM (
-        SELECT legal_name FROM inspection_details WHERE product_type = 'Drugs' 
-        UNION 
-        SELECT legal_name FROM compliance_actions WHERE product_type = 'Drugs' 
-        UNION 
-        SELECT legal_name FROM inspection_details WHERE product_type = 'Drugs' 
-        UNION 
-        SELECT companyname AS legal_name FROM warningletters
-      ) AS co
-      WHERE LOWER(co.legal_name) LIKE LOWER($1) -- Search filter for total count
+      SELECT cd.legal_name, COUNT(DISTINCT cd.fei_number) AS fei_number_count, COUNT(wld.marcscmsno) AS warning_letter_count 
+      FROM company_details cd
+      LEFT JOIN compliance_actions ca ON cd.fei_number = ca.fei_number
+      LEFT JOIN warninglettersdetails wld ON ca.case_injunction_id = wld.marcscmsno
+      WHERE lower(cd.legal_name) like lower($1)
+      GROUP BY cd.legal_name
+      ORDER BY cd.legal_name
     `, [`%${search}%`]);
-
-    const totalCount = totalRows[0]?.total || 0; // Get total count
+    
+    const totalCount = totalRows.length || 1; // Get total count
 
     return NextResponse.json({ data: rows, totalCount, page, limit }, { status: 200 });
   } catch (error) {
