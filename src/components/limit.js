@@ -1,32 +1,29 @@
 import { useState } from "react";
 
 export default function Limit({ limit, onLimitChange }) {
-  const [inputValue, setInputValue] = useState(limit);
+  const [selectedLimit, setSelectedLimit] = useState(limit);
 
-  const handleInputChange = (event) => {
-    const value = Math.max(1, Math.min(100, parseInt(event.target.value) || 1)); // Ensure value is between 1 and 100
-    setInputValue(value);
-  };
-
-  const handleSubmit = () => {
-    onLimitChange(inputValue); // Call the parent's onLimitChange function
+  const handleLimitChange = (event) => {
+    const value = parseInt(event.target.value);
+    setSelectedLimit(value);
+    onLimitChange(value); // Call the parent's onLimitChange function
   };
 
   return (
     <div style={{ marginBottom: '20px' }}>
       <label htmlFor="limit">Items per page:</label>
-      <input
+      <select
         id="limit"
-        type="number"
-        value={inputValue}
-        onChange={handleInputChange}
-        min={1}
-        max={100}
-        style={{ marginLeft: '10px', width: '60px' }}
-      />
-      <button onClick={handleSubmit} style={{ marginLeft: '10px' }}>
-        Set Limit
-      </button>
+        value={selectedLimit}
+        onChange={handleLimitChange}
+        style={{ marginLeft: '10px' }}
+      >
+        <option value={5}>5</option>
+        <option value={10}>10</option>
+        <option value={25}>25</option>
+        <option value={50}>50</option>
+        <option value={100}>100</option>
+      </select>
     </div>
   );
 }

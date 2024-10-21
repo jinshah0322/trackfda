@@ -90,7 +90,7 @@ export default function Page() {
       </table>
 
       <Pagination
-        page={page}
+        page={totalPages==0?0:page}
         totalPages={totalPages}
         onPageChange={(newPage) => setPage(newPage)}
       />

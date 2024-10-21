@@ -32,7 +32,7 @@ export async function GET(req) {
       ORDER BY cd.legal_name
     `, [`%${search}%`]);
     
-    const totalCount = totalRows.length || 1; // Get total count
+    const totalCount = totalRows.length; // Get total count
 
     return NextResponse.json({ data: rows, totalCount, page, limit }, { status: 200 });
   } catch (error) {
