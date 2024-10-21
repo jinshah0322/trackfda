@@ -8,7 +8,7 @@ import Pagination from "@/components/pagination";
 
 async function getCompanies(page, limit, searchTerm = "") {
   let response = await fetch(
-    `http://192.168.6.66:3000/api/company?page=${page}&limit=${limit}&search=${searchTerm}`
+    `http://localhost:3000/api/company?page=${page}&limit=${limit}&search=${searchTerm}`
   );
   return await response.json();
 }
