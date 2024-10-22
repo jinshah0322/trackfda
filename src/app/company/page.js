@@ -36,13 +36,6 @@ export default function Page() {
 
   const totalPages = Math.ceil(totalCount / limit);
 
-  const handleCompanyClick = (item) => {
-    const companyData = {
-      fei_number_count: item.fei_number_count,
-      warning_letter_count: item.warning_letter_count,
-    };
-    localStorage.setItem('companyData', JSON.stringify(companyData));
-  };
 
   if (isLoading) {
     return <Loading />;
