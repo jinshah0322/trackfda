@@ -47,7 +47,7 @@ export async function GET(req) {
         
         return acc;
       }, {});
-      
+
       //Fetch details from warninglettersdetails using the FEI numbers
       const {rows:warningLetters} = await query(`
         SELECT wl.letterissuedate,wl.issuingoffice,wl.subject,wl.warningletterurl
@@ -56,6 +56,8 @@ export async function GET(req) {
         ON ca.case_injunction_id = wl.marcscmsno
         WHERE ca.fei_number in (${placeholders})
     `,feiNumbersArray)
+    console.log(warningLetters);
+      
     console.log(warningLetters);
      
     // Return the details from inspection_details
