@@ -23,6 +23,7 @@ export default function Page() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    
     const fetchData = async () => {
       setIsLoading(true);
       const result = await getCompanies(page, limit, searchTerm);

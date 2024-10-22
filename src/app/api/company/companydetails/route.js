@@ -1,0 +1,40 @@
+import { NextResponse } from 'next/server';
+import { query } from '../../../../../lib/db';
+
+export async function GET(req) {
+    try {
+        const url = new URL(req.url);
+        const companyname = url.searchParams.get('compnayname');
+        
+        // Get all the distinct FEI numbers based on the legal name
+        const { rows: feiNumbers } = await query(`
+            SELECT fei_number FROM company_details WHERE legal_name = $1
+        `, [companyname]);
+
+        console.log(feiNumbers);
+
+        // Check if we received any fei_numbers
+        if (feiNumbers.length === 0) {
+            return NextResponse.json({ error: 'No FEI numbers found for this company name.' }, { status: 404 });
+        }
+
+        // Extract the FEI numbers into an array
+        const feiNumbersArray = feiNumbers.map(obj => obj.fei_number);
+
+        // Create placeholders for the SQL query
+        const placeholders = feiNumbersArray.map((_, index) => `$${index + 1}`).join(', ');
+
+        // Fetch details from inspection_details using the FEI numbers
+        const { rows } = await query(`
+            SELECT * FROM company_details WHERE fei_number IN (${placeholders})
+        `, feiNumbersArray);
+        console.log(rows);
+
+        // Return the details from inspection_details
+        return NextResponse.json({ data: rows }, { status: 200 });
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return NextResponse.json({ error: 'Failed to load data' }, { status: 500 });
+    }
+}

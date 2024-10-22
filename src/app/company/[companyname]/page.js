@@ -8,9 +8,17 @@ export default function Page({ params }) {
     fei_number_count: 0,
     warning_letter_count: 0,
   });
-
+  
+ 
+  async function getCompanyDetails(page, limit, searchTerm = "") {
+    let response = await fetch(
+      `http://localhost:3000/api/company/companydetails?compnayname=${decodeURIComponent(params.companyname)}`
+    );
+    return await response.json();
+  }
   // Retrieve data from localStorage on component mount
   useEffect(() => {
+    const companyDetails= getCompanyDetails();
     const storedData = localStorage.getItem("companyData");
     if (storedData) {
       setCompanyData(JSON.parse(storedData));
