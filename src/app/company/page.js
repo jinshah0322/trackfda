@@ -5,6 +5,7 @@ import Loading from "@/components/loading";
 import Search from "@/components/search";
 import Limit from "@/components/limit";
 import Pagination from "@/components/pagination";
+import Link from "next/link";
 
 async function getCompanies(page, limit, searchTerm = "") {
   let response = await fetch(
@@ -33,6 +34,14 @@ export default function Page() {
   }, [page, limit, searchTerm]);
 
   const totalPages = Math.ceil(totalCount / limit);
+
+  const handleCompanyClick = (item) => {
+    // Store "Number of facility" and "Warning letters Issued" in localStorage
+    localStorage.setItem("companyData", JSON.stringify({
+      fei_number_count: item.fei_number_count,
+      warning_letter_count: item.warning_letter_count,
+    }));
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -75,8 +84,14 @@ export default function Page() {
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.legal_name}
+              <td style={{ border: "1px solid #ddd", padding: "8px"}}>
+                <Link 
+                  href={`/company/${item.legal_name}`} 
+                  style={{ textDecoration: "none" ,color:"blue"}}
+                  onClick={() => handleCompanyClick(item)}  // Save data when clicked
+                >
+                  {item.legal_name}
+                </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.fei_number_count}
