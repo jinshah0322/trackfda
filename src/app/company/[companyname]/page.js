@@ -1,21 +1,13 @@
+// src/app/company/[companyname]/page.js
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect } from "react";
 import "@/app/style.css";
 import Link from "next/link";
+import { useSelector } from 'react-redux';
 
 export default function Page({ params }) {
-  const [companyData, setCompanyData] = useState({
-    fei_number_count: 0,
-    warning_letter_count: 0,
-  });
-
-  // Retrieve data from localStorage on component mount
-  useEffect(() => {
-    const storedData = localStorage.getItem("companyData");
-    if (storedData) {
-      setCompanyData(JSON.parse(storedData));
-    }
-  }, []);
+  const companyData = useSelector((state) => state.company);
 
   return (
     <div className="page-container">

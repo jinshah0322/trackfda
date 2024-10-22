@@ -6,6 +6,8 @@ import Search from "@/components/search";
 import Limit from "@/components/limit";
 import Pagination from "@/components/pagination";
 import Link from "next/link";
+import { useDispatch} from "react-redux";
+import { setCompanyData } from "../redux/companySlice";
 
 async function getCompanies(page, limit, searchTerm = "") {
   let response = await fetch(
@@ -15,6 +17,7 @@ async function getCompanies(page, limit, searchTerm = "") {
 }
 
 export default function Page() {
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -36,11 +39,12 @@ export default function Page() {
   const totalPages = Math.ceil(totalCount / limit);
 
   const handleCompanyClick = (item) => {
-    // Store "Number of facility" and "Warning letters Issued" in localStorage
-    localStorage.setItem("companyData", JSON.stringify({
-      fei_number_count: item.fei_number_count,
-      warning_letter_count: item.warning_letter_count,
-    }));
+    dispatch(
+      setCompanyData({
+        fei_number_count: item.fei_number_count,
+        warning_letter_count: item.warning_letter_count,
+      })
+    );
   };
 
   if (isLoading) {
@@ -63,7 +67,7 @@ export default function Page() {
         limit={limit}
         onLimitChange={(newLimit) => {
           setLimit(newLimit);
-          setPage(1); 
+          setPage(1);
         }}
       />
 
@@ -84,11 +88,11 @@ export default function Page() {
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td style={{ border: "1px solid #ddd", padding: "8px"}}>
-                <Link 
-                  href={`/company/${item.legal_name}`} 
-                  style={{ textDecoration: "none" ,color:"blue"}}
-                  onClick={() => handleCompanyClick(item)}  // Save data when clicked
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                <Link
+                  href={`/company/${item.legal_name}`}
+                  style={{ textDecoration: "none", color: "blue" }}
+                  onClick={() => handleCompanyClick(item)} // Save data when clicked
                 >
                   {item.legal_name}
                 </Link>
@@ -105,7 +109,7 @@ export default function Page() {
       </table>
 
       <Pagination
-        page={totalPages==0?0:page}
+        page={totalPages == 0 ? 0 : page}
         totalPages={totalPages}
         onPageChange={(newPage) => setPage(newPage)}
       />
