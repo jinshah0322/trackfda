@@ -6,8 +6,6 @@ import Search from "@/components/search";
 import Limit from "@/components/limit";
 import Pagination from "@/components/pagination";
 import Link from "next/link";
-import { useDispatch} from "react-redux";
-import { setCompanyData } from "../redux/companySlice";
 
 async function getCompanies(page, limit, searchTerm = "") {
   let response = await fetch(
@@ -17,7 +15,6 @@ async function getCompanies(page, limit, searchTerm = "") {
 }
 
 export default function Page() {
-  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -39,12 +36,11 @@ export default function Page() {
   const totalPages = Math.ceil(totalCount / limit);
 
   const handleCompanyClick = (item) => {
-    dispatch(
-      setCompanyData({
-        fei_number_count: item.fei_number_count,
-        warning_letter_count: item.warning_letter_count,
-      })
-    );
+    const companyData = {
+      fei_number_count: item.fei_number_count,
+      warning_letter_count: item.warning_letter_count,
+    };
+    localStorage.setItem('companyData', JSON.stringify(companyData));
   };
 
   if (isLoading) {

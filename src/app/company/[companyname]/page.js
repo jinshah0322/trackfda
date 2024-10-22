@@ -1,13 +1,18 @@
-// src/app/company/[companyname]/page.js
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "@/app/style.css";
 import Link from "next/link";
-import { useSelector } from 'react-redux';
 
 export default function Page({ params }) {
-  const companyData = useSelector((state) => state.company);
+  const [companyData, setCompanyData] = useState({});
+
+  useEffect(() => {
+    const savedCompanyData = localStorage.getItem("companyData");
+    if (savedCompanyData) {
+      setCompanyData(JSON.parse(savedCompanyData));
+    }
+  }, []);
 
   return (
     <div className="page-container">
@@ -17,6 +22,7 @@ export default function Page({ params }) {
       <h1 className="company-title">
         {decodeURIComponent(params.companyname)}
       </h1>
+
       {/* Tabs */}
       <div className="tabs">
         <a className="tab active-tab">Analysis</a>
@@ -28,22 +34,22 @@ export default function Page({ params }) {
       <div className="cards-container">
         <div className="card">
           <p className="card-title">Total Facilities</p>
-          <p className="card-number">{companyData.fei_number_count}</p>
+          <p className="card-number">{companyData.fei_number_count || 0}</p>
         </div>
 
         <div className="card">
           <p className="card-title">Total Inspections</p>
-          <p className="card-number">71</p>
+          <p className="card-number">6</p>
         </div>
 
         <div className="card">
           <p className="card-title">Total Published 483</p>
-          <p className="card-number">7</p>
+          <p className="card-number">1</p>
         </div>
 
         <div className="card">
           <p className="card-title">Total Warning letters</p>
-          <p className="card-number">{companyData.warning_letter_count}</p>
+          <p className="card-number">{companyData.warning_letter_count || 0}</p>
         </div>
       </div>
     </div>
