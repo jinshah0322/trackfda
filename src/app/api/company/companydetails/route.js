@@ -28,7 +28,17 @@ export async function GET(req) {
         const { rows } = await query(`
             SELECT * FROM company_details WHERE fei_number IN (${placeholders})
         `, feiNumbersArray);
-        console.log(rows);
+
+        //Fetch details from warninglettersdetails using the FEI numbers
+        const {rows:warningLetters} = await query(`
+            SELECT wl.letterissuedate,wl.issuingoffice,wl.subject,wl.warningletterurl
+            FROM compliance_actions ca
+            JOIN warninglettersdetails wl
+            ON ca.case_injunction_id = wl.marcscmsno
+            WHERE ca.fei_number in (${placeholders})
+        `,feiNumbersArray)
+        console.log(warningLetters);
+        
 
         // Return the details from inspection_details
         return NextResponse.json({ data: rows }, { status: 200 });
