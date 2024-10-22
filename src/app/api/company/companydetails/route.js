@@ -47,7 +47,7 @@ export async function GET(req) {
         
         return acc;
       }, {});
-
+       console.log(from483CountByFieNumber)
       //Fetch details from warninglettersdetails using the FEI numbers
       const {rows:warningLetters} = await query(`
         SELECT wl.letterissuedate,wl.issuingoffice,wl.subject,wl.warningletterurl
