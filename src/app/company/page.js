@@ -37,11 +37,11 @@ export default function Page() {
   const totalPages = Math.ceil(totalCount / limit);
 
   const handleCompanyClick = (item) => {
-    // Store "Number of facility" and "Warning letters Issued" in localStorage
-    localStorage.setItem("companyData", JSON.stringify({
+    const companyData = {
       fei_number_count: item.fei_number_count,
       warning_letter_count: item.warning_letter_count,
-    }));
+    };
+    localStorage.setItem('companyData', JSON.stringify(companyData));
   };
 
   if (isLoading) {
@@ -64,7 +64,7 @@ export default function Page() {
         limit={limit}
         onLimitChange={(newLimit) => {
           setLimit(newLimit);
-          setPage(1); 
+          setPage(1);
         }}
       />
 
@@ -85,11 +85,11 @@ export default function Page() {
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td style={{ border: "1px solid #ddd", padding: "8px"}}>
-                <Link 
-                  href={`/company/${item.legal_name}`} 
-                  style={{ textDecoration: "none" ,color:"blue"}}
-                  onClick={() => handleCompanyClick(item)}  // Save data when clicked
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                <Link
+                  href={`/company/${item.legal_name}`}
+                  style={{ textDecoration: "none", color: "blue" }}
+                  onClick={() => handleCompanyClick(item)} // Save data when clicked
                 >
                   {item.legal_name}
                 </Link>
@@ -106,7 +106,7 @@ export default function Page() {
       </table>
 
       <Pagination
-        page={totalPages==0?0:page}
+        page={totalPages == 0 ? 0 : page}
         totalPages={totalPages}
         onPageChange={(newPage) => setPage(newPage)}
       />
