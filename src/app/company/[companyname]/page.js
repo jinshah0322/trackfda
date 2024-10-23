@@ -1,19 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Loading from "@/components/loading";
 import "@/app/style.css";
 import Link from "next/link";
+import { AnalysisTab, FacilitiesTab, Form483sTab, WarningLettersTab } from "@/components/companyDetails";
 
 export default function Page({ params }) {
-
   const [loading, setLoading] = useState(true);
   const [companyFacilityDeytails, setCompanyFacilityDetails] = useState({});
-
+  const [activeTab, setActiveTab] = useState("analysis"); // State for active tab
 
   async function getCompanyDetails() {
     try {
       let response = await fetch(
-        `http://localhost:3000/api/company/companydetails?compnayname=${decodeURIComponent(params.companyname)}`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails?compnayname=${decodeURIComponent(params.companyname)}`
       );
       return await response.json();
     } catch (error) {
@@ -33,6 +34,7 @@ export default function Page({ params }) {
     }
     return updatedObj;
   }
+
   function countOccurrences(array, key) {
     return array.reduce((acc, item) => {
       const feiNumber = item[key];
@@ -40,29 +42,23 @@ export default function Page({ params }) {
       return acc;
     }, {});
   }
-  // Retrieve data from localStorage on component mount
+
   useEffect(() => {
-    // Fetch the company details and update the state
-    async function fetchCompanyFacilityDetails() {
-      // Fetch the company details and update the state
+    const fetchCompanyFacilityDetails = async () => {
+      setLoading(true);
       const companyDetails = await getCompanyDetails();
 
       if (companyDetails && companyDetails.facilities) {
-        // Store the facilities data in state
-
         const form483Count = countOccurrences(companyDetails.form483Details, 'fei_number');
-
-        // Count warning letter occurrences for each fei_number
         const warningLetterCount = countOccurrences(companyDetails.warningLetters, 'fei_number');
-        // Add the count to the corresponding facility object in the facilities array
+
         const companyFacilities = companyDetails.facilities.map(facility => {
           const feiNumber = facility.fei_number;
           const companyFacilities = {
             ...facility,
-            form483_count: form483Count[feiNumber] || 0, // Default to 0 if no match found
-            warning_letter_count: warningLetterCount[feiNumber] || 0 // Default to 0 if no match found
+            form483_count: form483Count[feiNumber] || 0,
+            warning_letter_count: warningLetterCount[feiNumber] || 0
           };
-          // Replace null or '-' with 'NA'
           return replaceNullAndDashWithNA(companyFacilities);
         });
         setCompanyFacilityDetails(companyFacilities);
@@ -71,10 +67,14 @@ export default function Page({ params }) {
       }
 
       setLoading(false);
-    }
+    };
 
     fetchCompanyFacilityDetails();
-  }, []);
+  }, [params.companyname]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="page-container">
@@ -85,34 +85,40 @@ export default function Page({ params }) {
         {decodeURIComponent(params.companyname)}
       </h1>
 
-      {/* Tabs */}
+      {/ Tabs /}
       <div className="tabs">
-        <a className="tab active-tab">Analysis</a>
-        <a className="tab">Facilities</a>
-        <a className="tab">Form 483s</a>
+        <a
+          className={`tab ${activeTab === "analysis" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("analysis")}
+        >
+          Analysis
+        </a>
+        <a
+          className={`tab ${activeTab === "facilities" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("facilities")}
+        >
+          Facilities
+        </a>
+        <a
+          className={`tab ${activeTab === "form483s" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("form483s")}
+        >
+          Form 483s
+        </a>
+        <a
+          className={`tab ${activeTab === "warningletters" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("warningletters")}
+        >
+          Warning Letters
+        </a>
       </div>
 
-      {/* Cards */}
+      {/ Tab Content /}
       <div className="cards-container">
-        <div className="card">
-          <p className="card-title">Total Facilities</p>
-          <p className="card-number">1</p>
-        </div>
-
-        <div className="card">
-          <p className="card-title">Total Inspections</p>
-          <p className="card-number">1</p>
-        </div>
-
-        <div className="card">
-          <p className="card-title">Total Published 483</p>
-          <p className="card-number">1</p>
-        </div>
-
-        <div className="card">
-          <p className="card-title">Total Warning letters</p>
-          <p className="card-number">1</p>
-        </div>
+        {activeTab === "analysis" && <AnalysisTab data={companyFacilityDeytails.analysis} />}
+        {activeTab === "facilities" && <FacilitiesTab />}
+        {activeTab === "form483s" && <Form483sTab />}
+        {activeTab === "warningletters" && <WarningLettersTab />}
       </div>
     </div>
   );
