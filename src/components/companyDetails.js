@@ -24,9 +24,9 @@ export function AnalysisTab({ data }) {
     );
   }
   
-export function FacilitiesTab({data}) {
+  export function FacilitiesTab({ data }) {
     return (
-       <>
+      <>
         {data.length === 0 ? (
           <div style={{ textAlign: "center", padding: "16px" }}>
             <h2>No facilities available for this company.</h2>
@@ -89,7 +89,8 @@ export function FacilitiesTab({data}) {
         )}
       </>
     );
-}  
+  }
+  
 
 export function Form483sTab({ data }) {
   return (
