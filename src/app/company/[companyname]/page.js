@@ -123,7 +123,7 @@ export default function Page({ params }) {
       {/* Tab Content */}
       <div className="cards-container">
         {activeTab === "analysis" && <AnalysisTab data={companyAnalysisDetails} />}
-        {activeTab === "facilities" && <FacilitiesTab />}
+        {activeTab === "facilities" && <FacilitiesTab data={companyFacilityDetails}/>}
         {activeTab === "form483s" && <Form483sTab data={form483Details  }/>}
         {activeTab === "warningletters" && <WarningLettersTab  data={warningLettersDetails}/>}
       </div>
