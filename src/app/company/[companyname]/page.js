@@ -72,7 +72,7 @@ export default function Page({ params }) {
       } else {
         console.log("No facilities data found");
       }
-
+      console.log("hello from shubham")
       setLoading(false);
     };
 
