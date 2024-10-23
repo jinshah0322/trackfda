@@ -1,27 +1,35 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Loading from "@/components/loading";
 import "@/app/style.css";
 import Link from "next/link";
 
 export default function Page({ params }) {
-  const [companyData, setCompanyData] = useState({
-    fei_number_count: 0,
-    warning_letter_count: 0,
-  });
-  
- 
-  async function getCompanyDetails(page, limit, searchTerm = "") {
-    let response = await fetch(
-      `http://localhost:3000/api/company/companydetails?compnayname=${decodeURIComponent(params.companyname)}`
-    );
-    return await response.json();
-  }
-  // Retrieve data from localStorage on component mount
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState(null);
+
   useEffect(() => {
-    const companyDetails= getCompanyDetails();
-    
-  }, []);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails?compnayname=${params.companyname}`
+        );
+        const data = await response.json();
+        setData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [params.companyname]); // Adding the dependency array to prevent infinite re-rendering
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="page-container">
@@ -43,22 +51,30 @@ export default function Page({ params }) {
       <div className="cards-container">
         <div className="card">
           <p className="card-title">Total Facilities</p>
-          <p className="card-number">1</p>
+          <p className="card-number">
+            {data?.totalFacilities}
+          </p>
         </div>
 
         <div className="card">
           <p className="card-title">Total Inspections</p>
-          <p className="card-number">1</p>
+          <p className="card-number">
+            {data?.totalInspections}
+          </p>
         </div>
 
         <div className="card">
           <p className="card-title">Total Published 483</p>
-          <p className="card-number">1</p>
+          <p className="card-number">
+            {data?.totalPublished483s}
+          </p>
         </div>
 
         <div className="card">
           <p className="card-title">Total Warning letters</p>
-          <p className="card-number">1</p>
+          <p className="card-number">
+            {data?.totalWarningLetters}
+          </p>
         </div>
       </div>
     </div>

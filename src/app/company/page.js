@@ -9,7 +9,7 @@ import Link from "next/link";
 
 async function getCompanies(page, limit, searchTerm = "") {
   let response = await fetch(
-    `http://localhost:3000/api/company?page=${page}&limit=${limit}&search=${searchTerm}`
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/company?page=${page}&limit=${limit}&search=${searchTerm}`
   );
   return await response.json();
 }
@@ -82,7 +82,6 @@ export default function Page() {
                 <Link
                   href={`/company/${item.legal_name}`}
                   style={{ textDecoration: "none", color: "blue" }}
-                  onClick={() => handleCompanyClick(item)} // Save data when clicked
                 >
                   {item.legal_name}
                 </Link>

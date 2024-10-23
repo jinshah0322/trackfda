@@ -9,11 +9,22 @@ export async function GET(req) {
     // Fetch distinct FEI numbers and related details in a single query
     const { rows: companyDetailsResult } = await query(
       `
-      SELECT * FROM company_details WHERE legal_name = $1
+      SELECT legal_name,fei_number,city,state,country_area,firm_address FROM company_details WHERE legal_name = $1
     `,
       [companyname]
     );
 
+    //Fetch Inspection details for selected company name
+    const { rows: inspectionResult } = await query(
+        `
+        SELECT * FROM company_details cd
+        INNER JOIN inspection_details i ON cd.fei_number = i.fei_number
+        WHERE cd.legal_name = $1
+      `,
+        [companyname]
+      );
+
+    //Fetch published 483 details for the selected company name
     const { rows: published483Result } = await query(
         `
         SELECT cd.legal_name, cd.fei_number, p.date_posted, p.download_link FROM company_details cd
@@ -22,7 +33,8 @@ export async function GET(req) {
       `,
         [companyname]
       );
-
+    
+    //Fetch warning letter details for the selected company name
     const { rows: warningLetterResult } = await query(
         `
         SELECT cd.fei_number,cd.legal_name,wl.letterissuedate, wl.issuingoffice, wl.subject, 
@@ -36,6 +48,7 @@ export async function GET(req) {
 
     // Get unique FEI numbers to count total facilities
     const totalFacilities = companyDetailsResult.length;
+    const totalInspections = inspectionResult.length;
     const totalWarningLetters = warningLetterResult.length;
     const totalPublished483s = published483Result.length
 
@@ -67,7 +80,7 @@ export async function GET(req) {
 
     // Return the combined data
     return NextResponse.json(
-      {totalFacilities, totalPublished483s, totalWarningLetters, facilities, form483Details, warningLetters},
+      {totalFacilities, totalInspections, totalPublished483s, totalWarningLetters, facilities, form483Details, warningLetters},
       { status: 200 }
     );
   } catch (error) {
