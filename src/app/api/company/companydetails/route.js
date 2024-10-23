@@ -25,9 +25,6 @@ export async function GET(req) {
         [companyname]
       );
 
-      console.log(inspectionResult);
-      
-
     //Fetch published 483 details for the selected company name
     const { rows: published483Result } = await query(
         `
