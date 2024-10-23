@@ -4,77 +4,25 @@ import { useEffect, useState } from "react";
 import Loading from "@/components/loading";
 import "@/app/style.css";
 import Link from "next/link";
-import { AnalysisTab, FacilitiesTab, Form483sTab, WarningLettersTab } from "@/components/companyDetails";
 
 export default function Page({ params }) {
-  const [loading, setLoading] = useState(true);
-  const [companyFacilityDetails, setCompanyFacilityDetails] = useState({});
-  const [activeTab, setActiveTab] = useState("analysis"); // State for active tab
-
-  async function getCompanyDetails() {
-    try {
-      let response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails?compnayname=${decodeURIComponent(params.companyname)}`
-      );
-      return await response.json();
-    } catch (error) {
-      console.error("Error fetching company details:", error);
-      return null;
-    }
+  const [companyData, setCompanyData] = useState({
+    fei_number_count: 0,
+    warning_letter_count: 0,
+  });
+  
+ 
+  async function getCompanyDetails(page, limit, searchTerm = "") {
+    let response = await fetch(
+      `http://localhost:3000/api/company/companydetails?compnayname=${decodeURIComponent(params.companyname)}`
+    );
+    return await response.json();
   }
-
-  function replaceNullAndDashWithNA(obj) {
-    const updatedObj = {};
-    for (let key in obj) {
-      if (obj[key] === null || obj[key] === '-') {
-        updatedObj[key] = 'NA';
-      } else {
-        updatedObj[key] = obj[key];
-      }
-    }
-    return updatedObj;
-  }
-
-  function countOccurrences(array, key) {
-    return array.reduce((acc, item) => {
-      const feiNumber = item[key];
-      acc[feiNumber] = (acc[feiNumber] || 0) + 1;
-      return acc;
-    }, {});
-  }
-
+  // Retrieve data from localStorage on component mount
   useEffect(() => {
-    const fetchCompanyFacilityDetails = async () => {
-      setLoading(true);
-      const companyDetails = await getCompanyDetails();
-
-      if (companyDetails && companyDetails.facilities) {
-        const form483Count = countOccurrences(companyDetails.form483Details, 'fei_number');
-        const warningLetterCount = countOccurrences(companyDetails.warningLetters, 'fei_number');
-
-        const companyFacilities = companyDetails.facilities.map(facility => {
-          const feiNumber = facility.fei_number;
-          const companyFacilities = {
-            ...facility,
-            form483_count: form483Count[feiNumber] || 0,
-            warning_letter_count: warningLetterCount[feiNumber] || 0
-          };
-          return replaceNullAndDashWithNA(companyFacilities);
-        });
-        setCompanyFacilityDetails(companyFacilities);
-      } else {
-        console.log("No facilities data found");
-      }
-
-      setLoading(false);
-    };
-
-    fetchCompanyFacilityDetails();
-  }, [params.companyname]);
-
-  if (loading) {
-    return <Loading />;
-  }
+    const companyDetails= getCompanyDetails();
+    
+  }, []);
 
   return (
     <div className="page-container">
@@ -115,10 +63,25 @@ export default function Page({ params }) {
 
       {/* Tab Content */}
       <div className="cards-container">
-        {activeTab === "analysis" && <AnalysisTab data={companyFacilityDetails.analysis} />}
-        {activeTab === "facilities" && <FacilitiesTab />}
-        {activeTab === "form483s" && <Form483sTab />}
-        {activeTab === "warningletters" && <WarningLettersTab />}
+        <div className="card">
+          <p className="card-title">Total Facilities</p>
+          <p className="card-number">1</p>
+        </div>
+
+        <div className="card">
+          <p className="card-title">Total Inspections</p>
+          <p className="card-number">1</p>
+        </div>
+
+        <div className="card">
+          <p className="card-title">Total Published 483</p>
+          <p className="card-number">1</p>
+        </div>
+
+        <div className="card">
+          <p className="card-title">Total Warning letters</p>
+          <p className="card-number">1</p>
+        </div>
       </div>
     </div>
   );
