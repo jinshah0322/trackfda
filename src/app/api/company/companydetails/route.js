@@ -62,18 +62,6 @@ export async function GET(req) {
       ({letterissuedate,fei_number,legal_name,issuingoffice,subject,warningletterurl})
     );
 
-    // Count published 483s by FEI number
-    const form483CountByFieNumber = form483Details.reduce((acc, item) => {
-      acc[item.fei_number] = (acc[item.fei_number] || 0) + 1;
-      return acc;
-    }, {});
-
-    // Count warningLetter by FEI number
-    const warningLetterCountByFieNumber = warningLetters.reduce((acc, item) => {
-      acc[item.fei_number] = (acc[item.fei_number] || 0) + 1;
-      return acc;
-    }, {});
-
     // Return the combined data
     return NextResponse.json(
       {analysis, facilities, form483Details, warningLetters},
