@@ -17,12 +17,16 @@ export async function GET(req) {
     //Fetch Inspection details for selected company name
     const { rows: inspectionResult } = await query(
         `
-        SELECT * FROM company_details cd
+        SELECT cd.legal_name,cd.fei_number,i.project_area,i.product_type,i.classification,
+        i.posted_citations FROM company_details cd
         INNER JOIN inspection_details i ON cd.fei_number = i.fei_number
         WHERE cd.legal_name = $1
       `,
         [companyname]
       );
+
+      console.log(inspectionResult);
+      
 
     //Fetch published 483 details for the selected company name
     const { rows: published483Result } = await query(
@@ -48,23 +52,9 @@ export async function GET(req) {
 
     const analysis = {totalFacilities:companyDetailsResult.length,totalInspections:inspectionResult.length,totalWarningLetters:warningLetterResult.length,totalPublished483s:published483Result.length}
 
-    // Separate company details, form 483 details, and warning letters
-    const facilities = companyDetailsResult.map(
-      ({legal_name,fei_number,city,state,country_area,firm_address}) => 
-      ({legal_name,fei_number,city,state,country_area,firm_address})
-    );
-    const form483Details = published483Result.map(
-      ({ date_posted, fei_number, legal_name, download_link}) => 
-      ({date_posted,fei_number,legal_name,download_link})
-    );
-    const warningLetters = warningLetterResult.map(
-      ({letterissuedate,fei_number,legal_name,issuingoffice,subject,warningletterurl}) => 
-      ({letterissuedate,fei_number,legal_name,issuingoffice,subject,warningletterurl})
-    );
-
     // Return the combined data
     return NextResponse.json(
-      {analysis, facilities, form483Details, warningLetters},
+      {analysis, facilities:companyDetailsResult, form483Details:published483Result, warningLetters:warningLetterResult},
       { status: 200 }
     );
   } catch (error) {
