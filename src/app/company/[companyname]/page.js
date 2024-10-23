@@ -4,34 +4,25 @@ import { useEffect, useState } from "react";
 import Loading from "@/components/loading";
 import "@/app/style.css";
 import Link from "next/link";
-import {AnalysisTab,FacilitiesTab,Form483sTab,WarningLettersTab} from "@/components/companyDetails";
 
 export default function Page({ params }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState(null);
-  const [activeTab, setActiveTab] = useState("analysis"); // State for active tab
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails?compnayname=${params.companyname}`
-        );
-        const data = await response.json();
-        setData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [params.companyname]);
-
-  if (isLoading) {
-    return <Loading />;
+  const [companyData, setCompanyData] = useState({
+    fei_number_count: 0,
+    warning_letter_count: 0,
+  });
+  
+ 
+  async function getCompanyDetails(page, limit, searchTerm = "") {
+    let response = await fetch(
+      `http://localhost:3000/api/company/companydetails?compnayname=${decodeURIComponent(params.companyname)}`
+    );
+    return await response.json();
   }
+  // Retrieve data from localStorage on component mount
+  useEffect(() => {
+    const companyDetails= getCompanyDetails();
+    
+  }, []);
 
   return (
     <div className="page-container">
@@ -72,10 +63,25 @@ export default function Page({ params }) {
 
       {/* Tab Content */}
       <div className="cards-container">
-        {activeTab === "analysis" && <AnalysisTab data={data.analysis}/>}
-        {activeTab === "facilities" && <FacilitiesTab />}
-        {activeTab === "form483s" && <Form483sTab />}
-        {activeTab === "warningletters" && <WarningLettersTab />}
+        <div className="card">
+          <p className="card-title">Total Facilities</p>
+          <p className="card-number">1</p>
+        </div>
+
+        <div className="card">
+          <p className="card-title">Total Inspections</p>
+          <p className="card-number">1</p>
+        </div>
+
+        <div className="card">
+          <p className="card-title">Total Published 483</p>
+          <p className="card-number">1</p>
+        </div>
+
+        <div className="card">
+          <p className="card-title">Total Warning letters</p>
+          <p className="card-number">1</p>
+        </div>
       </div>
     </div>
   );
