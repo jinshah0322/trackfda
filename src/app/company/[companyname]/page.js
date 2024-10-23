@@ -8,7 +8,7 @@ import { AnalysisTab, FacilitiesTab, Form483sTab, WarningLettersTab } from "@/co
 
 export default function Page({ params }) {
   const [loading, setLoading] = useState(true);
-  const [companyFacilityDeytails, setCompanyFacilityDetails] = useState({});
+  const [companyFacilityDetails, setCompanyFacilityDetails] = useState({});
   const [activeTab, setActiveTab] = useState("analysis"); // State for active tab
 
   async function getCompanyDetails() {
@@ -85,7 +85,7 @@ export default function Page({ params }) {
         {decodeURIComponent(params.companyname)}
       </h1>
 
-      {/ Tabs /}
+      {/* Tabs */}
       <div className="tabs">
         <a
           className={`tab ${activeTab === "analysis" ? "active-tab" : ""}`}
@@ -113,9 +113,9 @@ export default function Page({ params }) {
         </a>
       </div>
 
-      {/ Tab Content /}
+      {/* Tab Content */}
       <div className="cards-container">
-        {activeTab === "analysis" && <AnalysisTab data={companyFacilityDeytails.analysis} />}
+        {activeTab === "analysis" && <AnalysisTab data={companyFacilityDetails.analysis} />}
         {activeTab === "facilities" && <FacilitiesTab />}
         {activeTab === "form483s" && <Form483sTab />}
         {activeTab === "warningletters" && <WarningLettersTab />}
