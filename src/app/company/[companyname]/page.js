@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import Loading from "@/components/loading";
 import "@/app/style.css";
 import Link from "next/link";
+import {AnalysisTab,FacilitiesTab,Form483sTab,WarningLettersTab} from "@/components/companyDetails";
 
 export default function Page({ params }) {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
+  const [activeTab, setActiveTab] = useState("analysis"); // State for active tab
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,7 +27,7 @@ export default function Page({ params }) {
       }
     };
     fetchData();
-  }, [params.companyname]); // Adding the dependency array to prevent infinite re-rendering
+  }, [params.companyname]);
 
   if (isLoading) {
     return <Loading />;
@@ -42,40 +44,38 @@ export default function Page({ params }) {
 
       {/* Tabs */}
       <div className="tabs">
-        <a className="tab active-tab">Analysis</a>
-        <a className="tab">Facilities</a>
-        <a className="tab">Form 483s</a>
+        <a
+          className={`tab ${activeTab === "analysis" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("analysis")}
+        >
+          Analysis
+        </a>
+        <a
+          className={`tab ${activeTab === "facilities" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("facilities")}
+        >
+          Facilities
+        </a>
+        <a
+          className={`tab ${activeTab === "form483s" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("form483s")}
+        >
+          Form 483s
+        </a>
+        <a
+          className={`tab ${activeTab === "warningletters" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("warningletters")}
+        >
+          Warning Letters
+        </a>
       </div>
 
-      {/* Cards */}
+      {/* Tab Content */}
       <div className="cards-container">
-        <div className="card">
-          <p className="card-title">Total Facilities</p>
-          <p className="card-number">
-            {data?.totalFacilities}
-          </p>
-        </div>
-
-        <div className="card">
-          <p className="card-title">Total Inspections</p>
-          <p className="card-number">
-            {data?.totalInspections}
-          </p>
-        </div>
-
-        <div className="card">
-          <p className="card-title">Total Published 483</p>
-          <p className="card-number">
-            {data?.totalPublished483s}
-          </p>
-        </div>
-
-        <div className="card">
-          <p className="card-title">Total Warning letters</p>
-          <p className="card-number">
-            {data?.totalWarningLetters}
-          </p>
-        </div>
+        {activeTab === "analysis" && <AnalysisTab data={data.analysis}/>}
+        {activeTab === "facilities" && <FacilitiesTab />}
+        {activeTab === "form483s" && <Form483sTab />}
+        {activeTab === "warningletters" && <WarningLettersTab />}
       </div>
     </div>
   );

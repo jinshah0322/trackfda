@@ -46,11 +46,7 @@ export async function GET(req) {
         [companyname]
       );
 
-    // Get unique FEI numbers to count total facilities
-    const totalFacilities = companyDetailsResult.length;
-    const totalInspections = inspectionResult.length;
-    const totalWarningLetters = warningLetterResult.length;
-    const totalPublished483s = published483Result.length
+    const analysis = {totalFacilities:companyDetailsResult.length,totalInspections:inspectionResult.length,totalWarningLetters:warningLetterResult.length,totalPublished483s:published483Result.length}
 
     // Separate company details, form 483 details, and warning letters
     const facilities = companyDetailsResult.map(
@@ -80,7 +76,7 @@ export async function GET(req) {
 
     // Return the combined data
     return NextResponse.json(
-      {totalFacilities, totalInspections, totalPublished483s, totalWarningLetters, facilities, form483Details, warningLetters},
+      {analysis, facilities, form483Details, warningLetters},
       { status: 200 }
     );
   } catch (error) {
