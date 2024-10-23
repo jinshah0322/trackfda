@@ -5,10 +5,7 @@ import "@/app/style.css";
 import Link from "next/link";
 
 export default function Page({ params }) {
-  const [companyData, setCompanyData] = useState({
-    fei_number_count: 0,
-    warning_letter_count: 0,
-  });
+
   const [loading, setLoading] = useState(true);
   const [companyFacilityDeytails, setCompanyFacilityDetails] = useState({});
 
