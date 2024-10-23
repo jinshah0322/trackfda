@@ -9,18 +9,74 @@ export default function Page({ params }) {
     fei_number_count: 0,
     warning_letter_count: 0,
   });
-  
- 
-  async function getCompanyDetails(page, limit, searchTerm = "") {
-    let response = await fetch(
-      `http://localhost:3000/api/company/companydetails?compnayname=${decodeURIComponent(params.companyname)}`
-    );
-    return await response.json();
+  const [loading, setLoading] = useState(true);
+  const [companyFacilityDeytails, setCompanyFacilityDetails] = useState({});
+
+
+  async function getCompanyDetails() {
+    try {
+      let response = await fetch(
+        `http://localhost:3000/api/company/companydetails?compnayname=${decodeURIComponent(params.companyname)}`
+      );
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching company details:", error);
+      return null;
+    }
+  }
+
+  function replaceNullAndDashWithNA(obj) {
+    const updatedObj = {};
+    for (let key in obj) {
+      if (obj[key] === null || obj[key] === '-') {
+        updatedObj[key] = 'NA';
+      } else {
+        updatedObj[key] = obj[key];
+      }
+    }
+    return updatedObj;
+  }
+  function countOccurrences(array, key) {
+    return array.reduce((acc, item) => {
+      const feiNumber = item[key];
+      acc[feiNumber] = (acc[feiNumber] || 0) + 1;
+      return acc;
+    }, {});
   }
   // Retrieve data from localStorage on component mount
   useEffect(() => {
-    const companyDetails= getCompanyDetails();
-    
+    // Fetch the company details and update the state
+    async function fetchCompanyFacilityDetails() {
+      // Fetch the company details and update the state
+      const companyDetails = await getCompanyDetails();
+
+      if (companyDetails && companyDetails.facilities) {
+        // Store the facilities data in state
+
+        const form483Count = countOccurrences(companyDetails.form483Details, 'fei_number');
+
+        // Count warning letter occurrences for each fei_number
+        const warningLetterCount = countOccurrences(companyDetails.warningLetters, 'fei_number');
+        // Add the count to the corresponding facility object in the facilities array
+        const companyFacilities = companyDetails.facilities.map(facility => {
+          const feiNumber = facility.fei_number;
+          const companyFacilities = {
+            ...facility,
+            form483_count: form483Count[feiNumber] || 0, // Default to 0 if no match found
+            warning_letter_count: warningLetterCount[feiNumber] || 0 // Default to 0 if no match found
+          };
+          // Replace null or '-' with 'NA'
+          return replaceNullAndDashWithNA(companyFacilities);
+        });
+        setCompanyFacilityDetails(companyFacilities);
+      } else {
+        console.log("No facilities data found");
+      }
+
+      setLoading(false);
+    }
+
+    fetchCompanyFacilityDetails();
   }, []);
 
   return (
