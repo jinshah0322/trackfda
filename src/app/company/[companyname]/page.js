@@ -11,6 +11,7 @@ export default function Page({ params }) {
   const [companyFacilityDetails, setCompanyFacilityDetails] = useState({});
   const [companyAnalysisDetails, setCompanyAnalysisDetails] = useState(null);
   const [form483Details, setForm483Details] = useState({});
+  const [warningLettersDetails, setWarningLetters] = useState({});
   const [activeTab, setActiveTab] = useState("analysis"); // State for active tab
 
   async function getCompanyDetails() {
@@ -21,6 +22,7 @@ export default function Page({ params }) {
       response = await response.json();
       setCompanyAnalysisDetails(response.analysis); // Set the entire response
       setForm483Details(response.form483Details);
+      setWarningLetters(response.warningLetters);
       return response; // Return the response for further processing if needed
     } catch (error) {
       console.error("Error fetching company details:", error);
@@ -123,7 +125,7 @@ export default function Page({ params }) {
         {activeTab === "analysis" && <AnalysisTab data={companyAnalysisDetails} />}
         {activeTab === "facilities" && <FacilitiesTab />}
         {activeTab === "form483s" && <Form483sTab data={form483Details  }/>}
-        {activeTab === "warningletters" && <WarningLettersTab />}
+        {activeTab === "warningletters" && <WarningLettersTab  data={warningLettersDetails}/>}
       </div>
     </div>
   );
