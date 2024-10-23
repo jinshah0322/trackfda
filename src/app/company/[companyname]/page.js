@@ -65,9 +65,10 @@ export default function Page({ params }) {
             ...facility,
             form483_count: form483Count[feiNumber] || 0,
             warning_letter_count: warningLetterCount[feiNumber] || 0
-          };
+          }; 
           return replaceNullAndDashWithNA(companyFacility);
         });
+        console.log(companyFacilities,'test')
         setCompanyFacilityDetails(companyFacilities);
       } else {
         console.log("No facilities data found");
@@ -123,7 +124,7 @@ export default function Page({ params }) {
       {/* Tab Content */}
       <div className="cards-container">
         {activeTab === "analysis" && <AnalysisTab data={companyAnalysisDetails} />}
-        {activeTab === "facilities" && <FacilitiesTab />}
+        {activeTab === "facilities" && <FacilitiesTab data={companyFacilityDetails} />}
         {activeTab === "form483s" && <Form483sTab data={form483Details  }/>}
         {activeTab === "warningletters" && <WarningLettersTab  data={warningLettersDetails}/>}
       </div>
