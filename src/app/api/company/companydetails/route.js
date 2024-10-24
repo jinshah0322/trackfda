@@ -51,7 +51,7 @@ export async function GET(req) {
 
     // Return the combined data
     return NextResponse.json(
-      {analysis, facilities:companyDetailsResult, form483Details:published483Result, warningLetters:warningLetterResult},
+      {analysis, facilities:companyDetailsResult, form483Details:published483Result, warningLetters:warningLetterResult,inspections:inspectionResult},
       { status: 200 }
     );
   } catch (error) {

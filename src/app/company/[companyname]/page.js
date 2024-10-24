@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import Loading from "@/components/loading";
 import "@/app/style.css";
 import Link from "next/link";
-import { AnalysisTab, FacilitiesTab, Form483sTab, WarningLettersTab } from "@/components/companyDetails";
+import AnalysisTab from "@/components/companyDetails/analysis";
+import FacilitiesTab from "@/components/companyDetails/facilities";
+import Form483sTab from "@/components/companyDetails/form483";
+import WarningLettersTab from "@/components/companyDetails/warningletter";
+import '@/app/style.css'
 
 export default function Page({ params }) {
   const [loading, setLoading] = useState(true);
@@ -12,6 +16,7 @@ export default function Page({ params }) {
   const [companyAnalysisDetails, setCompanyAnalysisDetails] = useState(null);
   const [form483Details, setForm483Details] = useState({});
   const [warningLettersDetails, setWarningLetters] = useState({});
+  const [inspectionDetails,setInspectionDetails] = useState({})
   const [activeTab, setActiveTab] = useState("analysis"); // State for active tab
 
   async function getCompanyDetails() {
@@ -23,6 +28,7 @@ export default function Page({ params }) {
       setCompanyAnalysisDetails(response.analysis); // Set the entire response
       setForm483Details(response.form483Details);
       setWarningLetters(response.warningLetters);
+      setInspectionDetails(response.inspections);
       return response; // Return the response for further processing if needed
     } catch (error) {
       console.error("Error fetching company details:", error);
@@ -121,8 +127,8 @@ export default function Page({ params }) {
       </div>
 
       {/* Tab Content */}
-      <div className="cards-container">
-        {activeTab === "analysis" && <AnalysisTab data={companyAnalysisDetails} />}
+      <div className="company">
+        {activeTab === "analysis" && <AnalysisTab data={{companyAnalysisDetails,inspectionDetails}} />}
         {activeTab === "facilities" && <FacilitiesTab data={companyFacilityDetails}/>}
         {activeTab === "form483s" && <Form483sTab data={form483Details  }/>}
         {activeTab === "warningletters" && <WarningLettersTab  data={warningLettersDetails}/>}
