@@ -201,6 +201,8 @@ export default function AnalysisTab({ data }) {
                 <th>Product Type</th>
                 <th>Project Area</th>
                 <th>Posted Citations</th>
+                <th>Fiscal Year</th>
+                <th>Inspection End Date</th>
               </tr>
             </thead>
             <tbody>
@@ -212,6 +214,8 @@ export default function AnalysisTab({ data }) {
                   <td>{item.product_type}</td>
                   <td>{item.project_area}</td>
                   <td>{item.posted_citations}</td>
+                  <td>{item.fiscal_year}</td>
+                  <td>{new Date(item.inspection_end_date).toLocaleDateString('en-GB')}</td>
                 </tr>
               ))}
             </tbody>
