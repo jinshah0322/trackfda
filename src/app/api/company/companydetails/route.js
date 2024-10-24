@@ -16,42 +16,58 @@ export async function GET(req) {
 
     //Fetch Inspection details for selected company name
     const { rows: inspectionResult } = await query(
-        `
+      `
         SELECT cd.legal_name,cd.fei_number,i.project_area,i.product_type,i.classification,
         i.posted_citations FROM company_details cd
         INNER JOIN inspection_details i ON cd.fei_number = i.fei_number
         WHERE cd.legal_name = $1
       `,
-        [companyname]
-      );
+      [companyname]
+    );
+
+    const { rows: inspectionClassification } = await query(
+      `select classification,abbrevation from inspection_details_masterclassification`
+    );
 
     //Fetch published 483 details for the selected company name
     const { rows: published483Result } = await query(
-        `
+      `
         SELECT cd.legal_name, cd.fei_number, p.date_posted, p.download_link FROM company_details cd
         INNER JOIN published_483s p ON cd.fei_number = p.fei_number
         WHERE cd.legal_name = $1
       `,
-        [companyname]
-      );
-    
+      [companyname]
+    );
+
     //Fetch warning letter details for the selected company name
     const { rows: warningLetterResult } = await query(
-        `
+      `
         SELECT cd.fei_number,cd.legal_name,wl.letterissuedate, wl.issuingoffice, wl.subject, 
         wl.warningletterurl FROM company_details cd
         INNER JOIN compliance_actions ca ON cd.fei_number = ca.fei_number
         INNER JOIN warninglettersdetails wl ON ca.case_injunction_id = wl.marcscmsno
         WHERE cd.legal_name = $1
       `,
-        [companyname]
-      );
+      [companyname]
+    );
 
-    const analysis = {totalFacilities:companyDetailsResult.length,totalInspections:inspectionResult.length,totalWarningLetters:warningLetterResult.length,totalPublished483s:published483Result.length}
+    const analysis = {
+      totalFacilities: companyDetailsResult.length,
+      totalInspections: inspectionResult.length,
+      totalWarningLetters: warningLetterResult.length,
+      totalPublished483s: published483Result.length,
+    };
 
     // Return the combined data
     return NextResponse.json(
-      {analysis, facilities:companyDetailsResult, form483Details:published483Result, warningLetters:warningLetterResult,inspections:inspectionResult},
+      {
+        analysis,
+        facilities: companyDetailsResult,
+        form483Details: published483Result,
+        warningLetters: warningLetterResult,
+        inspections: inspectionResult,
+        inspectionClassification
+      },
       { status: 200 }
     );
   } catch (error) {
