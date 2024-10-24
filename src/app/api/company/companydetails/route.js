@@ -18,7 +18,7 @@ export async function GET(req) {
     const { rows: inspectionResult } = await query(
       `
         SELECT cd.legal_name,cd.fei_number,i.project_area,i.product_type,i.classification,
-        i.posted_citations FROM company_details cd
+        i.posted_citations,i.fiscal_year,i.inspection_end_date FROM company_details cd
         INNER JOIN inspection_details i ON cd.fei_number = i.fei_number
         WHERE cd.legal_name = $1
       `,

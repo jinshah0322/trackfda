@@ -7,32 +7,32 @@ export default function AnalysisTab({ data }) {
   const [selectedProductType, setSelectedProductType] = useState("All");
   const [selectedProjectArea, setSelectedProjectArea] = useState("All");
   const [selectedPostedCitation, setSelectedPostedCitation] = useState("All");
-  const [limit, setLimit] = useState(10); // Default limit
-  const [page, setPage] = useState(1); // Default page
+  const [limit, setLimit] = useState(5);
+  const [page, setPage] = useState(1);
 
   const handleFilterChange = (event) => {
     setSelectedClassification(event.target.value);
-    setPage(1); // Reset to the first page when the filter changes
+    setPage(1);
   };
 
   const handleProductTypeChange = (event) => {
     setSelectedProductType(event.target.value);
-    setPage(1); // Reset to the first page when the filter changes
+    setPage(1);
   };
 
   const handleProjectAreaChange = (event) => {
     setSelectedProjectArea(event.target.value);
-    setPage(1); // Reset to the first page when the filter changes
+    setPage(1);
   };
 
   const handlePostedCitationChange = (event) => {
     setSelectedPostedCitation(event.target.value);
-    setPage(1); // Reset to the first page when the filter changes
+    setPage(1);
   };
 
   const handleLimitChange = (newLimit) => {
     setLimit(newLimit);
-    setPage(1); // Reset to the first page when the limit changes
+    setPage(1);
   };
 
   const clearFilters = () => {
@@ -40,7 +40,7 @@ export default function AnalysisTab({ data }) {
     setSelectedProductType("All");
     setSelectedProjectArea("All");
     setSelectedPostedCitation("All");
-    setPage(1); // Reset to the first page when filters are cleared
+    setPage(1);
   };
 
   const filteredData = data.inspectionDetails.filter((item) => {
@@ -101,7 +101,9 @@ export default function AnalysisTab({ data }) {
         </div>
       </div>
 
-      <div className="filter-container"
+      {/* Filter section */}
+      <div
+        className="filter-container"
         style={{
           marginBottom: "10px",
           display: "flex",
@@ -109,7 +111,8 @@ export default function AnalysisTab({ data }) {
           flexWrap: "wrap",
         }}
       >
-        <div style={{ marginRight: "15px"}}>
+        {/* Filter Dropdowns */}
+        <div style={{ marginRight: "15px" }}>
           <label htmlFor="classification-filter">Classification: </label>
           <select
             id="classification-filter"
@@ -124,7 +127,7 @@ export default function AnalysisTab({ data }) {
             ))}
           </select>
         </div>
-        <div style={{ marginRight: "15px"}}>
+        <div style={{ marginRight: "15px" }}>
           <label htmlFor="product-type-filter">Product Type: </label>
           <select
             id="product-type-filter"
@@ -141,7 +144,7 @@ export default function AnalysisTab({ data }) {
             ))}
           </select>
         </div>
-        <div style={{ marginRight: "15px"}}>
+        <div style={{ marginRight: "15px" }}>
           <label htmlFor="project-area-filter">Project Area: </label>
           <select
             id="project-area-filter"
@@ -158,7 +161,7 @@ export default function AnalysisTab({ data }) {
             ))}
           </select>
         </div>
-        <div style={{ marginRight: "15px"}}>
+        <div style={{ marginRight: "15px" }}>
           <label htmlFor="posted-citation-filter">Posted Citation: </label>
           <select
             id="posted-citation-filter"
@@ -177,41 +180,53 @@ export default function AnalysisTab({ data }) {
             ))}
           </select>
         </div>
-        <button onClick={clearFilters}>
-          Clear All Filters
-      </button>
+        <button onClick={clearFilters}>Clear All Filters</button>
       </div>
 
       <Limit onLimitChange={handleLimitChange} />
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>Company</th>
-            <th>Inspection Date</th>
-            <th>Classification</th>
-            <th>Product Type</th>
-            <th>Project Area</th>
-            <th>Posted Citations</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedData.map((item, index) => (
-            <tr key={index}>
-              <td>{item.legal_name}</td>
-              <td>{new Date(item.inspection_date).toLocaleDateString()}</td>
-              <td>{item.classification}</td>
-              <td>{item.product_type}</td>
-              <td>{item.project_area}</td>
-              <td>{item.posted_citations}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <Pagination
-        totalPages={totalPages}
-        currentPage={page}
-        onPageChange={setPage}
-      />
+
+      {/* Table Section */}
+      {filteredData.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "16px" }}>
+          <h2>No Inspections available for this company.</h2>
+        </div>
+      ) : (
+        <>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>FEI Number</th>
+                <th>Classification</th>
+                <th>Product Type</th>
+                <th>Project Area</th>
+                <th>Posted Citations</th>
+                <th>Fiscal Year</th>
+                <th>Inspection End Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedData.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.legal_name}</td>
+                  <td>{item.fei_number}</td>
+                  <td>{item.classification}</td>
+                  <td>{item.product_type}</td>
+                  <td>{item.project_area}</td>
+                  <td>{item.posted_citations}</td>
+                  <td>{item.fiscal_year}</td>
+                  <td>{new Date(item.inspection_end_date).toLocaleDateString('en-GB')}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Pagination
+            totalPages={totalPages}
+            page={page}
+            onPageChange={setPage}
+          />
+        </>
+      )}
     </>
   );
 }
