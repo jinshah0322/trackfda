@@ -130,7 +130,7 @@ export default function Page({ params }) {
 
       {/* Tab Content */}
       <div className="company">
-        {activeTab === "analysis" && <AnalysisTab data={{companyAnalysisDetails,inspectionDetails,inspectionClassification}} />}
+        {activeTab === "analysis" && <AnalysisTab data={{companyAnalysisDetails,inspectionDetails,inspectionClassification,companyname:params.companyname}} />}
         {activeTab === "facilities" && <FacilitiesTab data={companyFacilityDetails}/>}
         {activeTab === "form483s" && <Form483sTab data={form483Details  }/>}
         {activeTab === "warningletters" && <WarningLettersTab  data={warningLettersDetails}/>}

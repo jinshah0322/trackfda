@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Limit from "../limit";
 import Pagination from "../pagination"; // Import the Pagination component
+import Link from "next/link";
 
 export default function AnalysisTab({ data }) {
   const [selectedClassification, setSelectedClassification] = useState("All");
@@ -203,6 +204,7 @@ export default function AnalysisTab({ data }) {
                 <th>Posted Citations</th>
                 <th>Fiscal Year</th>
                 <th>Inspection End Date</th>
+                <th>Inspection Citations</th>
               </tr>
             </thead>
             <tbody>
@@ -216,6 +218,18 @@ export default function AnalysisTab({ data }) {
                   <td>{item.posted_citations}</td>
                   <td>{item.fiscal_year}</td>
                   <td>{new Date(item.inspection_end_date).toLocaleDateString('en-GB')}</td>
+                  <td>{(item.posted_citations).toLowerCase()==='yes'?<Link href={`/company/${data.companyname}/${item.fei_number}`}><button
+                    style={{
+                      padding: "8px 16px",
+                      backgroundColor: "#007bff",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    View Citations
+                  </button></Link>:'N/A'}</td>
                 </tr>
               ))}
             </tbody>
