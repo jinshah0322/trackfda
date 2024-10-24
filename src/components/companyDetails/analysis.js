@@ -7,32 +7,32 @@ export default function AnalysisTab({ data }) {
   const [selectedProductType, setSelectedProductType] = useState("All");
   const [selectedProjectArea, setSelectedProjectArea] = useState("All");
   const [selectedPostedCitation, setSelectedPostedCitation] = useState("All");
-  const [limit, setLimit] = useState(5); // Default limit
-  const [page, setPage] = useState(1); // Default page
+  const [limit, setLimit] = useState(5);
+  const [page, setPage] = useState(1);
 
   const handleFilterChange = (event) => {
     setSelectedClassification(event.target.value);
-    setPage(1); // Reset to the first page when the filter changes
+    setPage(1);
   };
 
   const handleProductTypeChange = (event) => {
     setSelectedProductType(event.target.value);
-    setPage(1); // Reset to the first page when the filter changes
+    setPage(1);
   };
 
   const handleProjectAreaChange = (event) => {
     setSelectedProjectArea(event.target.value);
-    setPage(1); // Reset to the first page when the filter changes
+    setPage(1);
   };
 
   const handlePostedCitationChange = (event) => {
     setSelectedPostedCitation(event.target.value);
-    setPage(1); // Reset to the first page when the filter changes
+    setPage(1);
   };
 
   const handleLimitChange = (newLimit) => {
     setLimit(newLimit);
-    setPage(1); // Reset to the first page when the limit changes
+    setPage(1);
   };
 
   const clearFilters = () => {
@@ -40,7 +40,7 @@ export default function AnalysisTab({ data }) {
     setSelectedProductType("All");
     setSelectedProjectArea("All");
     setSelectedPostedCitation("All");
-    setPage(1); // Reset to the first page when filters are cleared
+    setPage(1);
   };
 
   const filteredData = data.inspectionDetails.filter((item) => {
@@ -101,6 +101,7 @@ export default function AnalysisTab({ data }) {
         </div>
       </div>
 
+      {/*Filter section*/}
       <div className="filter-container"
         style={{
           marginBottom: "10px",
