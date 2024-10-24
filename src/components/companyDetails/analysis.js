@@ -188,7 +188,7 @@ export default function AnalysisTab({ data }) {
         <thead>
           <tr>
             <th>Company</th>
-            <th>Inspection Date</th>
+            <th>FEI Number</th>
             <th>Classification</th>
             <th>Product Type</th>
             <th>Project Area</th>
@@ -199,7 +199,7 @@ export default function AnalysisTab({ data }) {
           {paginatedData.map((item, index) => (
             <tr key={index}>
               <td>{item.legal_name}</td>
-              <td>{new Date(item.inspection_date).toLocaleDateString()}</td>
+              <td>{item.fei_number}</td>
               <td>{item.classification}</td>
               <td>{item.product_type}</td>
               <td>{item.project_area}</td>
