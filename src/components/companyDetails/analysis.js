@@ -101,8 +101,9 @@ export default function AnalysisTab({ data }) {
         </div>
       </div>
 
-      {/*Filter section*/}
-      <div className="filter-container"
+      {/* Filter section */}
+      <div
+        className="filter-container"
         style={{
           marginBottom: "10px",
           display: "flex",
@@ -110,7 +111,8 @@ export default function AnalysisTab({ data }) {
           flexWrap: "wrap",
         }}
       >
-        <div style={{ marginRight: "15px"}}>
+        {/* Filter Dropdowns */}
+        <div style={{ marginRight: "15px" }}>
           <label htmlFor="classification-filter">Classification: </label>
           <select
             id="classification-filter"
@@ -125,7 +127,7 @@ export default function AnalysisTab({ data }) {
             ))}
           </select>
         </div>
-        <div style={{ marginRight: "15px"}}>
+        <div style={{ marginRight: "15px" }}>
           <label htmlFor="product-type-filter">Product Type: </label>
           <select
             id="product-type-filter"
@@ -142,7 +144,7 @@ export default function AnalysisTab({ data }) {
             ))}
           </select>
         </div>
-        <div style={{ marginRight: "15px"}}>
+        <div style={{ marginRight: "15px" }}>
           <label htmlFor="project-area-filter">Project Area: </label>
           <select
             id="project-area-filter"
@@ -159,7 +161,7 @@ export default function AnalysisTab({ data }) {
             ))}
           </select>
         </div>
-        <div style={{ marginRight: "15px"}}>
+        <div style={{ marginRight: "15px" }}>
           <label htmlFor="posted-citation-filter">Posted Citation: </label>
           <select
             id="posted-citation-filter"
@@ -178,41 +180,49 @@ export default function AnalysisTab({ data }) {
             ))}
           </select>
         </div>
-        <button onClick={clearFilters}>
-          Clear All Filters
-      </button>
+        <button onClick={clearFilters}>Clear All Filters</button>
       </div>
 
       <Limit onLimitChange={handleLimitChange} />
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>Company</th>
-            <th>FEI Number</th>
-            <th>Classification</th>
-            <th>Product Type</th>
-            <th>Project Area</th>
-            <th>Posted Citations</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedData.map((item, index) => (
-            <tr key={index}>
-              <td>{item.legal_name}</td>
-              <td>{item.fei_number}</td>
-              <td>{item.classification}</td>
-              <td>{item.product_type}</td>
-              <td>{item.project_area}</td>
-              <td>{item.posted_citations}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <Pagination
-        totalPages={totalPages}
-        currentPage={page}
-        onPageChange={setPage}
-      />
+
+      {/* Table Section */}
+      {filteredData.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "16px" }}>
+          <h2>No Inspections available for this company.</h2>
+        </div>
+      ) : (
+        <>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>FEI Number</th>
+                <th>Classification</th>
+                <th>Product Type</th>
+                <th>Project Area</th>
+                <th>Posted Citations</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedData.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.legal_name}</td>
+                  <td>{item.fei_number}</td>
+                  <td>{item.classification}</td>
+                  <td>{item.product_type}</td>
+                  <td>{item.project_area}</td>
+                  <td>{item.posted_citations}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Pagination
+            totalPages={totalPages}
+            page={page}
+            onPageChange={setPage}
+          />
+        </>
+      )}
     </>
   );
 }
