@@ -7,7 +7,7 @@ export default function AnalysisTab({ data }) {
   const [selectedProductType, setSelectedProductType] = useState("All");
   const [selectedProjectArea, setSelectedProjectArea] = useState("All");
   const [selectedPostedCitation, setSelectedPostedCitation] = useState("All");
-  const [limit, setLimit] = useState(10); // Default limit
+  const [limit, setLimit] = useState(5); // Default limit
   const [page, setPage] = useState(1); // Default page
 
   const handleFilterChange = (event) => {
