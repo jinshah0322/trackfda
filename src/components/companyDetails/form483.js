@@ -27,7 +27,7 @@ export default function Form483sTab({ data }) {
             {data.map((item, index) => (
               <tr key={index}>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                  {item.date_posted}
+                  {new Date(item.date_posted).toLocaleDateString('en-GB')}
                 </td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                   {item.legal_name}
