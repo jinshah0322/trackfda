@@ -1,5 +1,6 @@
 import { useState } from "react";
 import InspectionPieChart from "../InspectionPieChart";
+import InspectionBarChart from "../inspectionbarchart";
 import Limit from "../limit";
 import Pagination from "../pagination"; // Import the Pagination component
 import Link from "next/link";
@@ -84,7 +85,50 @@ const pieChartData = {
   labels: inspectionData.map(item => item.classification), // ["Class A", "Class B", "Class C"]
   values: inspectionData.map(item => item.count) // [10, 20, 30]
 };
-console.log(pieChartData,'da');
+
+const uniqueYears = [...new Set(data.inspectionDetails.map(item => item.fiscal_year.toString()))].sort();
+const barChartData = {
+  labels: uniqueYears,
+  datasets: [
+    {
+      label: 'ΟΑΙ',
+      data: Array(14).fill(0),
+      backgroundColor: 'orange',
+      stack: 'Stack 0',
+    },
+    {
+      label: 'VAI',
+      data: Array(14).fill(0),
+      backgroundColor: 'dodgerblue',
+      stack: 'Stack 0',
+    },
+    {
+      label: 'ΝΑΙ',
+      data: Array(14).fill(0),
+      backgroundColor: 'skyblue',
+      stack: 'Stack 0',
+    },
+  ],
+};
+
+data.inspectionDetails.forEach((item) => {
+  const yearIndex = barChartData.labels.indexOf(item.fiscal_year.toString());
+  
+  if (yearIndex !== -1) {
+    if (item.classification === 'OAI') {
+      barChartData.datasets[0].data[yearIndex] += 1;
+    } else if (item.classification === 'VAI') {
+      barChartData.datasets[1].data[yearIndex] += 1;
+    } else if (item.classification === 'NAI') {
+      barChartData.datasets[2].data[yearIndex] += 1;
+    }
+  } else {
+    console.warn(`Fiscal year ${item.fiscal_year} not found in barChartData.labels`);
+  }
+});
+
+
+console.log(barChartData)
 
   // Calculate total pages based on filtered data and limit
   const totalPages = Math.ceil(filteredData.length / limit);
@@ -121,8 +165,18 @@ console.log(pieChartData,'da');
           </p>
         </div>
       </div>
-
+ {/* Pass the data to the Pie Chart component */}
+ <div style={{
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "space-between",
+          flexWrap: "wrap",
+        }}>
+      <InspectionPieChart data={pieChartData} />  
+      <InspectionBarChart chartData={barChartData}/>
+ </div>
       {/* Filter section */}
+  
       <div
         className="filter-container"
         style={{
@@ -261,8 +315,7 @@ console.log(pieChartData,'da');
           />
         </>
       )}
-      {/* Pass the data to the Pie Chart component */}
-      <InspectionPieChart data={pieChartData} />  
+     
     </>
   );
 }
