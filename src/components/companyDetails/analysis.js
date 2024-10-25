@@ -1,4 +1,5 @@
 import { useState } from "react";
+import InspectionPieChart from "../InspectionPieChart";
 import Limit from "../limit";
 import Pagination from "../pagination"; // Import the Pagination component
 
@@ -64,13 +65,32 @@ export default function AnalysisTab({ data }) {
       isPostedCitationMatch
     );
   });
+  
+  function countOccurrences(array, key) {
+    return array.reduce((acc, item) => {
+      const feiNumber = item[key]||Unkown;
+      acc[feiNumber] = (acc[feiNumber] || 0) + 1;
+      return acc;
+    }, {});
+  }
+  const InspectionClassificationCount=countOccurrences(data.inspectionDetails,'classification')
+
+const inspectionData = Object.entries(InspectionClassificationCount).map(([classification, count]) => ({
+  classification,
+  count,
+}));
+const pieChartData = {
+  labels: inspectionData.map(item => item.classification), // ["Class A", "Class B", "Class C"]
+  values: inspectionData.map(item => item.count) // [10, 20, 30]
+};
+console.log(pieChartData,'da');
 
   // Calculate total pages based on filtered data and limit
   const totalPages = Math.ceil(filteredData.length / limit);
 
   // Slice the filtered data to apply the limit and page
   const paginatedData = filteredData.slice((page - 1) * limit, page * limit);
-
+   console.log(data)
   return (
     <>
       {/* Cards Section */}
@@ -227,6 +247,8 @@ export default function AnalysisTab({ data }) {
           />
         </>
       )}
+      {/* Pass the data to the Pie Chart component */}
+      <InspectionPieChart data={pieChartData} />  
     </>
   );
 }

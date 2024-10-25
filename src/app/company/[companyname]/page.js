@@ -8,7 +8,7 @@ import AnalysisTab from "@/components/companyDetails/analysis";
 import FacilitiesTab from "@/components/companyDetails/facilities";
 import Form483sTab from "@/components/companyDetails/form483";
 import WarningLettersTab from "@/components/companyDetails/warningletter";
-import '@/app/style.css'
+
 
 export default function Page({ params }) {
   const [loading, setLoading] = useState(true);
