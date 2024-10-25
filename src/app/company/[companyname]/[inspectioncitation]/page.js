@@ -30,7 +30,7 @@ export default function Page({ params }) {
         setLoading(false);
       }
     };
-    
+
     fetchCitationData();
   }, [companyName, inspectionCitation]);
 
@@ -59,39 +59,43 @@ export default function Page({ params }) {
         </Link>
       </div>
       <h1>Inspection Citation</h1>
-      
-      <Limit limit={limit} onLimitChange={handleLimitChange} />
 
       {paginatedData.length ? (
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Company</th>
-              <th>FEI Number</th>
-              <th>Act CFR Number</th>
-              <th>Short Description</th>
-              <th>Long Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedData.map((item, index) => (
-              <tr key={index}>
-                <td>{item.legal_name}</td>
-                <td>{item.fei_number}</td>
-                <td>{item.act_cfr_number}</td>
-                <td>{item.short_description}</td>
-                <td>{item.long_description}</td>
+        <>
+          <Limit limit={limit} onLimitChange={handleLimitChange} />
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>FEI Number</th>
+                <th>Act CFR Number</th>
+                <th>Short Description</th>
+                <th>Long Description</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {paginatedData.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.legal_name}</td>
+                  <td>{item.fei_number}</td>
+                  <td>{item.act_cfr_number}</td>
+                  <td>{item.short_description}</td>
+                  <td>{item.long_description}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
       ) : (
         <div style={{ textAlign: "center", padding: "16px" }}>
           <h2>No facilities available for this company.</h2>
         </div>
       )}
-      
-      <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
     </div>
   );
 }
