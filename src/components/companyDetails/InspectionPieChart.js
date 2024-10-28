@@ -31,7 +31,7 @@ const InspectionPieChart = ({ data }) => {
 
   return (
     <div style={{ width: "300px", height: "300px" ,marginBottom:"80px"}}> 
-      <h3>Inspection Classification</h3>
+      <h3 style={{ textAlign: 'center' }}>Inspection Classification</h3>
       <Pie data={pieData} />
     </div>
   );

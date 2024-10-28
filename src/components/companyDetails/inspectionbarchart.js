@@ -7,7 +7,7 @@ const InspectionBarChart = ({ chartData }) => {
     console.log(chartData)
   return (
     <div className="container">
-      <h1>Inspection done by year</h1>
+      <h3 style={{ textAlign: 'center' }}>Inspection done by year</h3>
       <Bar  style={{
         width:"700px",
         margin:'2rem'
