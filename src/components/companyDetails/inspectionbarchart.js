@@ -4,7 +4,6 @@ import { Bar } from 'react-chartjs-2';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const InspectionBarChart = ({ chartData }) => {
-    console.log(chartData)
   return (
     <div className="container">
       <h3 style={{ textAlign: 'center' }}>Inspection done by year</h3>

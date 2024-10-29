@@ -156,3 +156,8 @@ tr:hover td {
         padding: 8px;
     }
 }
+
+.linkDecoration {
+    text-decoration: none;
+    color: blue;
+}

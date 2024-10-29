@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Limit from "../limit";
 import Pagination from "../pagination";
+import Link from "next/link";
+import '@/app/style.css'
 
 export default function FacilitiesTab({ data }) {
   const [limit, setLimit] = useState(5);
@@ -60,7 +62,7 @@ export default function FacilitiesTab({ data }) {
                     {item.legal_name}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.fei_number}
+                    <Link className="linkDecoration" href={`/company/${item.legal_name}/facility/${item.fei_number}`}>{item.fei_number}</Link>
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     {item.city || "N/A"} {/* Default value for null */}

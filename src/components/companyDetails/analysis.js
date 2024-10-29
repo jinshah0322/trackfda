@@ -127,15 +127,11 @@ data.inspectionDetails.forEach((item) => {
   }
 });
 
-
-console.log(barChartData)
-
   // Calculate total pages based on filtered data and limit
   const totalPages = Math.ceil(filteredData.length / limit);
 
   // Slice the filtered data to apply the limit and page
   const paginatedData = filteredData.slice((page - 1) * limit, page * limit);
-   console.log(data)
   return (
     <>
       {/* Cards Section */}
