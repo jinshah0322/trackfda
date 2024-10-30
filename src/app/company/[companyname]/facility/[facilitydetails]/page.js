@@ -4,7 +4,7 @@ import Loading from "@/components/loading";
 import { useEffect, useState } from "react";
 import "@/app/style.css";
 import FacilityOverview from "@/components/facilityDetails/facilityoverview";
-import Form483sTab from "@/components/companyDetails/form483";
+import Formb from "@/components/companyDetails/form483";
 import InspectionPieChart from "@/components/InspectionPieChart";
 import InspectionBarChart from "@/components/inspectionbarchart";
 
