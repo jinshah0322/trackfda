@@ -13,7 +13,8 @@ export default function Page({ params }) {
   const [loading, setLoading] = useState(true);
   const [facilityDetails, setFacilityDetails] = useState(null);
   const[form483Details,setForm483Details]=useState(null);
-  const [inspectionDetails, setInspectionDetails] = useState(null)
+  const [inspectionDetails, setInspectionDetails] = useState(null);
+  const [complainceaction,setcomplainceaction]=useState(null);
 
   async function getFacilityDetails() {
     try {
@@ -87,6 +88,7 @@ export default function Page({ params }) {
           </>
         )}
          {activeTab === "form483s" && <Form483sTab data={form483Details  }/>}
+         {activeTab === "complaince-action" && < Timeline actions={actions} />}
       </div>
     </div>
   );
