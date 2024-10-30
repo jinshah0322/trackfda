@@ -5,6 +5,7 @@ import Pagination from "../pagination";
 export default function Form483sTab({ data }) {
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(1);
+  console.log(data)
 
   const totalPages = Math.ceil(data.length / limit);
   const paginatedData = data.slice((page - 1) * limit, page * limit);

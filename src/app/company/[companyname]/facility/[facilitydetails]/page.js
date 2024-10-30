@@ -4,11 +4,15 @@ import Loading from "@/components/loading";
 import { useEffect, useState } from "react";
 import "@/app/style.css";
 import FacilityOverview from "@/components/facilityDetails/facilityoverview";
+import Form483sTab from "@/components/companyDetails/form483";
+import InspectionPieChart from "@/components/InspectionPieChart";
+import InspectionBarChart from "@/components/inspectionbarchart";
 
 export default function Page({ params }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
   const [facilityDetails, setFacilityDetails] = useState(null);
+  const[form483Details,setForm483Details]=useState(null);
   const [inspectionDetails, setInspectionDetails] = useState(null)
 
   async function getFacilityDetails() {
@@ -17,8 +21,10 @@ export default function Page({ params }) {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails/facilitydetails?fei_number=${params.facilitydetails}`
       );
       response = await response.json();
+      console.log(response.published483Result)
       setFacilityDetails(response.facilityDetails[0]);
-      setInspectionDetails(response.inspectionResult)
+      setInspectionDetails(response.inspectionResult);
+      setForm483Details(response.published483Result);
       return response; // Return the response for further processing if needed
     } catch (error) {
       console.error("Error fetching company details:", error);
@@ -80,6 +86,7 @@ export default function Page({ params }) {
             <FacilityOverview data={{facilityDetails, inspectionDetails}}/>
           </>
         )}
+         {activeTab === "form483s" && <Form483sTab data={form483Details  }/>}
       </div>
     </div>
   );
