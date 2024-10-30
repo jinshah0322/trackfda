@@ -101,19 +101,19 @@ export default function AnalysisTab({ data }) {
     datasets: [
       {
         label: "ΟΑΙ",
-        data: Array(14).fill(0),
+        data: Array(uniqueYears.length).fill(0),
         backgroundColor: "orange",
         stack: "Stack 0",
       },
       {
         label: "VAI",
-        data: Array(14).fill(0),
+        data: Array(uniqueYears.length).fill(0),
         backgroundColor: "dodgerblue",
         stack: "Stack 0",
       },
       {
         label: "ΝΑΙ",
-        data: Array(14).fill(0),
+        data: Array(uniqueYears.length).fill(0),
         backgroundColor: "skyblue",
         stack: "Stack 0",
       },

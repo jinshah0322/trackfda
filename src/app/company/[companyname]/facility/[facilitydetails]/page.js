@@ -3,10 +3,7 @@ import Link from "next/link";
 import Loading from "@/components/loading";
 import { useEffect, useState } from "react";
 import "@/app/style.css";
-import Map from "@/components/map";
 import FacilityOverview from "@/components/facilityDetails/facilityoverview";
-import InspectionPieChart from "@/components/InspectionPieChart";
-import InspectionBarChart from "@/components/inspectionbarchart";
 
 export default function Page({ params }) {
   const [activeTab, setActiveTab] = useState("overview");
@@ -80,10 +77,7 @@ export default function Page({ params }) {
       <div className="facility-details-section">
         {activeTab === "overview" && (
           <>
-            <FacilityOverview facilityoverview={facilityDetails}/>
-            <Map location={facilityDetails.firm_address} />
-            {/* <InspectionPieChart data={pieChartData} />
-            <InspectionBarChart chartData={barChartData} /> */}
+            <FacilityOverview data={{facilityDetails, inspectionDetails}}/>
           </>
         )}
       </div>
