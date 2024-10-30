@@ -122,7 +122,6 @@ export default function FacilityOverview({ data }) {
           </div>
         </div>
       </div>
-      <hr/>
       <div
         style={{
           display: "flex",

@@ -7,7 +7,6 @@
 .cardsContainer {
     display: flex;
     gap: 16px;
-    margin-bottom: 30px;
 }
 
 .card {
@@ -20,7 +19,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s ease-in-out;
 }
 
 .cardTitle {
