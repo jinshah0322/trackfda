@@ -5,12 +5,14 @@ import { useEffect, useState } from "react";
 import "@/app/style.css";
 import Map from "@/components/map";
 import FacilityOverview from "@/components/facilityDetails/facilityoverview";
+import InspectionPieChart from "@/components/InspectionPieChart";
+import InspectionBarChart from "@/components/inspectionbarchart";
 
 export default function Page({ params }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
   const [facilityDetails, setFacilityDetails] = useState(null);
-  console.log()
+  const [inspectionDetails, setInspectionDetails] = useState(null)
 
   async function getFacilityDetails() {
     try {
@@ -18,9 +20,9 @@ export default function Page({ params }) {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails/facilitydetails?fei_number=${params.facilitydetails}`
       );
       response = await response.json();
-      console.log(response)
-      return response; 
-      // Return the response for further processing if needed
+      setFacilityDetails(response.facilityDetails[0]);
+      setInspectionDetails(response.inspectionResult)
+      return response; // Return the response for further processing if needed
     } catch (error) {
       console.error("Error fetching company details:", error);
       return null;
@@ -30,7 +32,7 @@ export default function Page({ params }) {
   useEffect(() => {
     const fetchFacilityDetails = async () => {
       setLoading(true);
-      setFacilityDetails(await getFacilityDetails());
+      await getFacilityDetails();
       setLoading(false);
     };
     fetchFacilityDetails();
@@ -78,8 +80,10 @@ export default function Page({ params }) {
       <div className="facility-details-section">
         {activeTab === "overview" && (
           <>
-            <FacilityOverview facilityoverview={facilityDetails.facilityDetails[0]}/>
-            <Map location={facilityDetails.facilityDetails[0].firm_address} />
+            <FacilityOverview facilityoverview={facilityDetails}/>
+            <Map location={facilityDetails.firm_address} />
+            {/* <InspectionPieChart data={pieChartData} />
+            <InspectionBarChart chartData={barChartData} /> */}
           </>
         )}
          {activeTab === "form483s" && <Form483sTab data={form483Details  }/>}

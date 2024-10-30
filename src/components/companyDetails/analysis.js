@@ -67,65 +67,76 @@ export default function AnalysisTab({ data }) {
       isPostedCitationMatch
     );
   });
-  
+
   function countOccurrences(array, key) {
     return array.reduce((acc, item) => {
-      const feiNumber = item[key]||Unkown;
+      const feiNumber = item[key] || Unkown;
       acc[feiNumber] = (acc[feiNumber] || 0) + 1;
       return acc;
     }, {});
   }
-  const InspectionClassificationCount=countOccurrences(data.inspectionDetails,'classification')
+  const InspectionClassificationCount = countOccurrences(
+    data.inspectionDetails,
+    "classification"
+  );
 
-const inspectionData = Object.entries(InspectionClassificationCount).map(([classification, count]) => ({
-  classification,
-  count,
-}));
-const pieChartData = {
-  labels: inspectionData.map(item => item.classification), // ["Class A", "Class B", "Class C"]
-  values: inspectionData.map(item => item.count) // [10, 20, 30]
-};
+  const inspectionData = Object.entries(InspectionClassificationCount).map(
+    ([classification, count]) => ({
+      classification,
+      count,
+    })
+  );
+  const pieChartData = {
+    labels: inspectionData.map((item) => item.classification), // ["Class A", "Class B", "Class C"]
+    values: inspectionData.map((item) => item.count), // [10, 20, 30]
+  };
 
-const uniqueYears = [...new Set(data.inspectionDetails.map(item => item.fiscal_year.toString()))].sort();
-const barChartData = {
-  labels: uniqueYears,
-  datasets: [
-    {
-      label: 'ΟΑΙ',
-      data: Array(14).fill(0),
-      backgroundColor: 'orange',
-      stack: 'Stack 0',
-    },
-    {
-      label: 'VAI',
-      data: Array(14).fill(0),
-      backgroundColor: 'dodgerblue',
-      stack: 'Stack 0',
-    },
-    {
-      label: 'ΝΑΙ',
-      data: Array(14).fill(0),
-      backgroundColor: 'skyblue',
-      stack: 'Stack 0',
-    },
-  ],
-};
+  const uniqueYears = [
+    ...new Set(
+      data.inspectionDetails.map((item) => item.fiscal_year.toString())
+    ),
+  ].sort();
+  const barChartData = {
+    labels: uniqueYears,
+    datasets: [
+      {
+        label: "ΟΑΙ",
+        data: Array(14).fill(0),
+        backgroundColor: "orange",
+        stack: "Stack 0",
+      },
+      {
+        label: "VAI",
+        data: Array(14).fill(0),
+        backgroundColor: "dodgerblue",
+        stack: "Stack 0",
+      },
+      {
+        label: "ΝΑΙ",
+        data: Array(14).fill(0),
+        backgroundColor: "skyblue",
+        stack: "Stack 0",
+      },
+    ],
+  };
 
-data.inspectionDetails.forEach((item) => {
-  const yearIndex = barChartData.labels.indexOf(item.fiscal_year.toString());
-  
-  if (yearIndex !== -1) {
-    if (item.classification === 'OAI') {
-      barChartData.datasets[0].data[yearIndex] += 1;
-    } else if (item.classification === 'VAI') {
-      barChartData.datasets[1].data[yearIndex] += 1;
-    } else if (item.classification === 'NAI') {
-      barChartData.datasets[2].data[yearIndex] += 1;
+  data.inspectionDetails.forEach((item) => {
+    const yearIndex = barChartData.labels.indexOf(item.fiscal_year.toString());
+
+    if (yearIndex !== -1) {
+      if (item.classification === "OAI") {
+        barChartData.datasets[0].data[yearIndex] += 1;
+      } else if (item.classification === "VAI") {
+        barChartData.datasets[1].data[yearIndex] += 1;
+      } else if (item.classification === "NAI") {
+        barChartData.datasets[2].data[yearIndex] += 1;
+      }
+    } else {
+      console.warn(
+        `Fiscal year ${item.fiscal_year} not found in barChartData.labels`
+      );
     }
-  } else {
-    console.warn(`Fiscal year ${item.fiscal_year} not found in barChartData.labels`);
-  }
-});
+  });
 
   // Calculate total pages based on filtered data and limit
   const totalPages = Math.ceil(filteredData.length / limit);
@@ -161,18 +172,20 @@ data.inspectionDetails.forEach((item) => {
           </p>
         </div>
       </div>
- {/* Pass the data to the Pie Chart component */}
- <div style={{
+      {/* Pass the data to the Pie Chart component */}
+      <div
+        style={{
           display: "flex",
           justifyContent: "space-around",
           alignItems: "space-between",
           flexWrap: "wrap",
-        }}>
-      <InspectionPieChart data={pieChartData} />  
-      <InspectionBarChart chartData={barChartData}/>
- </div>
+        }}
+      >
+        <InspectionPieChart data={pieChartData} />
+        <InspectionBarChart chartData={barChartData} />
+      </div>
       {/* Filter section */}
-  
+
       <div
         className="filter-container"
         style={{
@@ -287,19 +300,33 @@ data.inspectionDetails.forEach((item) => {
                   <td>{item.project_area}</td>
                   <td>{item.posted_citations}</td>
                   <td>{item.fiscal_year}</td>
-                  <td>{new Date(item.inspection_end_date).toLocaleDateString('en-GB')}</td>
-                  <td>{(item.posted_citations).toLowerCase()==='yes'?<Link href={`/company/${data.companyname}/${item.fei_number}`}><button
-                    style={{
-                      padding: "8px 16px",
-                      backgroundColor: "#007bff",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    View Citations
-                  </button></Link>:'N/A'}</td>
+                  <td>
+                    {new Date(item.inspection_end_date).toLocaleDateString(
+                      "en-GB"
+                    )}
+                  </td>
+                  <td>
+                    {item.posted_citations.toLowerCase() === "yes" ? (
+                      <Link
+                        href={`/company/${data.companyname}/${item.fei_number}`}
+                      >
+                        <button
+                          style={{
+                            padding: "8px 16px",
+                            backgroundColor: "#007bff",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          View Citations
+                        </button>
+                      </Link>
+                    ) : (
+                      "N/A"
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -311,7 +338,6 @@ data.inspectionDetails.forEach((item) => {
           />
         </>
       )}
-     
     </>
   );
 }
