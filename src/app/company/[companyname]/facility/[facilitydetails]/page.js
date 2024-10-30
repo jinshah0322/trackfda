@@ -3,11 +3,12 @@ import Link from "next/link";
 import Loading from "@/components/loading";
 import { useEffect, useState } from "react";
 import "@/app/style.css";
+import Map from "@/components/map";
 
 export default function Page({ params }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
-  const [facilityDetails, setFacilityDetails] = useState(null)
+  const [facilityDetails, setFacilityDetails] = useState(null);
 
   async function getFacilityDetails() {
     try {
@@ -70,17 +71,31 @@ export default function Page({ params }) {
           Form 483&apos;s
         </a>
       </div>
-      <div className="facility-details">
-        {facilityDetails ? (
-          <>
-            <p><strong>Facility Name:</strong> {facilityDetails.facilityDetails[0].legal_name}</p>
-            <p><strong>FEI Number:</strong> {facilityDetails.facilityDetails[0].fei_number}</p>
-            <p><strong>Firm Profile:</strong> {facilityDetails.facilityDetails[0].firm_profile}</p>
-            <p><strong>Location:</strong> {facilityDetails.facilityDetails[0].firm_address}</p>
-          </>
-        ) : (
-          <p>No details available.</p>
-        )}
+      <div className="facility-details-section">
+        <h2>Facility Details</h2>
+        <p>
+          <strong>Name:</strong> {facilityDetails.facilityDetails[0].legal_name}
+        </p>
+        <p>
+          <strong>FEI Number:</strong>{" "}
+          {facilityDetails.facilityDetails[0].fei_number}
+        </p>
+        <p>
+          <strong>Firm Profile:</strong>{" "}
+          <a
+            href={facilityDetails.facilityDetails[0].firm_profile}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {facilityDetails.facilityDetails[0].firm_profile}
+          </a>
+        </p>
+        <p>
+          <strong>Location:</strong>{" "}
+          {facilityDetails.facilityDetails[0].firm_address}
+        </p>
+
+        <Map location={facilityDetails.facilityDetails[0].firm_address} />
       </div>
     </div>
   );
