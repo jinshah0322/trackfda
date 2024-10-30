@@ -1,6 +1,6 @@
 import { useState } from "react";
-import InspectionPieChart from "./InspectionPieChart";
-import InspectionBarChart from "./inspectionbarchart";
+import InspectionPieChart from "../InspectionPieChart";
+import InspectionBarChart from "../inspectionbarchart";
 import Limit from "../limit";
 import Pagination from "../pagination"; // Import the Pagination component
 import Link from "next/link";

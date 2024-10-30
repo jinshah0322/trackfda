@@ -20,6 +20,7 @@
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
@@ -50,16 +51,16 @@
 /* Tabs */
 .tabs {
     display: flex;
-    gap: 15px;
-    border-bottom: 2px solid #ddd;
     margin-bottom: 20px;
 }
 
 .tab {
     padding: 10px 20px;
     cursor: pointer;
-    color: black;
     border-bottom: 2px solid transparent;
+    margin-right: 15px;
+    text-decoration: none;
+    color: black;
     transition: color 0.3s ease;
 }
 
@@ -75,9 +76,9 @@
 /* Cards */
 .cards-container {
     display: flex;
-    gap: 20px;
+    justify-content: space-between;
     margin-bottom: 30px;
-    flex-wrap: wrap;
+    /* Space between cards and table */
 }
 
 .card {
@@ -87,7 +88,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     padding: 16px;
     text-align: center;
-    width: calc(25% - 20px); /* Allows four cards per row with space between */
+    width: 22%;
     transition: transform 0.2s ease-in-out;
 }
 
@@ -110,6 +111,7 @@
 /* Inspection Table */
 .inspection-table-container {
     margin-top: 20px;
+    /* Space between cards and table */
 }
 
 table {
@@ -165,7 +167,7 @@ tr:hover td {
     color: blue;
 }
 
-/* Facility Details Section */
+
 .facility-details-section {
     margin: 20px 0;
 }

@@ -4,6 +4,7 @@ import Loading from "@/components/loading";
 import { useEffect, useState } from "react";
 import "@/app/style.css";
 import Map from "@/components/map";
+import FacilityOverview from "@/components/facilityDetails/facilityoverview";
 
 export default function Page({ params }) {
   const [activeTab, setActiveTab] = useState("overview");
@@ -72,30 +73,12 @@ export default function Page({ params }) {
         </a>
       </div>
       <div className="facility-details-section">
-        <h2>Facility Details</h2>
-        <p>
-          <strong>Name:</strong> {facilityDetails.facilityDetails[0].legal_name}
-        </p>
-        <p>
-          <strong>FEI Number:</strong>{" "}
-          {facilityDetails.facilityDetails[0].fei_number}
-        </p>
-        <p>
-          <strong>Firm Profile:</strong>{" "}
-          <a
-            href={facilityDetails.facilityDetails[0].firm_profile}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {facilityDetails.facilityDetails[0].firm_profile}
-          </a>
-        </p>
-        <p>
-          <strong>Location:</strong>{" "}
-          {facilityDetails.facilityDetails[0].firm_address}
-        </p>
-
-        <Map location={facilityDetails.facilityDetails[0].firm_address} />
+        {activeTab === "overview" && (
+          <>
+            <FacilityOverview facilityoverview={facilityDetails.facilityDetails[0]}/>
+            <Map location={facilityDetails.facilityDetails[0].firm_address} />
+          </>
+        )}
       </div>
     </div>
   );
