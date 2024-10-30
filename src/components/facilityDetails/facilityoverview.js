@@ -57,6 +57,24 @@ export default function FacilityOverview({data}) {
     ],
   };
 
+  data.inspectionDetails.forEach((item) => {
+    const yearIndex = barChartData.labels.indexOf(item.fiscal_year.toString());
+
+    if (yearIndex !== -1) {
+      if (item.classification === "OAI") {
+        barChartData.datasets[0].data[yearIndex] += 1;
+      } else if (item.classification === "VAI") {
+        barChartData.datasets[1].data[yearIndex] += 1;
+      } else if (item.classification === "NAI") {
+        barChartData.datasets[2].data[yearIndex] += 1;
+      }
+    } else {
+      console.warn(
+        `Fiscal year ${item.fiscal_year} not found in barChartData.labels`
+      );
+    }
+  });
+
   return (
     <div>
       <h2>Facility Details</h2>
@@ -82,8 +100,17 @@ export default function FacilityOverview({data}) {
         {data.facilityDetails.firm_address}
       </p>
       <Map location={data.facilityDetails.firm_address}/>
-      <InspectionPieChart data={pieChartData} />
-      <InspectionBarChart chartData={barChartData} />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "space-between",
+          flexWrap: "wrap",
+        }}
+      >
+        <InspectionPieChart data={pieChartData} />
+        <InspectionBarChart chartData={barChartData} />
+      </div>
     </div>
   );
 }
