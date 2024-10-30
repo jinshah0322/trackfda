@@ -14,6 +14,8 @@ export default function Page({ params }) {
   const [facilityDetails, setFacilityDetails] = useState(null);
   const [form483Details, setForm483Details] = useState(null);
   const [inspectionDetails, setInspectionDetails] = useState(null);
+  const [complianceAction, setComplianceAction] = useState(null);
+  const [importRefusal, setImportRefusal] = useState(null);
 
   async function getFacilityDetails() {
     try {
@@ -25,6 +27,8 @@ export default function Page({ params }) {
       setFacilityDetails(response.facilityDetails[0]);
       setInspectionDetails(response.inspectionResult);
       setForm483Details(response.published483Result);
+      setComplianceAction(response.ComplianceActionsCount)
+      setImportRefusal(response.importRefusals)
       return response; // Return the response for further processing if needed
     } catch (error) {
       console.error("Error fetching company details:", error);
@@ -81,7 +85,7 @@ export default function Page({ params }) {
         </a>
       </div>
       <div className="facility-details-section">
-        {activeTab === "overview" && <FacilityOverview data={{ facilityDetails, inspectionDetails }} />}
+        {activeTab === "overview" && <FacilityOverview data={{ facilityDetails, inspectionDetails,complianceAction,importRefusal }} />}
         {activeTab === "form483s" && <Form483sTab data={form483Details} />}
       </div>
     </div>
