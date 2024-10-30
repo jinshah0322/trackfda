@@ -1,8 +1,9 @@
 import Map from "../map";
 import InspectionPieChart from "@/components/InspectionPieChart";
 import InspectionBarChart from "@/components/inspectionbarchart";
+import styles from './FacilityOverview.module.css'; 
 
-export default function FacilityOverview({data}) {
+export default function FacilityOverview({ data }) {
   function countOccurrences(array, key) {
     return array.reduce((acc, item) => {
       const feiNumber = item[key] || Unkown;
@@ -26,7 +27,7 @@ export default function FacilityOverview({data}) {
     labels: inspectionData.map((item) => item.classification), // ["Class A", "Class B", "Class C"]
     values: inspectionData.map((item) => item.count), // [10, 20, 30]
   };
-  
+
   const uniqueYears = [
     ...new Set(
       data.inspectionDetails.map((item) => item.fiscal_year.toString())
@@ -77,29 +78,51 @@ export default function FacilityOverview({data}) {
 
   return (
     <div>
-      <h2>Facility Details</h2>
-      <p>
-        <strong>Name:</strong> {data.facilityDetails.legal_name}
-      </p>
-      <p>
-        <strong>FEI Number:</strong>{" "}
-        {data.facilityDetails.fei_number}
-      </p>
-      <p>
-        <strong>Firm Profile:</strong>{" "}
-        <a
-          href={data.facilityDetails.firm_profile}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {data.facilityDetails.firm_profile}
-        </a>
-      </p>
-      <p>
-        <strong>Location:</strong>{" "}
-        {data.facilityDetails.firm_address}
-      </p>
-      <Map location={data.facilityDetails.firm_address}/>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div>
+          <h2>Facility Details</h2>
+          <p>
+            <strong>Name:</strong> {data.facilityDetails.legal_name}
+          </p>
+          <p>
+            <strong>FEI Number:</strong> {data.facilityDetails.fei_number}
+          </p>
+          <p>
+            <strong>Firm Profile:</strong>{" "}
+            <a
+              href={data.facilityDetails.firm_profile}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {data.facilityDetails.firm_profile}
+            </a>
+          </p>
+          <p>
+            <strong>Location:</strong> {data.facilityDetails.firm_address}
+          </p>
+        </div>
+        <div className={styles.cardsContainer} style={{marginRight:"100px"}}>
+          <div className={styles.card}>
+            <p className={styles.cardTitle}>Inspections</p>
+            <p className={styles.cardNumber}>
+              {data.inspectionDetails ? data.inspectionDetails.length : 0}
+            </p>
+          </div>
+          <div className={styles.card}>
+            <p className={styles.cardTitle}>Compliance action</p>
+            <p className="card-number">
+            {data.complianceAction ? data.complianceAction.length : 0}
+            </p>
+          </div>
+          <div className={styles.card}>
+            <p className={styles.cardTitle}>Import Refusal</p>
+            <p className="card-number">
+              {data.importRefusal ? data.importRefusal.length : 0}
+            </p>
+          </div>
+        </div>
+      </div>
+      <hr/>
       <div
         style={{
           display: "flex",
@@ -111,6 +134,7 @@ export default function FacilityOverview({data}) {
         <InspectionPieChart data={pieChartData} />
         <InspectionBarChart chartData={barChartData} />
       </div>
+        <Map location={data.facilityDetails.firm_address} />
     </div>
   );
 }

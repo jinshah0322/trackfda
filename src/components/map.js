@@ -4,7 +4,7 @@ export default function Map({ location }) {
       <iframe
         src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${location}`}
         width="100%"
-        height="400"
+        height="350"
         style={{ border: 0 }}
         allowFullScreen=""
         loading="lazy"

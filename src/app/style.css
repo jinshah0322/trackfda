@@ -182,6 +182,6 @@ tr:hover td {
     border: 1px solid #ddd;
     border-radius: 5px;
     overflow: hidden;
-    width: 50%;
-    height: 400px;
+    width: 100%;
+    height: 350px;
 }

@@ -28,7 +28,15 @@ export async function GET(req) {
       [fei_number]
     );
 
-    return NextResponse.json({ facilityDetails,inspectionResult,published483Result }, { status: 200 });
+    const {rows:complianceActions} = await query(
+      `select * from compliance_actions where fei_number=$1`,[fei_number]
+    )
+
+    const {rows:importRefusals} = await query(
+      `select * from import_refusals where fei_number=$1`,[fei_number]
+    )
+
+    return NextResponse.json({ facilityDetails,inspectionResult,published483Result,complianceActions,importRefusals }, { status: 200 });
   } catch (error) {
     console.error("Error fetching data:", error);
     return NextResponse.json(
