@@ -12,8 +12,8 @@ export default function Page({ params }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
   const [facilityDetails, setFacilityDetails] = useState(null);
-  const[form483Details,setForm483Details]=useState(null);
-  const [inspectionDetails, setInspectionDetails] = useState(null)
+  const [form483Details, setForm483Details] = useState(null);
+  const [inspectionDetails, setInspectionDetails] = useState(null);
 
   async function getFacilityDetails() {
     try {
@@ -21,7 +21,7 @@ export default function Page({ params }) {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails/facilitydetails?fei_number=${params.facilitydetails}`
       );
       response = await response.json();
-      console.log(response.published483Result)
+      console.log(response.published483Result);
       setFacilityDetails(response.facilityDetails[0]);
       setInspectionDetails(response.inspectionResult);
       setForm483Details(response.published483Result);
@@ -81,12 +81,8 @@ export default function Page({ params }) {
         </a>
       </div>
       <div className="facility-details-section">
-        {activeTab === "overview" && (
-          <>
-            <FacilityOverview data={{facilityDetails, inspectionDetails}}/>
-          </>
-        )}
-         {activeTab === "form483s" && <Form483sTab data={form483Details  }/>}
+        {activeTab === "overview" && <FacilityOverview data={{ facilityDetails, inspectionDetails }} />}
+        {activeTab === "form483s" && <Form483sTab data={form483Details} />}
       </div>
     </div>
   );
