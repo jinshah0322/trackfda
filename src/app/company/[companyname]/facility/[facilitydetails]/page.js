@@ -10,6 +10,7 @@ export default function Page({ params }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
   const [facilityDetails, setFacilityDetails] = useState(null);
+  console.log()
 
   async function getFacilityDetails() {
     try {
@@ -17,7 +18,9 @@ export default function Page({ params }) {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails/facilitydetails?fei_number=${params.facilitydetails}`
       );
       response = await response.json();
-      return response; // Return the response for further processing if needed
+      console.log(response)
+      return response; 
+      // Return the response for further processing if needed
     } catch (error) {
       console.error("Error fetching company details:", error);
       return null;
@@ -79,6 +82,7 @@ export default function Page({ params }) {
             <Map location={facilityDetails.facilityDetails[0].firm_address} />
           </>
         )}
+         {activeTab === "form483s" && <Form483sTab data={form483Details  }/>}
       </div>
     </div>
   );
