@@ -249,7 +249,7 @@ export default function Page() {
                 {item.strength}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.te_code}
+                {item.te_code=='NaN'?'':item.te_code}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.rld}
