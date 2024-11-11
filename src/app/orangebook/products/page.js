@@ -15,15 +15,21 @@ export default function Page() {
   const [selectedTypes, setSelectedTypes] = useState(["RX", "OTC"]);
 
   const fetchData = async () => {
-    setIsLoading(true);
-    const typesQuery = selectedTypes.map((type) => `type=${type}`).join("&");
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/orangebook/products?page=${page}&limit=${limit}&${typesQuery}`
-    );
-    const result = await res.json();
-    setData(result.products);
-    setTotalCount(result.total_count);
-    setIsLoading(false);
+    if (selectedTypes.length === 0) {
+      setData([]);
+      setTotalCount(0); // Reset the count
+      setIsLoading(false); // Stop loading indicator
+    } else {
+      setIsLoading(true);
+      const typesQuery = selectedTypes.map((type) => `type=${type}`).join("&");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/orangebook/products?page=${page}&limit=${limit}&${typesQuery}`
+      );
+      const result = await res.json();
+      setData(result.products);
+      setTotalCount(result.total_count);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -31,14 +37,14 @@ export default function Page() {
   }, [page, limit, selectedTypes]);
 
   const handleTypeChange = (type) => {
-    setSelectedTypes((prevTypes) =>
-      prevTypes.includes(type)
-        ? prevTypes.filter((t) => t !== type) // Remove the type if already selected
-        : [...prevTypes, type] // Add the type to selectedTypes if not already selected
+    setSelectedTypes(
+      (prevTypes) =>
+        prevTypes.includes(type)
+          ? prevTypes.filter((t) => t !== type) // Remove the type if already selected
+          : [...prevTypes, type] // Add the type to selectedTypes if not already selected
     );
     setPage(1); // Reset the page to 1 when the filter changes
   };
-  
 
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -49,7 +55,7 @@ export default function Page() {
   return (
     <div>
       <h1>Orange Book Products</h1>
-      <div>
+      <div style={{ marginBottom: "10px" }}>
         <label>
           <input
             type="checkbox"
@@ -85,33 +91,71 @@ export default function Page() {
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Mkt. Status</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Active Ingredient</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Proprietary Name</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Appl. No.</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Dosage Form</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Mkt. Status
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Active Ingredient
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Proprietary Name
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Appl. No.
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Dosage Form
+            </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Route</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Strength</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>TE Code</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Strength
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              TE Code
+            </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>RLD</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>RS</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Applicant Holder</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Applicant Holder
+            </th>
           </tr>
         </thead>
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.type}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.ingredient}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.trade_name}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.appl_no}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.dosage_form}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.route}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.strength}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.te_code}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.rld}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.rs}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.applicant_full_name}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.type}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.ingredient}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.trade_name}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.appl_no}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.dosage_form}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.route}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.strength}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.te_code}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.rld}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.rs}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.applicant_full_name}
+              </td>
             </tr>
           ))}
         </tbody>
