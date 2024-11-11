@@ -10,21 +10,37 @@ export async function GET(req) {
     const page = parseInt(url.searchParams.get("page") || "1", 10);
     const limit = parseInt(url.searchParams.get("limit") || "10", 10);
 
-    let sqlQuery = `SELECT * FROM ob_product WHERE type != 'DISCN'`;
-    let count = `SELECT COUNT(*) FROM ob_product WHERE type != 'DISCN'`
+    const types = url.searchParams.getAll("type");
+    const hasTypes = types.length > 0;
+
+    let sqlQuery = `SELECT * FROM ob_product`;
+    let countQuery = `SELECT COUNT(*) FROM ob_product`;
+    const conditions = [];
     const params = [];
 
+    if (hasTypes) {
+      conditions.push(`type = ANY($${params.length + 1}::text[])`);
+      params.push(types);
+    } else {
+      conditions.push("type != 'DISCN'");
+    }
+
     if (ingredient) {
-      sqlQuery += ` AND ingredient = $${params.length + 1}`;
+      conditions.push(`ingredient = $${params.length + 1}`);
       params.push(ingredient);
     }
     if (tradename) {
-      sqlQuery += ` AND trade_name = $${params.length + 1}`;
+      conditions.push(`trade_name = $${params.length + 1}`);
       params.push(tradename);
     }
     if (applicant) {
-      sqlQuery += ` AND applicant = $${params.length + 1}`;
+      conditions.push(`applicant = $${params.length + 1}`);
       params.push(applicant);
+    }
+
+    if (conditions.length > 0) {
+      sqlQuery += " WHERE " + conditions.join(" AND ");
+      countQuery += " WHERE " + conditions.join(" AND ");
     }
 
     // Pagination logic
@@ -32,9 +48,14 @@ export async function GET(req) {
     sqlQuery += ` LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
     params.push(limit, offset);
 
+    // Execute queries
     const { rows: ob_products } = await query(sqlQuery, params);
-    const {rows:totl_count} = await query(count)
-    return NextResponse.json({ products: ob_products ,total_count:totl_count[0].count}, { status: 200 });
+    const { rows: total_count } = await query(countQuery, params.slice(0, -2)); // Exclude limit/offset params for count query
+
+    return NextResponse.json(
+      { products: ob_products, total_count: total_count[0].count },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error fetching data:", error);
     return NextResponse.json({ error: "Failed to load data" }, { status: 500 });

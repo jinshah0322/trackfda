@@ -11,19 +11,34 @@ export default function Page() {
   const [limit, setLimit] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Default selected types
+  const [selectedTypes, setSelectedTypes] = useState(["RX", "OTC"]);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    const typesQuery = selectedTypes.map((type) => `type=${type}`).join("&");
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/orangebook/products?page=${page}&limit=${limit}&${typesQuery}`
+    );
+    const result = await res.json();
+    setData(result.products);
+    setTotalCount(result.total_count);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/orangebook/products?page=${page}&limit=${limit}`
-      );
-      const result = await res.json();
-      setData(result.products);
-      setTotalCount(result.total_count);
-      setIsLoading(false);
-    };
     fetchData();
-  }, [page, limit]);
+  }, [page, limit, selectedTypes]);
+
+  const handleTypeChange = (type) => {
+    setSelectedTypes((prevTypes) =>
+      prevTypes.includes(type)
+        ? prevTypes.filter((t) => t !== type) // Remove the type if already selected
+        : [...prevTypes, type] // Add the type to selectedTypes if not already selected
+    );
+    setPage(1); // Reset the page to 1 when the filter changes
+  };
+  
 
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -34,6 +49,32 @@ export default function Page() {
   return (
     <div>
       <h1>Orange Book Products</h1>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={selectedTypes.includes("RX")}
+            onChange={() => handleTypeChange("RX")}
+          />
+          RX
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={selectedTypes.includes("OTC")}
+            onChange={() => handleTypeChange("OTC")}
+          />
+          OTC
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={selectedTypes.includes("DISCN")}
+            onChange={() => handleTypeChange("DISCN")}
+          />
+          DISCN
+        </label>
+      </div>
       <Limit
         limit={limit}
         onLimitChange={(newLimit) => {
