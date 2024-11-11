@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import "@/app/style.css";
 import FacilityOverview from "@/components/facilityDetails/facilityoverview";
 import Form483sTab from "@/components/companyDetails/form483";
+import Complainceactiontimeline from "@/components/facilityDetails/complainceactiontimeline"
+import Table from "@/components/table";
+
 
 
 export default function Page({ params }) {
@@ -13,8 +16,11 @@ export default function Page({ params }) {
   const [facilityDetails, setFacilityDetails] = useState(null);
   const [form483Details, setForm483Details] = useState(null);
   const [inspectionDetails, setInspectionDetails] = useState(null);
+  const [complianceActionCount, setComplianceActionCount] = useState(null);
   const [complianceAction, setComplianceAction] = useState(null);
   const [importRefusal, setImportRefusal] = useState(null);
+  const [subSystemSubpartData,setSubSystmeSubpartData] = useState(null);
+  const [subSystemSectionData,setSubSystemSectionData] = useState(null);
 
   async function getFacilityDetails() {
     try {
@@ -22,19 +28,24 @@ export default function Page({ params }) {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails/facilitydetails?fei_number=${params.facilitydetails}`
       );
       response = await response.json();
-      console.log(response.published483Result);
       setFacilityDetails(response.facilityDetails[0]);
       setInspectionDetails(response.inspectionResult);
       setForm483Details(response.published483Result);
-      setComplianceAction(response.ComplianceActionsCount)
-      setImportRefusal(response.importRefusals)
-      return response; // Return the response for further processing if needed
+      setComplianceActionCount(response.complianceActionsCount);
+      setImportRefusal(response.importRefusals);
+      setComplianceAction(response.timeLine);
+      setSubSystmeSubpartData(response.subSystemSubpartData);
+      setSubSystemSectionData(response.subSystemSectionData);
+        return response; // Return the response for further processing if needed
     } catch (error) {
       console.error("Error fetching company details:", error);
       return null;
     }
   }
-
+  const subSystemSubpartDataCloumn= [ { headerName: "Subpart Name", field: "subpartname" },
+    { headerName: "Frequency", field: "count" }]
+  const subSystemSectionDataCloumn= [ { headerName: "Section Name", field: "sectionname" },
+      { headerName: "Frequency", field: "count" }]
   useEffect(() => {
     const fetchFacilityDetails = async () => {
       setLoading(true);
@@ -52,7 +63,7 @@ export default function Page({ params }) {
     <div className="page-container">
       <div className="breadcrumb">
         <Link href={`/company/${decodeURIComponent(params.companyname)}`}>
-          ← Back to Company List
+          ← Back to Company
         </Link>
       </div>
       <h1>Facility Dashboard</h1>
@@ -84,8 +95,11 @@ export default function Page({ params }) {
         </a>
       </div>
       <div className="facility-details-section">
-        {activeTab === "overview" && <FacilityOverview data={{ facilityDetails, inspectionDetails,complianceAction,importRefusal }} />}
+        {activeTab === "overview" && <FacilityOverview data={{ facilityDetails, inspectionDetails,complianceActionCount,importRefusal }} />}
         {activeTab === "form483s" && <Form483sTab data={form483Details} />}
+        {activeTab === "compliance" && <Complainceactiontimeline data={complianceAction}/>}
+        {activeTab === "subsystem" && <Table data={subSystemSubpartData} columns={subSystemSubpartDataCloumn} tableName={"Subpart"}/>}
+        {activeTab === "subsystem" && <Table data={subSystemSectionData} columns={subSystemSectionDataCloumn} tableName={"Section"}/>}
       </div>
     </div>
   );

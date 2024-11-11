@@ -4,6 +4,7 @@ import InspectionBarChart from "@/components/inspectionbarchart";
 import styles from './FacilityOverview.module.css'; 
 
 export default function FacilityOverview({ data }) {
+
   function countOccurrences(array, key) {
     return array.reduce((acc, item) => {
       const feiNumber = item[key] || Unkown;
@@ -111,7 +112,7 @@ export default function FacilityOverview({ data }) {
           <div className={styles.card}>
             <p className={styles.cardTitle}>Compliance action</p>
             <p className="card-number">
-            {data.complianceAction ? data.complianceAction.length : 0}
+            {data.complianceActionCount.length ? data.complianceActionCount.length : 0}
             </p>
           </div>
           <div className={styles.card}>

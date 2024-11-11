@@ -23,6 +23,7 @@ export default function Page({ params }) {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails/inspectioncitations?companyname=${companyName}&inspectioncitation=${inspectionCitation}`
         );
         const data = await response.json();
+        console.log(data,"main")
         setCitationDetails(data.inspectionCitationsResult);
         setLoading(false);
       } catch (error) {

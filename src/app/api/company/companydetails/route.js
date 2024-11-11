@@ -4,7 +4,7 @@ import { query } from "../../../../../lib/db";
 export async function GET(req) {
   try {
     const url = new URL(req.url);
-    const companyname = url.searchParams.get("compnayname");
+    const companyname = url.searchParams.get("companyname");
 
     // Fetch distinct FEI numbers and related details in a single query
     const { rows: companyDetailsResult } = await query(
@@ -26,7 +26,7 @@ export async function GET(req) {
     );
 
     const { rows: inspectionClassification } = await query(
-      `select classification,abbrevation from inspection_details_masterclassification`
+      `select classification,abbrevation from insd_masterclassification`
     );
 
     //Fetch published 483 details for the selected company name

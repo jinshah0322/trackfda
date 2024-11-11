@@ -1,0 +1,93 @@
+/* ComplianceTimeline.module.css */
+.timelineContainer {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px; /* Reduced spacing between title and date */
+    text-align: center; /* Center the title */
+  }
+  
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  .timelineItem {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: relative; /* Required for positioning the line */
+    opacity: 0; /* Start hidden for animation */
+    animation: fadeIn 0.5s forwards; /* Add fade-in animation */
+  }
+  
+  .circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #00bfff; /* Blue border for the circle */
+    background-color: white; /* Optional: background color for the circle */
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  
+  .content {
+    flex: 1;
+    padding-left: 10px; /* Optional: padding to separate from the line */
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+  }
+  
+  .date {
+    color: #888;
+    margin-bottom: 5px; /* Reduced spacing between date and description */
+  }
+  
+  /* Scoped description styles */
+  .description {
+    margin: 0; /* Remove margin for tighter spacing with the date */
+    color: #555;
+  }
+  
+  /* Add styles for the connecting line */
+  .line {
+    position: absolute;
+    left: 8px; /* Align with the center of the circle */
+    top: 20px; /* Adjust to position the line properly */
+    width: 2px; /* Width of the line */
+    height: calc(100% + 20px); /* Extend the line to connect circles */
+    background-color: grey; /* Line color */
+    z-index: -1; /* Send the line behind the content */
+  }
+  
+  /* Remove the last line */
+  .timelineItem:last-child .line {
+    display: none; /* Hide line for the last item */
+  }
+  
+  /* Animation keyframes */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px); /* Start slightly lower */
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0); /* Move to original position */
+    }
+  }
+  
+  /* Optional: Adjust the timing for the fade-in effect */
+  .fadeIn {
+    animation-delay: 0.1s; /* Delay to stagger items */
+  }
+  

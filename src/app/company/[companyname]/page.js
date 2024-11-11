@@ -23,7 +23,7 @@ export default function Page({ params }) {
   async function getCompanyDetails() {
     try {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails?compnayname=${decodeURIComponent(params.companyname)}`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails?companyname=${decodeURIComponent(params.companyname)}`
       );
       response = await response.json();
       setCompanyAnalysisDetails(response.analysis); // Set the entire response
