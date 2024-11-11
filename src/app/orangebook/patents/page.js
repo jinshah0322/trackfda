@@ -25,7 +25,9 @@ export default function Page() {
   useEffect(() => {
     // Fetch distinct values for ingredients, tradenames, and applicants
     const fetchDistinctValues = async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/orangebook/products/distinct-values`);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/orangebook/products/distinct-values`
+      );
       const result = await res.json();
       setDistinctIngredients(result.ingredientList);
       setDistinctTradenames(result.tradenameList);
@@ -42,11 +44,13 @@ export default function Page() {
       setIsLoading(false); // Stop loading indicator
     } else {
       setIsLoading(true);
-      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/orangebook/products?page=${page}&limit=${limit}`;
-      
+      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/orangebook/patents?page=${page}&limit=${limit}`;
+
       // Append selected filters to the URL
       if (selectedTypes.length > 0) {
-        const typesQuery = selectedTypes.map((type) => `type=${type}`).join("&");
+        const typesQuery = selectedTypes
+          .map((type) => `type=${type}`)
+          .join("&");
         url += `&${typesQuery}`;
       }
       if (selectedIngredient) {
@@ -61,7 +65,7 @@ export default function Page() {
 
       const res = await fetch(url);
       const result = await res.json();
-      setData(result.products);
+      setData(result.patents);
       setTotalCount(result.total_count);
       setIsLoading(false);
     }
@@ -69,13 +73,14 @@ export default function Page() {
 
   useEffect(() => {
     fetchData();
-  }, [page, limit, selectedTypes, selectedIngredient, selectedTradename, selectedApplicant]);
+  }, [page,limit,selectedTypes,selectedIngredient,selectedTradename,selectedApplicant,]);
 
   const handleTypeChange = (type) => {
-    setSelectedTypes((prevTypes) =>
-      prevTypes.includes(type)
-        ? prevTypes.filter((t) => t !== type) // Remove the type if already selected
-        : [...prevTypes, type] // Add the type to selectedTypes if not already selected
+    setSelectedTypes(
+      (prevTypes) =>
+        prevTypes.includes(type)
+          ? prevTypes.filter((t) => t !== type) // Remove the type if already selected
+          : [...prevTypes, type] // Add the type to selectedTypes if not already selected
     );
     setPage(1); // Reset the page to 1 when the filter changes
   };
@@ -87,24 +92,24 @@ export default function Page() {
   }
 
   // Transform the data for react-select dropdown
-  const ingredientOptions = distinctIngredients.map(ingredient => ({
+  const ingredientOptions = distinctIngredients.map((ingredient) => ({
     value: ingredient,
     label: ingredient,
   }));
 
-  const tradenameOptions = distinctTradenames.map(tradename => ({
+  const tradenameOptions = distinctTradenames.map((tradename) => ({
     value: tradename,
     label: tradename,
   }));
 
-  const applicantOptions = distinctApplicants.map(applicant => ({
+  const applicantOptions = distinctApplicants.map((applicant) => ({
     value: applicant,
     label: applicant,
   }));
 
   return (
     <div>
-      <h1>Orange Book Products</h1>
+      <h1>Orange Book Patents</h1>
 
       {/* Type Filters */}
       <div style={{ marginBottom: "10px" }}>
@@ -195,35 +200,77 @@ export default function Page() {
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Mkt. Status</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Active Ingredient</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Proprietary Name</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Appl. No.</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Dosage Form</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Route</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Strength</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>TE Code</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>RLD</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>RS</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Applicant Holder</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Approval Date</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Mkt. Status
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Active Ingredient
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Proprietary Name
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Applicant Name
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Patent No.
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Patent Expiry Date
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Drug Substance Flag
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Drug Product Flag
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Patent Use Code
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Delist Flag
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Submission Date
+            </th>
           </tr>
         </thead>
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.type}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.ingredient}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.trade_name}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.appl_type}{item.appl_no}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.dosage_form}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.route}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.strength}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.te_code == "NaN" ? "" : item.te_code}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.rld}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.rs}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.applicant_full_name}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.approval_date}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.type}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.ingredient}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.trade_name}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.applicant_full_name}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.patent_no}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {new Date(item.patent_expire_date).toLocaleDateString("en-GB")}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.drug_substance_flag}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.drug_product_flag}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.patent_use_code}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.delist_flag}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {new Date(item.submission_date).toLocaleDateString("en-GB")}
+              </td>
             </tr>
           ))}
         </tbody>
