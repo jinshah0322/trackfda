@@ -137,12 +137,12 @@ export default function Page() {
       {/* Ingredient Filter Dropdown */}
       <div style={{ marginBottom: "10px" }}>
         <label>
-          Ingredient:
+          Active Ingredient:
           <Select
             options={ingredientOptions}
             value={selectedIngredient}
             onChange={setSelectedIngredient}
-            placeholder="Select Ingredient"
+            placeholder="Select Active Ingredient"
             isClearable
             isSearchable
             styles={{ width: "250px" }}
@@ -153,12 +153,12 @@ export default function Page() {
       {/* Trade Name Filter Dropdown */}
       <div style={{ marginBottom: "10px" }}>
         <label>
-          Trade Name:
+          Proprietary Name:
           <Select
             options={tradenameOptions}
             value={selectedTradename}
             onChange={setSelectedTradename}
-            placeholder="Select Trade Name"
+            placeholder="Select Proprietary Name"
             isClearable
             isSearchable
             styles={{ width: "250px" }}
@@ -169,12 +169,12 @@ export default function Page() {
       {/* Applicant Filter Dropdown */}
       <div style={{ marginBottom: "10px" }}>
         <label>
-          Applicant:
+          Applicant Holder:
           <Select
             options={applicantOptions}
             value={selectedApplicant}
             onChange={setSelectedApplicant}
-            placeholder="Select Applicant"
+            placeholder="Select Applicant Holder"
             isClearable
             isSearchable
             styles={{ width: "250px" }}
@@ -195,71 +195,35 @@ export default function Page() {
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Mkt. Status
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Active Ingredient
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Proprietary Name
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Appl. No.
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Dosage Form
-            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Mkt. Status</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Active Ingredient</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Proprietary Name</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Appl. No.</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Dosage Form</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Route</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Strength
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              TE Code
-            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Strength</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>TE Code</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>RLD</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>RS</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Applicant Holder
-            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Applicant Holder</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Approval Date</th>
           </tr>
         </thead>
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.type}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.ingredient}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.trade_name}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.appl_no}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.dosage_form}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.route}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.strength}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.te_code=='NaN'?'':item.te_code}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.rld}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.rs}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.applicant_full_name}
-              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.type}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.ingredient}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.trade_name}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.appl_no}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.dosage_form}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.route}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.strength}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.te_code == "NaN" ? "" : item.te_code}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.rld}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.rs}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.applicant_full_name}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.approval_date}</td>
             </tr>
           ))}
         </tbody>

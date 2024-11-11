@@ -34,7 +34,7 @@ export async function GET(req) {
       params.push(tradename);
     }
     if (applicant) {
-      conditions.push(`applicant = $${params.length + 1}`);
+      conditions.push(`applicant_full_name = $${params.length + 1}`);
       params.push(applicant);
     }
 
