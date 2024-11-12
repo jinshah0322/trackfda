@@ -4,6 +4,7 @@ import Select from "react-select";
 import Loading from "@/components/loading";
 import Pagination from "@/components/pagination";
 import Limit from "@/components/limit";
+import Link from "next/link";
 
 export default function Page() {
   const [data, setData] = useState([]);
@@ -25,7 +26,9 @@ export default function Page() {
   useEffect(() => {
     // Fetch distinct values for ingredients, tradenames, and applicants
     const fetchDistinctValues = async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/orangebook/products/distinct-values`);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/orangebook/products/distinct-values`
+      );
       const result = await res.json();
       setDistinctIngredients(result.ingredientList);
       setDistinctTradenames(result.tradenameList);
@@ -43,10 +46,12 @@ export default function Page() {
     } else {
       setIsLoading(true);
       let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/orangebook/products?page=${page}&limit=${limit}`;
-      
+
       // Append selected filters to the URL
       if (selectedTypes.length > 0) {
-        const typesQuery = selectedTypes.map((type) => `type=${type}`).join("&");
+        const typesQuery = selectedTypes
+          .map((type) => `type=${type}`)
+          .join("&");
         url += `&${typesQuery}`;
       }
       if (selectedIngredient) {
@@ -69,13 +74,21 @@ export default function Page() {
 
   useEffect(() => {
     fetchData();
-  }, [page, limit, selectedTypes, selectedIngredient, selectedTradename, selectedApplicant]);
+  }, [
+    page,
+    limit,
+    selectedTypes,
+    selectedIngredient,
+    selectedTradename,
+    selectedApplicant,
+  ]);
 
   const handleTypeChange = (type) => {
-    setSelectedTypes((prevTypes) =>
-      prevTypes.includes(type)
-        ? prevTypes.filter((t) => t !== type) // Remove the type if already selected
-        : [...prevTypes, type] // Add the type to selectedTypes if not already selected
+    setSelectedTypes(
+      (prevTypes) =>
+        prevTypes.includes(type)
+          ? prevTypes.filter((t) => t !== type) // Remove the type if already selected
+          : [...prevTypes, type] // Add the type to selectedTypes if not already selected
     );
     setPage(1); // Reset the page to 1 when the filter changes
   };
@@ -87,17 +100,17 @@ export default function Page() {
   }
 
   // Transform the data for react-select dropdown
-  const ingredientOptions = distinctIngredients.map(ingredient => ({
+  const ingredientOptions = distinctIngredients.map((ingredient) => ({
     value: ingredient,
     label: ingredient,
   }));
 
-  const tradenameOptions = distinctTradenames.map(tradename => ({
+  const tradenameOptions = distinctTradenames.map((tradename) => ({
     value: tradename,
     label: tradename,
   }));
 
-  const applicantOptions = distinctApplicants.map(applicant => ({
+  const applicantOptions = distinctApplicants.map((applicant) => ({
     value: applicant,
     label: applicant,
   }));
@@ -195,35 +208,77 @@ export default function Page() {
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Mkt. Status</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Active Ingredient</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Proprietary Name</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Appl. No.</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Dosage Form</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Mkt. Status
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Active Ingredient
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Proprietary Name
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Appl. No.
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Dosage Form
+            </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Route</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Strength</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>TE Code</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Strength
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              TE Code
+            </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>RLD</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>RS</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Applicant Holder</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Approval Date</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Applicant Holder
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Approval Date
+            </th>
           </tr>
         </thead>
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.type}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.ingredient}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.trade_name}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.appl_type}{item.appl_no}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.dosage_form}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.route}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.strength}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.te_code == "NaN" ? "" : item.te_code}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.rld}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.rs}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.applicant_full_name}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.approval_date}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.type}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.ingredient}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.trade_name}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                <Link href={`/orangebook/products/${item.appl_no}?productno=${item.product_no}&appltype=${item.appl_type}`}>{item.appl_type}{item.appl_no}</Link>
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.dosage_form}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.route}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.strength}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.te_code == "NaN" ? "" : item.te_code}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.rld}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.rs}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.applicant_full_name}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.approval_date}
+              </td>
             </tr>
           ))}
         </tbody>
