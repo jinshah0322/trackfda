@@ -14,6 +14,7 @@ export default function Page() {
 
   // Default selected types and additional filters
   const [selectedTypes, setSelectedTypes] = useState(["RX", "OTC"]);
+  const [expiryFilter, setExpiryFilter] = useState(null);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [selectedTradename, setSelectedTradename] = useState(null);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
@@ -21,6 +22,12 @@ export default function Page() {
   const [distinctIngredients, setDistinctIngredients] = useState([]);
   const [distinctTradenames, setDistinctTradenames] = useState([]);
   const [distinctApplicants, setDistinctApplicants] = useState([]);
+
+  const expiryOptions = [
+    { value: "1", label: "Expires in next 1 year" },
+    { value: "2", label: "Expires in next 2 years" },
+    { value: "5", label: "Expires in next 5 years" },
+  ];
 
   useEffect(() => {
     // Fetch distinct values for ingredients, tradenames, and applicants
@@ -62,6 +69,9 @@ export default function Page() {
       if (selectedApplicant) {
         url += `&applicant=${selectedApplicant.value}`;
       }
+      if (expiryFilter) {
+        url += `&expiry_in_years=${expiryFilter.value}`;
+      }
 
       const res = await fetch(url);
       const result = await res.json();
@@ -73,7 +83,15 @@ export default function Page() {
 
   useEffect(() => {
     fetchData();
-  }, [page,limit,selectedTypes,selectedIngredient,selectedTradename,selectedApplicant,]);
+  }, [
+    page,
+    limit,
+    selectedTypes,
+    selectedIngredient,
+    selectedTradename,
+    selectedApplicant,
+    expiryFilter
+  ]);
 
   const handleTypeChange = (type) => {
     setSelectedTypes(
@@ -183,6 +201,23 @@ export default function Page() {
             isClearable
             isSearchable
             styles={{ width: "250px" }}
+          />
+        </label>
+      </div>
+
+      {/* Expiry Filter Dropdown */}
+      <div style={{ marginBottom: "10px" }}>
+        <label>
+          Patent Expiry:
+          <Select
+            options={expiryOptions}
+            value={expiryFilter}
+            onChange={(selectedOption) => {
+              setExpiryFilter(selectedOption);
+              setPage(1); // Reset page when filter changes
+            }}
+            placeholder="Select Expiry Range"
+            isClearable
           />
         </label>
       </div>
