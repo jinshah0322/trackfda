@@ -116,7 +116,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Orange Book Patents</h1>
+      <h1>Orange Book Exclusivity</h1>
 
       {/* Type Filters */}
       <div style={{ marginBottom: "10px" }}>
