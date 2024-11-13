@@ -6,7 +6,7 @@ export async function GET(req) {
     const url = new URL(req.url);
     const appl_no = url.searchParams.get("applno");
     const appl_type = url.searchParams.get("appltype");
-    const {rows} = await query(`select * from ob_product where appl_no=$1 and appl_type=$2`,[appl_no,appl_type])
+    const {rows} = await query(`select * from ob_product where appl_no=$1 and appl_type=$2 order by product_no`,[appl_no,appl_type])
     return NextResponse.json({productDetails:rows}, { status: 200 })
   } catch (error) {
     console.error("Error fetching Product Details:", error);

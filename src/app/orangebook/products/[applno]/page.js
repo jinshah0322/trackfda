@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/loading";
+import Link from "next/link";
 
 export default function Page({ params, searchParams }) {
   const [data, setData] = useState([]);
@@ -33,58 +34,110 @@ export default function Page({ params, searchParams }) {
     setExpandedProductNo(expandedProductNo === productNo ? null : productNo);
   };
 
+  const ProductCard = ({ product, isExpanded, onToggle }) => {
+    return (
+      <div style={{ border: "1px solid #ccc", marginBottom: "10px" }}>
+        <div
+          onClick={onToggle}
+          style={{
+            backgroundColor: "#e0e0e0",
+            padding: "10px",
+            cursor: "pointer",
+            fontWeight: "bold",
+          }}
+        >
+          {product.trade_name} ({product.ingredient}) <br />
+          {product.strength} <br />
+          Marketing Status:{" "}
+          {product.type == "RX"
+            ? "Prescription"
+            : product.type == "OTC"
+            ? "Over-the-counter"
+            : "Discontinued"}
+        </div>
+        {isExpanded && (
+          <div style={{ padding: "10px" }}>
+            <p>
+              <strong>Active Ingredient:</strong> {product.ingredient}
+            </p>
+            <p>
+              <strong>Proprietary Name:</strong> {product.trade_name}
+            </p>
+            <p>
+              <strong>Dosage Form, Route of Administration:</strong>{" "}
+              {product.dosage_form}; {product.route}
+            </p>
+            <p>
+              <strong>Strength:</strong> {product.strength}
+            </p>
+            <p>
+              <strong>Reference Listed Drug:</strong> {product.rld}
+            </p>
+            <p>
+              <strong>Reference Standard:</strong> {product.rs}
+            </p>
+            <p>
+              <strong>TE Code:</strong> {product.te_code}
+            </p>
+            <p>
+              <strong>Application Number:</strong> {product.appl_no}
+            </p>
+            <p>
+              <strong>Product Number:</strong> {product.product_no}
+            </p>
+            <p>
+              <strong>Approval Date:</strong> {product.approval_date}
+            </p>
+            <p>
+              <strong>Applicant Holder Full Name:</strong>{" "}
+              {product.applicant_full_name}
+            </p>
+            <p>
+              <strong>Marketing Status: </strong>
+              {product.type == "RX"
+                ? "Prescription"
+                : product.type == "OTC"
+                ? "Over-the-counter"
+                : "Discontinued"}
+            </p>
+            <Link
+              href={`/orangebook/patent_exclusivity_info/${product.appl_no}?productno=${product.product_no}&appltype=${product.appl_type}`}
+            >
+              Patent and Exclusivity Information
+            </Link>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div>
+      <div className="breadcrumb">
+        <Link
+          href={`/orangebook/products`}
+        >
+          ← Back to Product
+        </Link>
+      </div>
       <h1>
-        Orange Book Product Details for {searchParams.appltype === "A" ? "ANDA" : "NDA"} {params.applno}
+        Orange Book Product Details for{" "}
+        {searchParams.appltype === "A" ? "ANDA" : "NDA"} {params.applno}
       </h1>
       <div style={{ marginTop: "20px" }}>
-        {data.map((product, index) => (
-          <ProductCard
-            key={index}
-            product={product}
-            isExpanded={expandedProductNo === product.product_no}
-            onToggle={() => handleToggle(product.product_no)}
-          />
-        ))}
+        {data.length > 0 ? (
+          data.map((product, index) => (
+            <ProductCard
+              key={index}
+              product={product}
+              isExpanded={expandedProductNo === product.product_no}
+              onToggle={() => handleToggle(product.product_no)}
+            />
+          ))
+        ) : (
+          <h3>No Data Present</h3>
+        )}
       </div>
     </div>
   );
 }
-
-const ProductCard = ({ product, isExpanded, onToggle }) => {
-  return (
-    <div style={{ border: "1px solid #ccc", marginBottom: "10px" }}>
-      <div
-        onClick={onToggle}
-        style={{
-          backgroundColor: "#e0e0e0",
-          padding: "10px",
-          cursor: "pointer",
-          fontWeight: "bold",
-        }}
-      >
-        {product.trade_name} ({product.ingredient}) <br />
-        {product.strength} <br />
-        Marketing Status: {product.type=='RX'?'Prescription':(product.type=='OTC'?'Over-the-counter':'Discontinued')}
-      </div>
-      {isExpanded && (
-        <div style={{ padding: "10px" }}>
-          <p><strong>Active Ingredient:</strong> {product.ingredient}</p>
-          <p><strong>Proprietary Name:</strong> {product.trade_name}</p>
-          <p><strong>Dosage Form, Route of Administration:</strong> {product.dosage_form}; {product.route}</p>
-          <p><strong>Strength:</strong> {product.strength}</p>
-          <p><strong>Reference Listed Drug:</strong> {product.rld}</p>
-          <p><strong>Reference Standard:</strong> {product.rs}</p>
-          <p><strong>TE Code:</strong> {product.te_code}</p>
-          <p><strong>Application Number:</strong> {product.appl_no}</p>
-          <p><strong>Product Number:</strong> {product.product_no}</p>
-          <p><strong>Approval Date:</strong> {product.approval_date}</p>
-          <p><strong>Applicant Holder Full Name:</strong> {product.applicant_full_name}</p>
-          <p><strong>Marketing Status:</strong> {product.type}</p>
-          <a href="#">Patent and Exclusivity Information</a>
-        </div>
-      )}
-    </div>
-  );
-};
