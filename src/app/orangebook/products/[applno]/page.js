@@ -100,7 +100,7 @@ export default function Page({ params, searchParams }) {
                 ? "Over-the-counter"
                 : "Discontinued"}
             </p>
-            <Link
+            <Link style={{color:"blue",textDecoration:"None"}}
               href={`/orangebook/patent_exclusivity_info/${product.appl_no}?productno=${product.product_no}&appltype=${product.appl_type}`}
             >
               Patent and Exclusivity Information

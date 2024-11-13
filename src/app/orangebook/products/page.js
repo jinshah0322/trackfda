@@ -253,7 +253,7 @@ export default function Page() {
                 {item.trade_name}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                <Link href={`/orangebook/products/${item.appl_no}?productno=${item.product_no}&appltype=${item.appl_type}`}>{item.appl_type}{item.appl_no}</Link>
+                <Link style={{color:"blue",textDecoration:"None"}} href={`/orangebook/products/${item.appl_no}?productno=${item.product_no}&appltype=${item.appl_type}`}>{item.appl_type}{item.appl_no}</Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.dosage_form}
