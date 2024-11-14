@@ -33,3 +33,4 @@ export async function GET(req) {
     return NextResponse.json({ error: 'Failed to load company data' }, { status: 500 });
   }
 }
+  
