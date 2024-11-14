@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Search({ searchTerm, onSearch }) {
+export default function Search({ searchTerm, onSearch, placeholder }) {
   const [inputValue, setInputValue] = useState(searchTerm || "");
 
   const handleSearch = (event) => {
@@ -12,7 +12,7 @@ export default function Search({ searchTerm, onSearch }) {
     <form onSubmit={handleSearch} style={{ marginBottom: '20px' }}>
       <input
         type="text"
-        placeholder="Search by company..."
+        placeholder={placeholder}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)} // Update local input state
         style={{ padding: '8px', marginRight: '10px' }}
