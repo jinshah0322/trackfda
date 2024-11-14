@@ -51,6 +51,7 @@ export default function Page() {
           setSearchTerm(term);
           setPage(1);
         }}
+        placeholder=' Search by company...'
       />
 
       <Limit
