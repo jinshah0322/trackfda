@@ -5,12 +5,14 @@ import { useEffect, useState } from "react";
 import "@/app/style.css";
 import Overview from "@/components/investigatorDetails/overview";
 import Loading from "@/components/loading";
+import Form483sTab from "@/components/companyDetails/form483";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("overview");
   const [investigatorData, setInvestigatorData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [overview, setOverview] = useState(null);
+  const [form483Details, setForm483Details] = useState({});
 
   useEffect(() => {
     const storedData = localStorage.getItem("investigatorData");
@@ -34,9 +36,8 @@ export default function Page() {
             )}`
           );
           const data = await response.json();
-          if (response.ok && data.overview) {
-            setOverview(data.overview);
-          }
+          setOverview(data.overview);
+          setForm483Details(data.form483data);
         } catch (error) {
           console.error("Error fetching investigations by year:", error);
         } finally {
@@ -92,7 +93,7 @@ export default function Page() {
           className={`tab ${activeTab === "form483s" ? "active-tab" : ""}`}
           onClick={() => setActiveTab("form483s")}
         >
-          Form 483's
+          Form 483`&apos;`s
         </a>
       </div>
 
@@ -104,7 +105,7 @@ export default function Page() {
         {activeTab === "coinvestigators" && (
           <div>Co-Investigators content goes here...</div>
         )}
-        {activeTab === "form483s" && <div>Form 483's content goes here...</div>}
+        {activeTab === "form483s" && <Form483sTab data={form483Details} />}
       </div>
     </div>
   );

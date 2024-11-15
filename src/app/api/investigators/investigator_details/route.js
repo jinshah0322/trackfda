@@ -57,8 +57,29 @@ export async function GET(req) {
       [investigator]
     );
 
+    const {rows:form483data} = await query(`
+      SELECT 
+        p483s.record_date, 
+        cd.legal_name, 
+        p483s.fei_number, 
+        p483s.download_link
+      FROM 
+          published_483s p483s
+      JOIN 
+          company_details cd 
+      ON 
+          p483s.fei_number = cd.fei_number
+      WHERE EXISTS (
+          SELECT 1
+          FROM unnest(p483s.investigators) AS inv
+          WHERE LOWER(REGEXP_REPLACE(inv, '\\s*\\.\\s*', ' ', 'g')) = LOWER(REGEXP_REPLACE($1, '\\s*\\.\\s*', ' ', 'g'))
+      )
+      ORDER BY 
+          p483s.record_date DESC;
+      `,[investigator])
+
     return NextResponse.json(
-      { overview: { investigationByYear, facilityDetails_issueDate } },
+      { overview: { investigationByYear, facilityDetails_issueDate },form483data },
       { status: 200 }
     );
   } catch (error) {
