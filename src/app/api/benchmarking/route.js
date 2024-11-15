@@ -140,7 +140,7 @@ export async function GET(req) {
     try {
         // Query the database to get the company names
         const { rows: companyNameList } = await query(
-            `SELECT legal_name FROM company_details`
+            `SELECT distinct legal_name FROM company_details`
         );
 
         // Send back the list of company names with a 200 status
