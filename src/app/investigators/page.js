@@ -5,6 +5,7 @@ import Loading from "@/components/loading";
 import Search from "@/components/search";
 import Limit from "@/components/limit";
 import Pagination from "@/components/pagination";
+import Link from "next/link";
 
 export default function Page() {
   const [data, setData] = useState([]);
@@ -59,6 +60,17 @@ export default function Page() {
     }
   };
 
+  const handleInvestigatorClick = (item) => {
+    const investigatorData = {
+      name: item.investigator,
+      num483sIssued: item.num_483s_issued,
+      lastIssuedDate: item.latest_record_date,
+      status: getStatus(item.latest_record_date),
+    };
+
+    localStorage.setItem("investigatorData", JSON.stringify(investigatorData));
+  };
+
   return (
     <div>
       <h1>Investigator List</h1>
@@ -69,7 +81,7 @@ export default function Page() {
           setSearchTerm(term);
           setPage(1); // Reset to page 1 on new search
         }}
-        placeholder='Search by Investigator...'
+        placeholder="Search by Investigator..."
       />
 
       <Limit
@@ -92,22 +104,30 @@ export default function Page() {
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Last 483 Issued Date
             </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Status
-            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Status</th>
           </tr>
         </thead>
         <tbody>
           {filteredData.map((item, index) => (
             <tr key={index}>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.investigator}
+                <Link
+                  href="/investigators/investigator_details"
+                  style={{
+                    color: "blue",
+                    textDecoration: "none",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleInvestigatorClick(item)}
+                >
+                  {item.investigator}
+                </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.num_483s_issued}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {new Date(item.latest_record_date).toLocaleDateString('en-IN')}
+                {new Date(item.latest_record_date).toLocaleDateString("en-IN")}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {getStatus(item.latest_record_date)}
