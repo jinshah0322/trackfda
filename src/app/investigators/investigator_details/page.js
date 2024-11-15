@@ -93,7 +93,7 @@ export default function Page() {
           className={`tab ${activeTab === "form483s" ? "active-tab" : ""}`}
           onClick={() => setActiveTab("form483s")}
         >
-          Form 483`&apos;`s
+          Form 483&apos;s
         </a>
       </div>
 
