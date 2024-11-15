@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import Form483sTab from '@/components/companyDetails/form483';
+import Loading from '@/components/loading';
 
 export default function Page() {
     const [subPartNameList, setSubPartNameList] = useState([]); // Initialized as empty arrays
@@ -149,9 +150,9 @@ export default function Page() {
 
             <div>
                 {loading ? (
-                    <p>Loading...</p> 
+                    <Loading></Loading>
                 ) : (
-                    from483Data ? <Form483sTab data={from483Data} /> : <p>No data found</p>
+                     <Form483sTab data={from483Data} /> 
                 )}
             </div>
         </>

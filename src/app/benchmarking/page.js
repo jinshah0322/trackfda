@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Select from 'react-select';
 import '../compliancematrics.css';
 import InspectionTable from "@/components/copmarisionmatrix";
+import Loading from "@/components/loading";
 
 export default function Page() {
     const [companies, setCompanies] = useState(['', '']);
@@ -11,7 +12,8 @@ export default function Page() {
     const [loading, setLoading] = useState(true);
     const [filteredOptions, setFilteredOptions] = useState([]);
     const [inspectionMetricData, setInspectionMetricData] = useState(null);
-    const [from483sMetricData,setFrom483sMetricData]= useState(null)
+    const [from483sMetricData,setFrom483sMetricData]= useState(null);
+    const [investigatorsMetricData,setInvestigatorsMetricData] = useState(null);
 
     async function getCompanyNameList() {
         try {
@@ -75,8 +77,10 @@ export default function Page() {
             }
     
             const result = await response.json();
-            setInspectionMetricData(result.inspectionMratic);
-            setFrom483sMetricData(result.from483sMartic);
+            setInspectionMetricData(result.inspectionMetric);
+            setFrom483sMetricData(result.from483sMetric);
+            setInvestigatorsMetricData(result.investigatorsMetric);
+          
     
         } catch (error) {
             console.error('Error sending request:', error);
@@ -119,7 +123,7 @@ export default function Page() {
     };
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <Loading></Loading>;
     }
 
     return (
@@ -192,6 +196,7 @@ export default function Page() {
 
             {inspectionMetricData && <InspectionTable data={inspectionMetricData} matricName={"Inspection"} />}
             {inspectionMetricData && <InspectionTable data={from483sMetricData} matricName={"From483s"}/>}
+            {inspectionMetricData && <InspectionTable data={investigatorsMetricData} matricName={"Invetigators"}/>}
         </div>
     );
 }
