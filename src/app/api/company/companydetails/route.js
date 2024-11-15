@@ -32,7 +32,7 @@ export async function GET(req) {
     //Fetch published 483 details for the selected company name
     const { rows: published483Result } = await query(
       `
-        SELECT cd.legal_name, cd.fei_number, p.date_posted, p.download_link FROM company_details cd
+        SELECT cd.legal_name, cd.fei_number, p.record_date, p.download_link FROM company_details cd
         INNER JOIN published_483s p ON cd.fei_number = p.fei_number
         WHERE cd.legal_name = $1
       `,

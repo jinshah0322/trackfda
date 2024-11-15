@@ -34,7 +34,7 @@ export default function Form483sTab({ data }) {
         <thead>
           <tr>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Posted Date
+              Issue Date
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Company Name
@@ -51,7 +51,7 @@ export default function Form483sTab({ data }) {
           {paginatedData.map((item, index) => (
             <tr key={index}>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {new Date(item.date_posted).toLocaleDateString("en-GB")}
+                {new Date(item.record_date).toLocaleDateString("en-GB")}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.legal_name}
