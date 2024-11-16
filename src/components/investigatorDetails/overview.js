@@ -2,7 +2,7 @@ import BarChart from "../countByYearBarChart";
 import Link from "next/link";
 
 export default function Overview({ data }) {
-  const { lastIssuedDate, num483sIssued, overview } = data;
+  const { last_record_date, num_483s_issued , overview } = data;
 
   return (
     <>
@@ -13,7 +13,7 @@ export default function Overview({ data }) {
         <div className="card">
           <p className="card-title">Last Form 483 Issued Date</p>
           <p className="card-number">
-            {new Date(lastIssuedDate).toLocaleDateString("en-GB", {
+            {new Date(last_record_date).toLocaleDateString("en-GB", {
               day: "2-digit",
               month: "short",
               year: "numeric",
@@ -22,7 +22,7 @@ export default function Overview({ data }) {
         </div>
         <div className="card">
           <p className="card-title">Form 483s Issued</p>
-          <p className="card-number">{num483sIssued}</p>
+          <p className="card-number">{num_483s_issued}</p>
         </div>
       </div>
       <div

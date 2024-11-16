@@ -53,22 +53,11 @@ export default function Page() {
 
     if (monthsDifference <= 12) {
       return "Active";
-    } else if (monthsDifference <= 24) {
+    } else if (monthsDifference <= 36) {
       return "Moderately Active";
     } else {
       return "Inactive";
     }
-  };
-
-  const handleInvestigatorClick = (item) => {
-    const investigatorData = {
-      name: item.investigator,
-      num483sIssued: item.num_483s_issued,
-      lastIssuedDate: item.latest_record_date,
-      status: getStatus(item.latest_record_date),
-    };
-
-    localStorage.setItem("investigatorData", JSON.stringify(investigatorData));
   };
 
   return (
@@ -112,13 +101,12 @@ export default function Page() {
             <tr key={index}>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 <Link
-                  href="/investigators/investigator_details"
+                  href={`/investigators/investigator_details?name=${item.investigator}`}
                   style={{
                     color: "blue",
                     textDecoration: "none",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleInvestigatorClick(item)}
                 >
                   {item.investigator}
                 </Link>
