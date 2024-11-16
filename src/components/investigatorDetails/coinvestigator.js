@@ -1,10 +1,22 @@
 import Link from "next/link";
+import Limit from "@/components/limit";
+import Pagination from "@/components/pagination";
 
-export default function Coinvestigator({ data, onTabChange }) {
-  console.log(data);
+export default function Coinvestigator({
+  data,
+  onTabChange,
+  page,
+  limit,
+  onPageChange,
+  onLimitChange,
+}) {
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedData = data.slice(startIndex, endIndex);
 
   return (
     <>
+      <Limit limit={limit} onLimitChange={onLimitChange} />
       <table
         style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}
       >
@@ -19,7 +31,7 @@ export default function Coinvestigator({ data, onTabChange }) {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => (
+          {paginatedData.map((item, index) => (
             <tr key={index}>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 <Link
@@ -37,6 +49,11 @@ export default function Coinvestigator({ data, onTabChange }) {
           ))}
         </tbody>
       </table>
+      <Pagination
+        page={page}
+        totalPages={Math.ceil(data.length / limit)}
+        onPageChange={onPageChange}
+      />
     </>
   );
 }

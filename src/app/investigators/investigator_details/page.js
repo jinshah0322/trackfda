@@ -14,7 +14,9 @@ export default function Page({ searchParams }) {
   const [overview, setOverview] = useState(null);
   const [form483Details, setForm483Details] = useState({});
   const [coinvestigator, setCoinvestigator] = useState({});
-  const [investigatorData, setInvestigatorData] = useState({})
+  const [investigatorData, setInvestigatorData] = useState({});
+  const [page, setPage] = useState(1); // Pagination state
+  const [limit, setLimit] = useState(10); // Items per page
 
   useEffect(() => {
     const fetchInvestigationsByYear = async () => {
@@ -25,7 +27,7 @@ export default function Page({ searchParams }) {
         );
         const data = await response.json();
         setOverview(data.overview);
-        setInvestigatorData(data.overview.investigatorData[0])
+        setInvestigatorData(data.overview.investigatorData[0]);
         setForm483Details(data.form483data);
         setCoinvestigator(data.coinvestigators);
       } catch (error) {
@@ -37,14 +39,12 @@ export default function Page({ searchParams }) {
     fetchInvestigationsByYear();
   }, [searchParams]);
 
-  
-  
   if (loading) {
     return <Loading />;
   }
-  
-  const {num_483s_issued,last_record_date} = investigatorData
-  
+
+  const { num_483s_issued, last_record_date } = investigatorData;
+
   let status = "";
   if (last_record_date) {
     const currentYear = new Date().getFullYear();
@@ -52,7 +52,10 @@ export default function Page({ searchParams }) {
 
     if (recordYear === currentYear) {
       status = "Active";
-    } else if (recordYear === currentYear - 1 || recordYear === currentYear - 2) {
+    } else if (
+      recordYear === currentYear - 1 ||
+      recordYear === currentYear - 2
+    ) {
       status = "Moderately-Active";
     } else {
       status = "Inactive";
@@ -82,7 +85,9 @@ export default function Page({ searchParams }) {
           Sub Systems
         </a>
         <a
-          className={`tab ${activeTab === "coinvestigators" ? "active-tab" : ""}`}
+          className={`tab ${
+            activeTab === "coinvestigators" ? "active-tab" : ""
+          }`}
           onClick={() => setActiveTab("coinvestigators")}
         >
           Co-Investigators
@@ -97,11 +102,24 @@ export default function Page({ searchParams }) {
 
       <div className="tab-content">
         {activeTab === "overview" && (
-          <Overview data={{ num_483s_issued, last_record_date, overview }} />
+          <Overview
+            data={{ num_483s_issued, last_record_date, overview }}
+            page={page}
+            limit={limit}
+            onPageChange={setPage}
+            onLimitChange={setLimit}
+          />
         )}
         {activeTab === "subsystem" && <div>Subsystem content goes here...</div>}
         {activeTab === "coinvestigators" && (
-          <Coinvestigator data={coinvestigator} onTabChange={setActiveTab}/>
+          <Coinvestigator
+            data={coinvestigator}
+            onTabChange={setActiveTab}
+            page={page}
+            limit={limit}
+            onPageChange={setPage}
+            onLimitChange={setLimit}
+          />
         )}
         {activeTab === "form483s" && <Form483sTab data={form483Details} />}
       </div>
