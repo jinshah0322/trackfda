@@ -46,9 +46,13 @@ export default function BarChart({ data }) {
     scales: {
       y: {
         beginAtZero: true,
+        ticks: {
+          stepSize: 1, // Set the increment value to 1
+        },
       },
     },
   };
+  
 
   return <Bar data={chartData} options={options} />;
 }
