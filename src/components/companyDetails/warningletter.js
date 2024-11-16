@@ -3,7 +3,7 @@ import Limit from "../limit";
 import Pagination from "../pagination";
 
 export default function WarningLettersTab({ data }) {
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
   const totalPages = Math.ceil(data.length / limit);

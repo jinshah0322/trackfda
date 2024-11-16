@@ -5,7 +5,7 @@ import Link from "next/link";
 import '@/app/style.css'
 
 export default function FacilitiesTab({ data }) {
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
   const totalPages = Math.ceil(data.length / limit);

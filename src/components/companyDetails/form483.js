@@ -43,7 +43,7 @@ export default function Form483sTab({ data = [] }) {  // Default to an empty arr
               FEI Number
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Action
+              Form 483
             </th>
           </tr>
         </thead>
