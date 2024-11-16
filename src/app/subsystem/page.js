@@ -197,7 +197,7 @@ const styles = {
     },
     searchButton: {
         padding: '12px 20px',
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#007bff',
         color: '#fff',
         border: 'none',
         borderRadius: '4px',
@@ -205,5 +205,5 @@ const styles = {
         cursor: 'pointer',
         width: '100%',
         maxWidth: '200px',
-    },
+    }
 };

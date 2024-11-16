@@ -39,19 +39,18 @@ export async function POST(req) {
             cd.fei_number = fp.fei_number
         WHERE 
             cd.legal_name IN (${placeholders})
-            AND (fp.date_posted BETWEEN $${companyNames.length + 1} AND $${companyNames.length + 2})
+            AND (fp.date_posted BETWEEN $${companyNames.length + 1} AND $${companyNames.length + 2} OR fp.date_posted IS NULL)
         GROUP BY 
             cd.legal_name;
 
 `;
    const investigatorsQuery=`
      SELECT legal_name,investigators from published_483s where legal_name IN (${placeholders})
-     AND (record_date BETWEEN $${companyNames.length+1} AND $${companyNames.length+2})
+     AND (record_date BETWEEN $${companyNames.length+1} AND $${companyNames.length+2} OR record_date IS NULL)
    `;
-   const warningletterQuery =`
-   `;
-
-   function processInvestigators(data) {
+//    const warningletterQuery =`
+//    `;
+   function processInvestigators(data, companyNames) {
     // Initialize an empty object to hold the grouped data
     const groupedData = {};
   
@@ -66,37 +65,63 @@ export async function POST(req) {
         // If the company is not yet in groupedData, add it
         groupedData[legal_name] = {
           legal_name,
-          investigators: [...investigatorsList],
+          investigatorCounts: {},
         };
-      } else {
-        // If it is already there, add the investigators to the existing array
-        groupedData[legal_name].investigators.push(...investigatorsList);
+      }
+  
+      // For each investigator, increment their count
+      investigatorsList.forEach((investigator) => {
+        if (!investigator) return; // Skip falsy values
+        if (!groupedData[legal_name].investigatorCounts[investigator]) {
+          groupedData[legal_name].investigatorCounts[investigator] = 1;
+        } else {
+          groupedData[legal_name].investigatorCounts[investigator] += 1;
+        }
+      });
+    });
+  
+    // Ensure all companies are included
+    companyNames.forEach((companyName) => {
+      if (!groupedData[companyName]) {
+        groupedData[companyName] = {
+          legal_name: companyName,
+          investigatorCounts: {},
+        };
       }
     });
   
     // Process each company's investigators
     const result = Object.values(groupedData).map((company) => {
-      // Remove empty strings or falsy values from investigators array
-      let investigators = company.investigators.filter(Boolean);
+      const { legal_name, investigatorCounts } = company;
   
-      // Remove duplicate investigators
-      investigators = Array.from(new Set(investigators));
+      // Total number of unique investigators
+      const totalInvestigators = Object.keys(investigatorCounts).length;
   
-      // Total number of investigators having inspected at least one facility
-      const totalInvestigators = investigators.length;
+      let investigatorsString = 'No inspector found';
   
-      // Limit to top N investigators (change TOP_N as needed)
-      const TOP_N = 5;
-      let topInvestigators = investigators;
-      if (investigators.length > TOP_N) {
-        topInvestigators = investigators.slice(0, TOP_N);
+      if (totalInvestigators > 0) {
+        // Create an array of investigators with counts
+        const investigatorsWithCounts = Object.entries(investigatorCounts);
+  
+        // Sort investigators by counts in descending order, then by name
+        investigatorsWithCounts.sort((a, b) => {
+          if (b[1] !== a[1]) {
+            return b[1] - a[1]; // Descending order by count
+          } else {
+            return a[0].localeCompare(b[0]); // Ascending order by name
+          }
+        });
+  
+        // Limit to top N investigators (change TOP_N as needed)
+        const TOP_N = 5;
+        const topInvestigators = investigatorsWithCounts.slice(0, TOP_N);
+  
+        // Join top investigators into a string
+        investigatorsString = topInvestigators.map(([name]) => name).join(', ');
       }
   
-      // Join top investigators into a string
-      const investigatorsString = topInvestigators.join(', ');
-  
       return {
-        legal_name: company.legal_name,
+        legal_name,
         investigators: investigatorsString,
         'Total Investigators having inspected min 1 facility': totalInvestigators,
       };
@@ -104,6 +129,7 @@ export async function POST(req) {
   
     return result;
   }
+  
   
   
 try {
@@ -128,7 +154,7 @@ try {
         : ''
       }));
     const { rows :investigators} = await query(investigatorsQuery, values);
-    const investigatorsMetric= processInvestigators(investigators);
+    const investigatorsMetric= processInvestigators(investigators,companyNames);
     return NextResponse.json({inspectionMetric,from483sMetric,investigatorsMetric},{status:200});
 } catch (error) {
     console.error('Error executing query', error);
