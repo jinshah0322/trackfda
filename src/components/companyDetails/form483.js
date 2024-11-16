@@ -2,7 +2,7 @@ import { useState } from "react";
 import Limit from "../limit";
 import Pagination from "../pagination";
 
-export default function Form483sTab({ data }) {
+export default function Form483sTab({ data = [] }) {  // Default to an empty array
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
