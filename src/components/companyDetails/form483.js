@@ -3,7 +3,7 @@ import Limit from "../limit";
 import Pagination from "../pagination";
 
 export default function Form483sTab({ data = [] }) {  // Default to an empty array
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
   // Handle cases where data is not an array or is empty
@@ -31,19 +31,27 @@ export default function Form483sTab({ data = [] }) {  // Default to an empty arr
     <div>
       <Limit limit={limit} onLimitChange={handleLimitChange} />
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
+      <thead>
           <tr>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Posted Date</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Company Name</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>FEI Number</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Action</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Issue Date
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Company Name
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              FEI Number
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Form 483
+            </th>
           </tr>
         </thead>
         <tbody>
           {paginatedData.map((item, index) => (
             <tr key={index}>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {new Date(item.date_posted).toLocaleDateString("en-GB")}
+                {new Date(item.record_date).toLocaleDateString("en-GB")}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.legal_name}
