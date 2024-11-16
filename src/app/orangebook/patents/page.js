@@ -4,6 +4,7 @@ import Select from "react-select";
 import Loading from "@/components/loading";
 import Pagination from "@/components/pagination";
 import Limit from "@/components/limit";
+import Link from "next/link";
 
 export default function Page() {
   const [data, setData] = useState([]);
@@ -90,7 +91,7 @@ export default function Page() {
     selectedIngredient,
     selectedTradename,
     selectedApplicant,
-    expiryFilter
+    expiryFilter,
   ]);
 
   const handleTypeChange = (type) => {
@@ -127,6 +128,9 @@ export default function Page() {
 
   return (
     <div>
+      <div className="breadcrumb">
+        <Link href="/">← Back to Dashboard</Link>
+      </div>
       <h1>Orange Book Patents</h1>
 
       {/* Type Filters */}

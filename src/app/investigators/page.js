@@ -62,6 +62,9 @@ export default function Page() {
 
   return (
     <div>
+      <div className="breadcrumb">
+        <Link href="/">← Back to Dashboard</Link>
+      </div>
       <h1>Investigator List</h1>
 
       <Search
