@@ -3,7 +3,7 @@ import Limit from "../limit";
 import Pagination from "../pagination";
 
 export default function Form483sTab({ data }) {
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
   // Handle null or undefined data
