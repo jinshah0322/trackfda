@@ -13,6 +13,22 @@ export async function GET(req) {
   }
 
   try {
+    const { rows: investigatorData } = await query(
+      `
+      SELECT 
+          COUNT(DISTINCT p483s.published_483s_id) AS num_483s_issued,
+          MAX(p483s.record_date) AS last_record_date
+      FROM 
+          published_483s p483s
+      WHERE EXISTS (
+          SELECT 1
+          FROM UNNEST(p483s.investigators) AS inv
+          WHERE LOWER(REGEXP_REPLACE(inv, '\\s*\\.\\s*', ' ', 'g')) = LOWER(REGEXP_REPLACE($1, '\\s*\\.\\s*', ' ', 'g'))
+      );
+      `,
+      [investigator]
+    );
+
     const { rows: investigationByYear } = await query(
       `
             SELECT 
@@ -57,7 +73,8 @@ export async function GET(req) {
       [investigator]
     );
 
-    const {rows:form483data} = await query(`
+    const { rows: form483data } = await query(
+      `
       SELECT 
         p483s.record_date, 
         cd.legal_name, 
@@ -76,10 +93,47 @@ export async function GET(req) {
       )
       ORDER BY 
           p483s.record_date DESC;
-      `,[investigator])
+      `,
+      [investigator]
+    );
+
+    const { rows: coinvestigators } = await query(
+      `
+        WITH investigator_records AS (
+        SELECT 
+            published_483s_id,
+            UNNEST(investigators) AS co_investigator
+        FROM 
+            published_483s
+        WHERE 
+            EXISTS (
+                SELECT 1
+                FROM UNNEST(investigators) AS inv
+                WHERE LOWER(REGEXP_REPLACE(inv, '\\s*\\.\\s*', ' ', 'g')) = LOWER(REGEXP_REPLACE($1, '\\s*\\.\\s*', ' ', 'g'))
+            )
+        )
+        SELECT 
+            co_investigator AS co_investigator_name,
+            COUNT(*) AS investigations_done
+        FROM 
+            investigator_records
+        WHERE 
+            LOWER(REGEXP_REPLACE(co_investigator, '\\s*\\.\\s*', ' ', 'g')) != LOWER(REGEXP_REPLACE($1, '\\s*\\.\\s*', ' ', 'g'))
+        GROUP BY 
+            co_investigator
+        ORDER BY 
+            investigations_done DESC, 
+            co_investigator_name;
+        `,
+      [investigator]
+    );
 
     return NextResponse.json(
-      { overview: { investigationByYear, facilityDetails_issueDate },form483data },
+      {
+        overview: { investigatorData, investigationByYear, facilityDetails_issueDate },
+        form483data,
+        coinvestigators,
+      },
       { status: 200 }
     );
   } catch (error) {
