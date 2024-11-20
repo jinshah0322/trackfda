@@ -23,7 +23,6 @@ export default function Page() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    
     const fetchData = async () => {
       setIsLoading(true);
       const result = await getCompanies(page, limit, searchTerm);
@@ -36,13 +35,15 @@ export default function Page() {
 
   const totalPages = Math.ceil(totalCount / limit);
 
-
   if (isLoading) {
     return <Loading />;
   }
 
   return (
     <div>
+      <div className="breadcrumb">
+        <Link href="/">← Back to Dashboard</Link>
+      </div>
       <h1>Company List</h1>
 
       <Search
@@ -51,7 +52,7 @@ export default function Page() {
           setSearchTerm(term);
           setPage(1);
         }}
-        placeholder=' Search by company...'
+        placeholder=" Search by company..."
       />
 
       <Limit
