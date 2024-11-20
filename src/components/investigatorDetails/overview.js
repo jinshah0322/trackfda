@@ -26,13 +26,7 @@ export default function Overview({
       >
         <div className="card">
           <p className="card-title">Last Form 483 Issued Date</p>
-          <p className="card-number">
-            {new Date(last_record_date).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            })}
-          </p>
+          <p className="card-number">{last_record_date}</p>
         </div>
         <div className="card">
           <p className="card-title">Form 483s Issued</p>
@@ -94,7 +88,9 @@ export default function Overview({
       </table>
       <Pagination
         page={page}
-        totalPages={Math.ceil(overview.facilityDetails_issueDate.length / limit)}
+        totalPages={Math.ceil(
+          overview.facilityDetails_issueDate.length / limit
+        )}
         onPageChange={onPageChange}
       />
     </>

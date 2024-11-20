@@ -32,7 +32,7 @@ export async function GET(req) {
     const { rows: investigationByYear } = await query(
       `
             SELECT 
-                EXTRACT(YEAR FROM record_date) AS year, 
+                EXTRACT(YEAR FROM TO_DATE(record_date, 'DD-MM-YYYY')) AS year, 
                 COUNT(DISTINCT published_483s_id) AS investigations
             FROM published_483s
             WHERE EXISTS (
@@ -52,7 +52,7 @@ export async function GET(req) {
             cd.fei_number,
             cd.legal_name, 
             cd.firm_address, 
-            STRING_AGG(TO_CHAR(p483s.record_date, 'DD Mon YYYY'), ', ') AS record_dates
+            STRING_AGG(TO_CHAR(TO_DATE(p483s.record_date, 'DD-MM-YYYY'), 'DD Mon YYYY'), ', ') AS record_dates
         FROM 
             published_483s p483s
         JOIN 
