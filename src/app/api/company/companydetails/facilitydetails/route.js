@@ -89,33 +89,67 @@ export async function GET(req) {
       { rows: warningletters },
       { rows: actNumber }
     ] = await Promise.all([
-      query(`SELECT legal_name, fei_number, firm_profile, firm_address FROM company_details WHERE fei_number=$1`, [fei_number]),
-      query(`SELECT cd.legal_name, cd.fei_number, i.project_area, i.product_type, i.classification,
-              i.posted_citations, i.fiscal_year, i.inspection_end_date
-             FROM company_details cd
-             INNER JOIN inspection_details i ON cd.fei_number = i.fei_number
-             WHERE cd.fei_number = $1`, [fei_number]),
-      query(`SELECT cd.legal_name, cd.fei_number, p.date_posted, p.download_link
-             FROM company_details cd
-             INNER JOIN published_483s p ON cd.fei_number = p.fei_number
-             WHERE cd.fei_number = $1`, [fei_number]),
-      query(`SELECT * FROM compliance_actions WHERE fei_number=$1`, [fei_number]),
-      query(`SELECT product_code_description, import_division, refused_date AS date_to_show FROM import_refusals WHERE fei_number=$1`, [fei_number]),
-      query(`SELECT program_area, short_description, inspection_end_date AS date_to_show
-             FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY fei_number, inspection_end_date ORDER BY inspection_end_date DESC) AS rn
-                   FROM inspections_citations_details) AS subquery
-             WHERE fei_number = $1 AND rn = 1
-             ORDER BY inspection_end_date DESC`, [fei_number]),
-      query(`SELECT product_type, classification, inspection_end_date AS date_to_show
-             FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY fei_number, inspection_end_date ORDER BY inspection_end_date DESC) AS rn
-                   FROM inspection_details) AS subquery
-             WHERE fei_number = $1 AND rn = 1
-             ORDER BY inspection_end_date DESC`, [fei_number]),
-      query(`SELECT wld.subject, wld.issuingoffice, ca.action_taken_date AS date_to_show 
-             FROM compliance_actions AS ca
-             LEFT JOIN warninglettersdetails AS wld ON ca.case_injunction_id = wld.marcscmsno
-             WHERE fei_number = $1 AND wld.issuingoffice IS NOT NULL`, [fei_number]),
-      query(`SELECT act_cfr_number FROM inspections_citations_details WHERE fei_number=$1`, [fei_number])
+      query(
+        `SELECT cd.legal_name, cd.fei_number, cd.firm_profile, cd.firm_address
+         FROM company_details cd
+         WHERE cd.fei_number = $1`,
+        [fei_number]
+      ),
+      query(
+        `SELECT cd.legal_name, cd.fei_number, i.project_area, i.product_type, i.classification,
+                i.posted_citations, i.fiscal_year, i.inspection_end_date
+         FROM company_details cd
+         INNER JOIN inspection_details i ON cd.fei_number = i.fei_number
+         WHERE cd.fei_number = $1`,
+        [fei_number]
+      ),
+      query(
+        `SELECT cd.legal_name, cd.fei_number, p.record_date, p.download_link
+         FROM company_details cd
+         INNER JOIN published_483s p ON cd.fei_number = p.fei_number
+         WHERE cd.fei_number = $1`,
+        [fei_number]
+      ),
+      query(
+        `SELECT * FROM compliance_actions ca
+         WHERE ca.fei_number = $1`,
+        [fei_number]
+      ),
+      query(
+        `SELECT ir.product_code_description, ir.import_division, ir.refused_date AS date_to_show
+         FROM import_refusals ir
+         WHERE ir.fei_number = $1`,
+        [fei_number]
+      ),
+      query(
+        `SELECT ic.program_area, ic.short_description, ic.inspection_end_date AS date_to_show
+         FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY fei_number, inspection_end_date ORDER BY inspection_end_date DESC) AS rn
+               FROM inspections_citations_details) ic
+         WHERE ic.fei_number = $1 AND rn = 1
+         ORDER BY ic.inspection_end_date DESC`,
+        [fei_number]
+      ),
+      query(
+        `SELECT id.product_type, id.classification, id.inspection_end_date AS date_to_show
+         FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY fei_number, inspection_end_date ORDER BY inspection_end_date DESC) AS rn
+               FROM inspection_details) id
+         WHERE id.fei_number = $1 AND rn = 1
+         ORDER BY id.inspection_end_date DESC`,
+        [fei_number]
+      ),
+      query(
+        `SELECT wld.subject, wld.issuingoffice, ca.action_taken_date AS date_to_show
+         FROM compliance_actions ca
+         LEFT JOIN warninglettersdetails wld ON ca.case_injunction_id = wld.marcscmsno
+         WHERE ca.fei_number = $1 AND wld.issuingoffice IS NOT NULL`,
+        [fei_number]
+      ),
+      query(
+        `SELECT act_cfr_number
+         FROM inspections_citations_details icd
+         WHERE icd.fei_number = $1`,
+        [fei_number]
+      )
     ]);
 
     // Process compliance actions timeline

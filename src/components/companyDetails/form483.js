@@ -6,6 +6,7 @@ export default function Form483sTab({ data = [] }) {  // Default to an empty arr
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
+
   // Handle cases where data is not an array or is empty
   if (!Array.isArray(data) || data.length === 0) {
     return (
@@ -48,35 +49,41 @@ export default function Form483sTab({ data = [] }) {  // Default to an empty arr
           </tr>
         </thead>
         <tbody>
-          {paginatedData.map((item, index) => (
-            <tr key={index}>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {new Date(item.record_date).toLocaleDateString("en-GB")}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.legal_name}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.fei_number}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                <button
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#007bff",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => window.open(item.download_link, "_blank")}
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+          
+  {paginatedData.map((item, index) => {
+    // Parse the ISO date and format it
+   
+    return (
+      <tr key={index}>
+        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+          {item.record_date}
+        </td>
+        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+          {item.legal_name}
+        </td>
+        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+          {item.fei_number}
+        </td>
+        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+          <button
+            style={{
+              padding: "8px 16px",
+              backgroundColor: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+            onClick={() => window.open(item.download_link, "_blank")}
+          >
+            View
+          </button>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
+
       </table>
       <Pagination
         page={page}
