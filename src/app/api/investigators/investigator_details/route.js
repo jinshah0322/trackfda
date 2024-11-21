@@ -92,6 +92,11 @@ export async function GET(req) {
               unnest(p483s.investigators) AS investigator
           FROM 
               published_483s p483s
+          WHERE 
+          p483s.fei_number IN (
+              SELECT fei_number 
+              FROM company_details
+        )
       ),
       warning_letter_matches AS (
           SELECT 

@@ -17,10 +17,10 @@ export async function GET(req) {
               published_483s_id
           FROM 
               published_483s
-        WHERE 
-        fei_number IN (
-            SELECT fei_number 
-            FROM company_details
+          WHERE 
+          fei_number IN (
+              SELECT fei_number 
+              FROM company_details
         )
       ),
       warning_letter_counts AS (
