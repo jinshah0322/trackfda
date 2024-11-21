@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import styles from '../from483.module.css'; // Import the CSS module
+import Loading from '@/components/loading';
 
 const Page = () => {
   const [filters, setFilters] = useState({
@@ -167,7 +168,7 @@ const Page = () => {
 
       {/* Table */}
       {loading ? (
-        <p>Loading...</p>
+        <Loading/>
       ) : error ? (
         <p className={styles.error}>{error}</p>
       ) : (

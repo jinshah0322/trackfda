@@ -6,7 +6,7 @@ export async function GET(req) {
     const url = new URL(req.url);
     const search = url.searchParams.get("search") || "";
 
-    // Define the base SQL query with placeholders for dynamic conditions
+    // Base SQL query
     let sqlQuery = `
       WITH normalized_data AS (
           SELECT 
@@ -17,33 +17,84 @@ export async function GET(req) {
               published_483s_id
           FROM 
               published_483s
+      ),
+      warning_letter_counts AS (
+          SELECT 
+              nd.investigator,
+              COUNT(*) AS total_warning_letters
+          FROM 
+              normalized_data nd
+          INNER JOIN 
+              warninglettersdetails w
+          ON 
+              nd.fei_number = w.fei_number
+              AND (
+                  -- Priority 1: Match form483_issue_date
+                  (
+                      TO_DATE(w.form483_issue_date, 'DD-MM-YYYY') = TO_DATE(nd.record_date, 'DD-MM-YYYY')
+                      OR (
+                          TO_DATE(w.form483_issue_date, 'DD-MM-YYYY') 
+                          BETWEEN 
+                              TO_DATE(nd.record_date, 'DD-MM-YYYY') 
+                              AND 
+                              TO_DATE(nd.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
+                      )
+                  )
+                  -- Priority 2: Fallback to form483_response_date
+                  OR (
+                      TO_DATE(w.form483_response_date, 'DD-MM-YYYY') 
+                      BETWEEN 
+                          TO_DATE(nd.record_date, 'DD-MM-YYYY') 
+                      AND 
+                          TO_DATE(nd.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
+                  )
+                  -- Priority 3: Fallback to letterissuedate
+                  OR (
+                      TO_DATE(w.letterissuedate, 'DD-MM-YYYY') 
+                      BETWEEN 
+                          TO_DATE(nd.record_date, 'DD-MM-YYYY') 
+                          AND 
+                          TO_DATE(nd.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
+                  )
+              )
+          GROUP BY 
+              nd.investigator
       )
       SELECT 
-          MIN(investigator) AS investigator,  -- Displays the original name format
-          array_agg(DISTINCT fei_number) AS fei_numbers,
-          COUNT(DISTINCT published_483s_id) AS num_483s_issued,
-          MAX(record_date) AS latest_record_date
+          MIN(nd.investigator) AS investigator,  -- Displays the original name format
+          array_agg(DISTINCT nd.fei_number) AS fei_numbers,
+          COUNT(DISTINCT nd.published_483s_id) AS num_483s_issued,
+          MAX(nd.record_date) AS latest_record_date,
+          COALESCE(wc.total_warning_letters, 0) AS warning_letter_count
       FROM 
-          normalized_data
+          normalized_data nd
+      LEFT JOIN 
+          warning_letter_counts wc
+      ON 
+          nd.investigator = wc.investigator
     `;
 
-    // Add WHERE clause conditionally based on the search term
+    // Add WHERE clause if a search term is provided
+    const params = [];
     if (search) {
-      sqlQuery += `WHERE normalized_investigator ILIKE '%' || REGEXP_REPLACE(LOWER($1),'\\s*\\.\\s*',' ', 'g') || '%'`;
+      sqlQuery += `
+          WHERE normalized_investigator ILIKE '%' || $1 || '%'
+      `;
+      params.push(search);
     }
 
-    // Complete the query with GROUP BY and ORDER BY clauses
+    // Add GROUP BY and ORDER BY clauses
     sqlQuery += `
       GROUP BY 
-          normalized_investigator
+          nd.normalized_investigator, wc.total_warning_letters
       ORDER BY 
-          num_483s_issued desc
+          warning_letter_count DESC, num_483s_issued DESC
     `;
 
-    const params = search ? [search] : [];
-
+    // Execute the query
     const { rows: investigatorsData } = await query(sqlQuery, params);
 
+    // Return results as JSON
     return NextResponse.json({ investigatorsData }, { status: 200 });
   } catch (error) {
     console.error("Error fetching Investigator Details:", error);

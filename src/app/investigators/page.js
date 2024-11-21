@@ -117,6 +117,9 @@ export default function Page() {
               Number of 483s Issued
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Number of Warning Letters issued
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Last 483 Issued Date
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Status</th>
@@ -139,6 +142,9 @@ export default function Page() {
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.num_483s_issued}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.warning_letter_count}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.latest_record_date || "No Date Available"}
