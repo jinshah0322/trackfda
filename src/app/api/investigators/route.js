@@ -61,10 +61,10 @@ export async function GET(req) {
               LOWER(nd.investigator)
       )
       SELECT 
-          MIN(nd.investigator) AS investigator,  -- Ensures consistent display
+          MIN(nd.investigator) AS investigator, 
           array_agg(DISTINCT nd.fei_number) AS fei_numbers,
           COUNT(DISTINCT nd.published_483s_id) AS num_483s_issued,
-          MAX(nd.record_date) AS latest_record_date,
+          TO_CHAR(MAX(TO_DATE(nd.record_date, 'DD-MM-YYYY')), 'DD-MM-YYYY') AS latest_record_date,
           COALESCE(wc.total_warning_letters, 0) AS warning_letter_count
       FROM 
           normalized_data nd
