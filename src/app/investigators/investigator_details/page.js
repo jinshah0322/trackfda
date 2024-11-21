@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import "@/app/style.css";
 import Overview from "@/components/investigatorDetails/overview";
 import Loading from "@/components/loading";
-import Form483sTab from "@/components/companyDetails/form483";
 import Coinvestigator from "@/components/investigatorDetails/coinvestigator";
+import Form483 from "@/components/investigatorDetails/form483";
 
 export default function Page({ searchParams }) {
   const [activeTab, setActiveTab] = useState("overview");
@@ -86,6 +86,8 @@ export default function Page({ searchParams }) {
   };
 
   const status = last_record_date ? getStatus(last_record_date) : "No Status";
+  console.log(form483Details);
+  
 
   return (
     <div>
@@ -146,7 +148,7 @@ export default function Page({ searchParams }) {
             onLimitChange={setLimit}
           />
         )}
-        {activeTab === "form483s" && <Form483sTab data={form483Details} />}
+        {activeTab === "form483s" &&  <Form483 data={form483Details}/>}
       </div>
     </div>
   );

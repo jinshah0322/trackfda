@@ -78,7 +78,6 @@ export async function GET(req) {
       SELECT 
         p483s.record_date, 
         cd.legal_name, 
-        p483s.fei_number, 
         p483s.download_link
       FROM 
           published_483s p483s
@@ -89,7 +88,7 @@ export async function GET(req) {
       WHERE EXISTS (
           SELECT 1
           FROM unnest(p483s.investigators) AS inv
-          WHERE LOWER(REGEXP_REPLACE(inv, '\\s*\\.\\s*', ' ', 'g')) = LOWER(REGEXP_REPLACE($1, '\\s*\\.\\s*', ' ', 'g'))
+          WHERE inv = $1
       )
       ORDER BY 
           p483s.record_date DESC;

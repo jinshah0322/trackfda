@@ -20,7 +20,7 @@ export async function GET(req) {
       ),
       warning_letter_counts AS (
           SELECT 
-              nd.investigator,
+              LOWER(nd.investigator) AS investigator,
               COUNT(*) AS total_warning_letters
           FROM 
               normalized_data nd
@@ -55,13 +55,13 @@ export async function GET(req) {
                           TO_DATE(nd.record_date, 'DD-MM-YYYY') 
                           AND 
                           TO_DATE(nd.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
-                  )
+                      )
               )
           GROUP BY 
-              nd.investigator
+              LOWER(nd.investigator)
       )
       SELECT 
-          MIN(nd.investigator) AS investigator,  -- Displays the original name format
+          MIN(nd.investigator) AS investigator,  -- Ensures consistent display
           array_agg(DISTINCT nd.fei_number) AS fei_numbers,
           COUNT(DISTINCT nd.published_483s_id) AS num_483s_issued,
           MAX(nd.record_date) AS latest_record_date,
@@ -71,10 +71,10 @@ export async function GET(req) {
       LEFT JOIN 
           warning_letter_counts wc
       ON 
-          nd.investigator = wc.investigator
+          LOWER(nd.investigator) = wc.investigator
     `;
 
-    // Add WHERE clause if a search term is provided
+    // Add WHERE clause dynamically if a search term is provided
     const params = [];
     if (search) {
       sqlQuery += `
@@ -83,10 +83,10 @@ export async function GET(req) {
       params.push(search);
     }
 
-    // Add GROUP BY and ORDER BY clauses
+    // Complete the query with GROUP BY and ORDER BY
     sqlQuery += `
       GROUP BY 
-          nd.normalized_investigator, wc.total_warning_letters
+          LOWER(nd.investigator), wc.total_warning_letters
       ORDER BY 
           warning_letter_count DESC, num_483s_issued DESC
     `;

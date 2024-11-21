@@ -2,12 +2,12 @@ import { useState } from "react";
 import Limit from "../limit";
 import Pagination from "../pagination";
 
-export default function Form483sTab({ data = [] }) {
-  // Default to an empty array
+export default function Form483({ data = [] }) {
+  console.log(data);
+
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
-  // Handle cases where data is not an array or is empty
   if (!Array.isArray(data) || data.length === 0) {
     return (
       <div style={{ textAlign: "center", padding: "16px" }}>
@@ -29,7 +29,7 @@ export default function Form483sTab({ data = [] }) {
   };
 
   return (
-    <div>
+    <>
       <Limit limit={limit} onLimitChange={handleLimitChange} />
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
@@ -41,17 +41,21 @@ export default function Form483sTab({ data = [] }) {
               Company Name
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              FEI Number
+              Product Type
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Form 483
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Converted to Warning Letter
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Warning Letter
             </th>
           </tr>
         </thead>
         <tbody>
           {paginatedData.map((item, index) => {
-            // Parse the ISO date and format it
-
             return (
               <tr key={index}>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
@@ -61,7 +65,7 @@ export default function Form483sTab({ data = [] }) {
                   {item.legal_name}
                 </td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                  {item.fei_number}
+                  Drug
                 </td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                   <button
@@ -78,6 +82,8 @@ export default function Form483sTab({ data = [] }) {
                     View
                   </button>
                 </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}></td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}></td>
               </tr>
             );
           })}
@@ -88,6 +94,6 @@ export default function Form483sTab({ data = [] }) {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
-    </div>
+    </>
   );
 }
