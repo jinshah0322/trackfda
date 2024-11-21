@@ -82,8 +82,30 @@ export default function Form483({ data = [] }) {
                     View
                   </button>
                 </td>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}></td>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}></td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {item.warningletterurl === "" ? "---" : "✓"}
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {item.warningletterurl === "" ? (
+                    "---"
+                  ) : (
+                    <button
+                      style={{
+                        padding: "8px 16px",
+                        backgroundColor: "#007bff",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() =>
+                        window.open(item.warningletterurl, "_blank")
+                      }
+                    >
+                      View
+                    </button>
+                  )}
+                </td>
               </tr>
             );
           })}

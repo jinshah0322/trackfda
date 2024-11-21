@@ -75,21 +75,63 @@ export async function GET(req) {
 
     const { rows: form483data } = await query(
       `
-      SELECT 
-        p483s.record_date, 
-        cd.legal_name, 
-        p483s.download_link
-      FROM 
-          published_483s p483s
-      JOIN 
-          company_details cd 
-      ON 
-          p483s.fei_number = cd.fei_number
-      WHERE EXISTS (
-          SELECT 1
-          FROM unnest(p483s.investigators) AS inv
-          WHERE inv = $1
+      WITH normalized_data AS (
+          SELECT 
+              p483s.record_date, 
+              p483s.legal_name, 
+              p483s.download_link,
+              p483s.fei_number,
+              unnest(p483s.investigators) AS investigator
+          FROM 
+              published_483s p483s
+      ),
+      warning_letter_matches AS (
+          SELECT 
+              w.fei_number,
+              w.warningletterurl,
+              w.form483_issue_date,
+              w.form483_response_date,
+              w.letterissuedate
+          FROM 
+              warninglettersdetails w
       )
+      SELECT 
+          p483s.record_date, 
+          p483s.legal_name, 
+          p483s.download_link,
+          COALESCE(wl.warningletterurl, '') AS warningletterurl
+      FROM 
+          normalized_data p483s
+      LEFT JOIN warning_letter_matches wl
+      ON 
+          p483s.fei_number = wl.fei_number
+          AND (
+              -- Match FEI Number and date criteria
+              TO_DATE(wl.form483_issue_date, 'DD-MM-YYYY') = TO_DATE(p483s.record_date, 'DD-MM-YYYY')
+              OR (
+                  TO_DATE(wl.form483_issue_date, 'DD-MM-YYYY') 
+                  BETWEEN 
+                      TO_DATE(p483s.record_date, 'DD-MM-YYYY') 
+                      AND 
+                      TO_DATE(p483s.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
+              )
+              OR (
+                  TO_DATE(wl.form483_response_date, 'DD-MM-YYYY') 
+                  BETWEEN 
+                      TO_DATE(p483s.record_date, 'DD-MM-YYYY') 
+                      AND 
+                      TO_DATE(p483s.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
+              )
+              OR (
+                  TO_DATE(wl.letterissuedate, 'DD-MM-YYYY') 
+                  BETWEEN 
+                      TO_DATE(p483s.record_date, 'DD-MM-YYYY') 
+                      AND 
+                      TO_DATE(p483s.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
+              )
+          )
+      WHERE 
+          p483s.investigator = $1 
       ORDER BY 
           p483s.record_date DESC;
       `,
@@ -129,7 +171,11 @@ export async function GET(req) {
 
     return NextResponse.json(
       {
-        overview: { investigatorData, investigationByYear, facilityDetails_issueDate },
+        overview: {
+          investigatorData,
+          investigationByYear,
+          facilityDetails_issueDate,
+        },
         form483data,
         coinvestigators,
       },
