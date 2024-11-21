@@ -16,15 +16,15 @@ export async function GET(req) {
     const { rows: investigatorData } = await query(
       `
       SELECT 
-          COUNT(DISTINCT p483s.published_483s_id) AS num_483s_issued,
-          MAX(p483s.record_date) AS last_record_date
-      FROM 
-          published_483s p483s
-      WHERE EXISTS (
-          SELECT 1
-          FROM UNNEST(p483s.investigators) AS inv
-          WHERE LOWER(REGEXP_REPLACE(inv, '\\s*\\.\\s*', ' ', 'g')) = LOWER(REGEXP_REPLACE($1, '\\s*\\.\\s*', ' ', 'g'))
-      );
+            COUNT(DISTINCT p483s.published_483s_id) AS num_483s_issued,
+            TO_CHAR(MAX(TO_DATE(p483s.record_date, 'DD-MM-YYYY')), 'DD-MM-YYYY') AS last_record_date
+        FROM 
+            published_483s p483s
+        WHERE EXISTS (
+            SELECT 1
+            FROM UNNEST(p483s.investigators) AS inv
+            WHERE inv = $1
+        );
       `,
       [investigator]
     );
@@ -38,7 +38,7 @@ export async function GET(req) {
             WHERE EXISTS (
                 SELECT 1
                 FROM unnest(investigators) AS inv
-                WHERE LOWER(REGEXP_REPLACE(inv, '\\s*\\.\\s*', ' ', 'g')) = LOWER(REGEXP_REPLACE($1, '\\s*\\.\\s*', ' ', 'g'))
+                WHERE inv=$1
             )
             GROUP BY year
             ORDER BY year;
@@ -62,7 +62,7 @@ export async function GET(req) {
         WHERE EXISTS (
             SELECT 1
             FROM unnest(p483s.investigators) AS inv
-            WHERE LOWER(REGEXP_REPLACE(inv, '\\s*\\.\\s*', ' ', 'g')) = LOWER(REGEXP_REPLACE($1, '\\s*\\.\\s*', ' ', 'g'))
+            WHERE inv=$1
         )
         GROUP BY 
             cd.fei_number,
@@ -150,7 +150,7 @@ export async function GET(req) {
             EXISTS (
                 SELECT 1
                 FROM UNNEST(investigators) AS inv
-                WHERE LOWER(REGEXP_REPLACE(inv, '\\s*\\.\\s*', ' ', 'g')) = LOWER(REGEXP_REPLACE($1, '\\s*\\.\\s*', ' ', 'g'))
+                WHERE inv=$1
             )
         )
         SELECT 
