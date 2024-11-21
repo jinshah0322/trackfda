@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Select from "react-select";
-import Limit from "@/components/limit"; // Using your existing Limit component
-import Pagination from "@/components/pagination"; // Using your existing Pagination component
+import Limit from "@/components/limit";
+import Pagination from "@/components/pagination";
 import Loading from "@/components/loading";
 import Link from "next/link";
 
-const Page = () => {
+export default function Page() {
   const [filters, setFilters] = useState({
     year: "All",
     companyName: "",
+    conversion: "All", // Conversion filter
   });
 
   const [data, setData] = useState([]); // State to store fetched data
@@ -59,11 +59,7 @@ const Page = () => {
         ).sort((a, b) => b - a);
 
         // Add "All" option at the top of the list
-        const yearOptions = [
-          { value: "All", label: "All" },
-          ...uniqueYears.map((year) => ({ value: year, label: year })),
-        ];
-        setYears(yearOptions);
+        setYears(["All", ...uniqueYears]);
       } catch (err) {
         setError("Failed to fetch data.");
       } finally {
@@ -89,8 +85,14 @@ const Page = () => {
           new Date(item.record_date).getFullYear().toString() === filters.year;
         const companyNameMatches =
           !searchTerm || item.legal_name.toLowerCase().includes(searchTerm);
+        const conversionMatches =
+          filters.conversion === "All" ||
+          (filters.conversion === "Converted" &&
+            item.warningletterurl !== "") ||
+          (filters.conversion === "Not Converted" &&
+            item.warningletterurl === "");
 
-        return yearMatches && companyNameMatches;
+        return yearMatches && companyNameMatches && conversionMatches;
       });
       setFilteredData(filtered);
       setCurrentPage(1); // Reset to the first page
@@ -107,20 +109,11 @@ const Page = () => {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <div style={{ marginBottom: "20px" }}>
-        <Link
-          href="/"
-          style={{ textDecoration: "none", color: "#007bff" }}
-        >
-          ← Back to Dashboard
-        </Link>
+    <div>
+      <div className="breadcrumb">
+        <Link href="/">← Back to Dashboard</Link>
       </div>
-      <h1
-        style={{ marginBottom: "20px", fontSize: "24px", fontWeight: "bold" }}
-      >
-        Recent Form 483s
-      </h1>
+      <h1>Recent Form 483s</h1>
 
       {/* Filters */}
       <div
@@ -135,13 +128,22 @@ const Page = () => {
           <label style={{ display: "block", marginBottom: "5px" }}>
             Issue Year:
           </label>
-          <Select
-            options={years}
-            value={years.find((option) => option.value === filters.year)}
-            onChange={(option) =>
-              handleFilterChange("year", option?.value || "")
-            }
-          />
+          <select
+            value={filters.year}
+            onChange={(e) => handleFilterChange("year", e.target.value)}
+            style={{
+              padding: "8px",
+              border: "1px solid #ddd",
+              borderRadius: "4px",
+              backgroundColor: "white",
+            }}
+          >
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label style={{ display: "block", marginBottom: "5px" }}>
@@ -159,6 +161,25 @@ const Page = () => {
               borderRadius: "4px",
             }}
           />
+        </div>
+        <div>
+          <label style={{ display: "block", marginBottom: "5px" }}>
+            Conversion Status:
+          </label>
+          <select
+            value={filters.conversion}
+            onChange={(e) => handleFilterChange("conversion", e.target.value)}
+            style={{
+              padding: "8px",
+              border: "1px solid #ddd",
+              borderRadius: "4px",
+              backgroundColor: "white",
+            }}
+          >
+            <option value="All">All</option>
+            <option value="Converted">Converted To Warning Letter</option>
+            <option value="Not Converted">Not Converted</option>
+          </select>
         </div>
       </div>
 
@@ -270,6 +291,4 @@ const Page = () => {
       </div>
     </div>
   );
-};
-
-export default Page;
+}
