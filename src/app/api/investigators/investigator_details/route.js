@@ -20,7 +20,11 @@ export async function GET(req) {
             TO_CHAR(MAX(TO_DATE(p483s.record_date, 'DD-MM-YYYY')), 'DD-MM-YYYY') AS last_record_date
         FROM 
             published_483s p483s
-        WHERE EXISTS (
+        WHERE fei_number IN (
+                SELECT fei_number 
+                FROM company_details
+            )
+            AND EXISTS (
             SELECT 1
             FROM UNNEST(p483s.investigators) AS inv
             WHERE inv = $1
@@ -35,7 +39,11 @@ export async function GET(req) {
                 EXTRACT(YEAR FROM TO_DATE(record_date, 'DD-MM-YYYY')) AS year, 
                 COUNT(DISTINCT published_483s_id) AS investigations
             FROM published_483s
-            WHERE EXISTS (
+            WHERE fei_number IN (
+                SELECT fei_number 
+                FROM company_details
+            )
+            AND EXISTS (
                 SELECT 1
                 FROM unnest(investigators) AS inv
                 WHERE inv=$1
