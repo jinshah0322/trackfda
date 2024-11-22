@@ -64,7 +64,7 @@ export default function WarningLettersTab({ data }) {
                     {item.issuingoffice}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.fei_number}
+                    {item.subject}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     <button
