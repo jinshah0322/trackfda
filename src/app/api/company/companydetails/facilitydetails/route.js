@@ -104,7 +104,13 @@ export async function GET(req) {
         [fei_number]
       ),
       query(
-        `SELECT cd.legal_name, cd.fei_number, p.record_date, p.download_link
+        `SELECT cd.legal_name, cd.fei_number, p.record_date, p.download_link, p.inspection_start_date,p.inspection_end_date,
+        CASE 
+              WHEN inspection_start_date = '' OR inspection_end_date = '' THEN 'NA'
+              ELSE CONCAT(
+                  (TO_DATE(inspection_end_date, 'DD/MM/YYYY') - TO_DATE(inspection_start_date, 'DD/MM/YYYY')), ' days'
+              )
+          END AS inspection_duration
          FROM company_details cd
          INNER JOIN published_483s p ON cd.fei_number = p.fei_number
          WHERE cd.fei_number = $1`,
