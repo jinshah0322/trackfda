@@ -89,6 +89,8 @@ export async function GET(req) {
               p483s.legal_name, 
               p483s.download_link,
               p483s.fei_number,
+			  p483s.inspection_start_date,
+			  p483s.inspection_end_date,
               unnest(p483s.investigators) AS investigator
           FROM 
               published_483s p483s
@@ -112,7 +114,13 @@ export async function GET(req) {
           p483s.record_date, 
           p483s.legal_name, 
           p483s.download_link,
-          COALESCE(wl.warningletterurl, '') AS warningletterurl
+          COALESCE(wl.warningletterurl, '') AS warningletterurl,
+            CASE 
+                WHEN p483s.inspection_start_date='' OR p483s.inspection_end_date='' THEN 'NA'
+                ELSE CONCAT(
+                    (TO_DATE(p483s.inspection_end_date, 'DD/MM/YYYY') - TO_DATE(p483s.inspection_start_date, 'DD/MM/YYYY')), ' days'
+                )
+            END AS inspection_duration
       FROM 
           normalized_data p483s
       LEFT JOIN warning_letter_matches wl
