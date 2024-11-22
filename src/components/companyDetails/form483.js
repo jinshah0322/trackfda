@@ -44,6 +44,9 @@ export default function Form483sTab({ data = [] }) {
               FEI Number
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Inspection Duration
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Form 483
             </th>
           </tr>
@@ -62,6 +65,9 @@ export default function Form483sTab({ data = [] }) {
                 </td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                   {item.fei_number}
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {item.inspection_duration}
                 </td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                   <button
