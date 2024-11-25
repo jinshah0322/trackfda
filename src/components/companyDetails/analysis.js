@@ -279,7 +279,7 @@ export default function AnalysisTab({ data }) {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Company</th>
+                <th>Company Address</th>
                 <th>FEI Number</th>
                 <th>Classification</th>
                 <th>Product Type</th>
@@ -293,8 +293,9 @@ export default function AnalysisTab({ data }) {
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.legal_name}</td>
-                  <td>{item.fei_number}</td>
+                  <td>{item.firm_address}</td>
+                  <td> <Link className="linkDecoration" href={`/company/${item.legal_name}/facility/${item.fei_number}`}>{item.fei_number}</Link>
+                  </td>
                   <td>{item.classification}</td>
                   <td>{item.product_type}</td>
                   <td>{item.project_area}</td>

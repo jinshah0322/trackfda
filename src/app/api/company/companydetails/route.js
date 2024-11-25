@@ -17,7 +17,7 @@ export async function GET(req) {
     //Fetch Inspection details for selected company name
     const { rows: inspectionResult } = await query(
       `
-        SELECT cd.legal_name,cd.fei_number,i.project_area,i.product_type,i.classification,
+        SELECT cd.legal_name,cd.firm_address,cd.fei_number,i.project_area,i.product_type,i.classification,
         i.posted_citations,i.fiscal_year,i.inspection_end_date FROM company_details cd
         INNER JOIN inspection_details i ON cd.fei_number = i.fei_number
         WHERE cd.legal_name = $1
@@ -32,7 +32,7 @@ export async function GET(req) {
     //Fetch published 483 details for the selected company name
     const { rows: published483Result } = await query(
       `
-        SELECT cd.legal_name, cd.fei_number, p.record_date, p.download_link, p.inspection_start_date, p.inspection_end_date,
+        SELECT cd.legal_name, cd.firm_address, cd.fei_number, p.record_date, p.download_link, p.inspection_start_date, p.inspection_end_date,
           CASE 
               WHEN inspection_start_date = '' OR inspection_end_date = '' THEN 'NA'
               ELSE CONCAT(
@@ -50,7 +50,7 @@ export async function GET(req) {
     //Fetch warning letter details for the selected company name
     const { rows: warningLetterResult } = await query(
       `
-        SELECT cd.fei_number,cd.legal_name,wl.letterissuedate, wl.issuingoffice, wl.subject, 
+        SELECT cd.fei_number,cd.firm_address,wl.letterissuedate, wl.issuingoffice, wl.subject, 
         wl.warningletterurl FROM company_details cd
         INNER JOIN compliance_actions ca ON cd.fei_number = ca.fei_number
         INNER JOIN warninglettersdetails wl ON ca.case_injunction_id = wl.marcscmsno

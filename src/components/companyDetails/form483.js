@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Limit from "../limit";
 import Pagination from "../pagination";
-
+import Link from "next/link";
 export default function Form483sTab({ data = [] }) {
   // Default to an empty array
   const [limit, setLimit] = useState(10);
@@ -38,7 +38,7 @@ export default function Form483sTab({ data = [] }) {
               Issue Date
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Company Name
+              Company Address
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               FEI Number
@@ -61,10 +61,10 @@ export default function Form483sTab({ data = [] }) {
                   {item.record_date}
                 </td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                  {item.legal_name}
+                  {item.firm_address}
                 </td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                  {item.fei_number}
+                <Link className="linkDecoration" href={`/company/${item.legal_name}/facility/${item.fei_number}`}>{item.fei_number}</Link>
                 </td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                   {item.inspection_duration}

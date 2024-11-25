@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Limit from "../limit";
 import Pagination from "../pagination";
+import Link from "next/link";
 
 export default function WarningLettersTab({ data }) {
   const [limit, setLimit] = useState(10);
@@ -34,7 +35,7 @@ export default function WarningLettersTab({ data }) {
                   Issue Date
                 </th>
                 <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-                  Company Name
+                  Company Address
                 </th>
                 <th style={{ border: "1px solid #ddd", padding: "8px" }}>
                   FEI Number
@@ -55,10 +56,10 @@ export default function WarningLettersTab({ data }) {
                     {item.letterissuedate}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.legal_name}
+                    {item.firm_address}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.fei_number}
+                  <Link className="linkDecoration" href={`/company/${item.legal_name}/facility/${item.fei_number}`}>{item.fei_number}</Link>
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     {item.issuingoffice}

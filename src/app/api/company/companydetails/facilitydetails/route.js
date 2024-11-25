@@ -104,7 +104,7 @@ export async function GET(req) {
         [fei_number]
       ),
       query(
-        `SELECT cd.legal_name, cd.fei_number, p.record_date, p.download_link, p.inspection_start_date,p.inspection_end_date,
+        `SELECT cd.legal_name, cd.firm_address,cd.fei_number, p.record_date, p.download_link, p.inspection_start_date,p.inspection_end_date,
         CASE 
               WHEN inspection_start_date = '' OR inspection_end_date = '' THEN 'NA'
               ELSE CONCAT(

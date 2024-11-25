@@ -66,7 +66,7 @@ export default function Page({ params }) {
           ← Back to Company
         </Link>
       </div>
-      <h1>Facility Dashboard</h1>
+      <h1>{decodeURIComponent(params.companyname)}</h1>
 
       <div className="tabs">
         <a
