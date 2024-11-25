@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef} from "react";
 import Loading from "@/components/loading";
 import "@/app/style.css";
 import Link from "next/link";
@@ -9,29 +9,33 @@ import FacilitiesTab from "@/components/companyDetails/facilities";
 import Form483sTab from "@/components/companyDetails/form483";
 import WarningLettersTab from "@/components/companyDetails/warningletter";
 
-
 export default function Page({ params }) {
   const [loading, setLoading] = useState(true);
   const [companyFacilityDetails, setCompanyFacilityDetails] = useState({});
   const [companyAnalysisDetails, setCompanyAnalysisDetails] = useState(null);
   const [form483Details, setForm483Details] = useState({});
   const [warningLettersDetails, setWarningLetters] = useState({});
-  const [inspectionDetails,setInspectionDetails] = useState({});
-  const [inspectionClassification,setInspectionClassification] = useState({});
-  const [activeTab, setActiveTab] = useState("analysis"); // State for active tab
+  const [inspectionDetails, setInspectionDetails] = useState({});
+  const [inspectionClassification, setInspectionClassification] = useState({});
+  const [activeTab, setActiveTab] = useState("analysis");
+  const inspectionRef = useRef(null);
 
   async function getCompanyDetails() {
     try {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/company/companydetails?companyname=${decodeURIComponent(params.companyname)}`
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/company/companydetails?companyname=${decodeURIComponent(
+          params.companyname
+        )}`
       );
       response = await response.json();
-      setCompanyAnalysisDetails(response.analysis); // Set the entire response
+      setCompanyAnalysisDetails(response.analysis);
       setForm483Details(response.form483Details);
       setWarningLetters(response.warningLetters);
       setInspectionDetails(response.inspections);
-      setInspectionClassification(response.inspectionClassification)
-      return response; // Return the response for further processing if needed
+      setInspectionClassification(response.inspectionClassification);
+      return response;
     } catch (error) {
       console.error("Error fetching company details:", error);
       return null;
@@ -41,8 +45,8 @@ export default function Page({ params }) {
   function replaceNullAndDashWithNA(obj) {
     const updatedObj = {};
     for (let key in obj) {
-      if (obj[key] === null || obj[key] === '-') {
-        updatedObj[key] = 'NA';
+      if (obj[key] === null || obj[key] === "-") {
+        updatedObj[key] = "NA";
       } else {
         updatedObj[key] = obj[key];
       }
@@ -62,17 +66,23 @@ export default function Page({ params }) {
     const fetchCompanyFacilityDetails = async () => {
       setLoading(true);
       const companyDetails = await getCompanyDetails();
-      
-      if (companyDetails && companyDetails.facilities) {
-        const form483Count = countOccurrences(companyDetails.form483Details, 'fei_number');
-        const warningLetterCount = countOccurrences(companyDetails.warningLetters, 'fei_number');
 
-        const companyFacilities = companyDetails.facilities.map(facility => {
+      if (companyDetails && companyDetails.facilities) {
+        const form483Count = countOccurrences(
+          companyDetails.form483Details,
+          "fei_number"
+        );
+        const warningLetterCount = countOccurrences(
+          companyDetails.warningLetters,
+          "fei_number"
+        );
+
+        const companyFacilities = companyDetails.facilities.map((facility) => {
           const feiNumber = facility.fei_number;
           const companyFacility = {
             ...facility,
             form483_count: form483Count[feiNumber] || 0,
-            warning_letter_count: warningLetterCount[feiNumber] || 0
+            warning_letter_count: warningLetterCount[feiNumber] || 0,
           };
           return replaceNullAndDashWithNA(companyFacility);
         });
@@ -85,6 +95,12 @@ export default function Page({ params }) {
 
     fetchCompanyFacilityDetails();
   }, [params.companyname]);
+
+  const handleScrollToInspections = () => {
+    if (inspectionRef.current) {
+      inspectionRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   if (loading) {
     return <Loading />;
@@ -120,7 +136,9 @@ export default function Page({ params }) {
           Form 483s
         </a>
         <a
-          className={`tab ${activeTab === "warningletters" ? "active-tab" : ""}`}
+          className={`tab ${
+            activeTab === "warningletters" ? "active-tab" : ""
+          }`}
           onClick={() => setActiveTab("warningletters")}
         >
           Warning Letters
@@ -129,10 +147,26 @@ export default function Page({ params }) {
 
       {/* Tab Content */}
       <div className="company">
-        {activeTab === "analysis" && <AnalysisTab data={{companyAnalysisDetails,inspectionDetails,inspectionClassification,companyname:params.companyname}} />}
-        {activeTab === "facilities" && <FacilitiesTab data={companyFacilityDetails}/>}
-        {activeTab === "form483s" && <Form483sTab data={form483Details  }/>}
-        {activeTab === "warningletters" && <WarningLettersTab  data={warningLettersDetails}/>}
+        {activeTab === "analysis" && (
+          <AnalysisTab
+            data={{
+              companyAnalysisDetails,
+              inspectionDetails,
+              inspectionClassification,
+              companyname: params.companyname,
+            }}
+            setActiveTab={setActiveTab}
+            handleScrollToInspections={handleScrollToInspections}
+            inspectionRef={inspectionRef} // Pass the ref
+          />
+        )}
+        {activeTab === "facilities" && (
+          <FacilitiesTab data={companyFacilityDetails} />
+        )}
+        {activeTab === "form483s" && <Form483sTab data={form483Details} />}
+        {activeTab === "warningletters" && (
+          <WarningLettersTab data={warningLettersDetails} />
+        )}
       </div>
     </div>
   );
