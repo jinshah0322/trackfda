@@ -43,46 +43,6 @@ export default function Page() {
     return <Loading />;
   }
 
-  // Helper function to transform a date string into a valid Date object
-  const transformDate = (dateString) => {
-    if (!dateString) return null; // Handle empty or undefined dates
-    const parts = dateString.split("-");
-    if (parts.length === 3) {
-      // Check format based on order of parts
-      if (parts[0].length === 4) {
-        // Assume YYYY-MM-DD
-        return new Date(dateString);
-      } else if (parts[2].length === 4) {
-        // Assume DD-MM-YYYY
-        const [day, month, year] = parts;
-        return new Date(`${year}-${month}-${day}`);
-      }
-    }
-    return new Date(dateString); // Fallback to default parsing
-  };
-
-  // Helper function to calculate status based on the latest_record_date
-  const getStatus = (latestDate) => {
-    const latestRecordDate = transformDate(latestDate);
-
-    if (!latestRecordDate || isNaN(latestRecordDate)) {
-      return "Invalid Date";
-    }
-
-    const currentDate = new Date();
-    const monthsDifference =
-      (currentDate.getFullYear() - latestRecordDate.getFullYear()) * 12 +
-      (currentDate.getMonth() - latestRecordDate.getMonth());
-
-    if (monthsDifference <= 12) {
-      return "Active";
-    } else if (monthsDifference <= 36) {
-      return "Moderately Active";
-    } else {
-      return "Inactive";
-    }
-  };
-
   return (
     <div>
       <div className="breadcrumb">
@@ -125,7 +85,6 @@ export default function Page() {
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Last 483 Issued Date
             </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -154,9 +113,6 @@ export default function Page() {
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.latest_record_date || "No Date Available"}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {getStatus(item.latest_record_date)}
               </td>
             </tr>
           ))}
