@@ -5,7 +5,12 @@ import Limit from "../limit";
 import Pagination from "../pagination"; // Import the Pagination component
 import Link from "next/link";
 
-export default function AnalysisTab({ data }) {
+export default function AnalysisTab({
+  data,
+  setActiveTab,
+  handleScrollToInspections,
+  inspectionRef,
+}) {
   const [selectedClassification, setSelectedClassification] = useState("All");
   const [selectedProductType, setSelectedProductType] = useState("All");
   const [selectedProjectArea, setSelectedProjectArea] = useState("All");
@@ -147,25 +152,41 @@ export default function AnalysisTab({ data }) {
     <>
       {/* Cards Section */}
       <div className="cards-container">
-        <div className="card">
+        <div
+          className="card"
+          onClick={() => setActiveTab("facilities")}
+          style={{ cursor: "pointer" }}
+        >
           <p className="card-title">Total Facilities</p>
           <p className="card-number">
             {data.companyAnalysisDetails.totalFacilities}
           </p>
         </div>
-        <div className="card">
+        <div
+          className="card"
+          onClick={handleScrollToInspections} // Scrolls to inspections
+          style={{ cursor: "pointer" }}
+        >
           <p className="card-title">Total Inspections</p>
           <p className="card-number">
             {data.companyAnalysisDetails.totalInspections}
           </p>
         </div>
-        <div className="card">
+        <div
+          className="card"
+          onClick={() => setActiveTab("form483s")}
+          style={{ cursor: "pointer" }}
+        >
           <p className="card-title">Total Published 483</p>
           <p className="card-number">
             {data.companyAnalysisDetails.totalPublished483s}
           </p>
         </div>
-        <div className="card">
+        <div
+          className="card"
+          onClick={() => setActiveTab("warningletters")}
+          style={{ cursor: "pointer" }}
+        >
           <p className="card-title">Total Warning Letters</p>
           <p className="card-number">
             {data.companyAnalysisDetails.totalWarningLetters}
@@ -271,12 +292,12 @@ export default function AnalysisTab({ data }) {
 
       {/* Table Section */}
       {filteredData.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "16px" }}>
+        <div style={{ textAlign: "center", padding: "16px" }} ref={inspectionRef}>
           <h2>No Inspections available for this company.</h2>
         </div>
       ) : (
         <>
-          <table className="data-table">
+          <table className="data-table" ref={inspectionRef}>
             <thead>
               <tr>
                 <th>Company</th>
