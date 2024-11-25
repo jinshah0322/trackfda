@@ -45,7 +45,7 @@ export async function GET(req) {
 
     // Pagination logic
     const offset = (page - 1) * limit;
-    sqlQuery += ` LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+    sqlQuery += `ORDER BY TO_DATE(approval_date, 'Mon DD, YYYY') DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
     params.push(limit, offset);
 
     // Execute queries
