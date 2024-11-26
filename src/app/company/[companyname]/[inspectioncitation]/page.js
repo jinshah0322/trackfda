@@ -54,21 +54,53 @@ export default function Page({ params }) {
 
   return (
     <div>
+      {/* Breadcrumb */}
       <div className="breadcrumb">
         <Link href={`/company/${encodeURIComponent(companyName)}`}>
           ← Back to Company Details
         </Link>
       </div>
-      <h1>Inspection Citation</h1>
 
+      {/* Header Section */}
+      <div style={{ marginBottom: "16px" }}>
+        <h1 style={{ fontSize: "24px", color: "#333", marginBottom: "8px" }}>
+          Inspection Citation of {companyName}
+        </h1>
+        <p
+          style={{
+            fontSize: "18px",
+            color: "#555",
+            backgroundColor: "#f9f9f9",
+            padding: "12px 16px",
+            borderRadius: "8px",
+            display: "inline-block",
+            margin: 0,
+            lineHeight: "1.6",
+          }}
+        >
+          <span style={{ fontWeight: "bold", display: "block" }}>
+            Facility Number:
+          </span>
+          <span style={{ color: "#000" }}>
+            {citationDetails[0]?.fei_number || "N/A"}
+          </span>
+          <br />
+          <span style={{ fontWeight: "bold", display: "block" }}>
+            Firm Address:
+          </span>
+          <span style={{ color: "#000" }}>
+            {citationDetails[0]?.firm_address || "N/A"}
+          </span>
+        </p>
+      </div>
+
+      {/* Table Section */}
       {paginatedData.length ? (
         <>
           <Limit limit={limit} onLimitChange={handleLimitChange} />
           <table className="data-table">
             <thead>
               <tr>
-                <th>Company</th>
-                <th>FEI Number</th>
                 <th>Act CFR Number</th>
                 <th>Short Description</th>
                 <th>Long Description</th>
@@ -77,8 +109,6 @@ export default function Page({ params }) {
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.legal_name}</td>
-                  <td>{item.fei_number}</td>
                   <td>
                     <Link
                       href={`https://www.ecfr.gov/current/title-21/chapter-I/subchapter-C/part-211/subpart-C/section-${
@@ -106,7 +136,7 @@ export default function Page({ params }) {
         </>
       ) : (
         <div style={{ textAlign: "center", padding: "16px" }}>
-          <h2>No facilities available for this company.</h2>
+          <h2>No citations available for this company.</h2>
         </div>
       )}
     </div>

@@ -36,10 +36,10 @@ export default function Coinvestigator({
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 <Link
                   style={{ color: "blue", textDecoration: "none" }}
-                  href={`/investigators/investigator_details?name=${item.co_investigator_name}`}
+                  href={`/investigators/investigator_details?name=${item.co_employee_name}`}
                   onClick={() => onTabChange("overview")}
                 >
-                  {item.co_investigator_name}
+                  {item.co_employee_name}
                 </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>

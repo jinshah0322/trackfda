@@ -21,12 +21,18 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      let response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/investigators?search=${searchTerm}`
-      );
-      response = await response.json();
-      setData(response.investigatorsData);
-      setIsLoading(false);
+      try {
+        let response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/investigators`
+        );
+        response = await response.json();
+        setData(response.employeesData);
+      } catch (error) {
+        console.error("Error fetching employees data:", error);
+        setData([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchData();
   }, [searchTerm]);
@@ -90,7 +96,7 @@ export default function Page() {
       <div className="breadcrumb">
         <Link href="/">← Back to Dashboard</Link>
       </div>
-      <h1>Investigator List</h1>
+      <h1>Employee List</h1>
 
       <Search
         searchTerm={searchTerm}
@@ -98,7 +104,7 @@ export default function Page() {
           setSearchTerm(term);
           setPage(1); // Reset to page 1 on new search
         }}
-        placeholder="Search by Investigator..."
+        placeholder="Search by Employee Name..."
       />
 
       <Limit
@@ -299,14 +305,14 @@ export default function Page() {
             <tr key={index}>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 <Link
-                  href={`/investigators/investigator_details?name=${item.investigator}`}
+                  href={`/investigators/investigator_details?name=${item.employee_name}`}
                   style={{
                     color: "blue",
                     textDecoration: "none",
                     cursor: "pointer",
                   }}
                 >
-                  {item.investigator}
+                  {item.employee_name}
                 </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>

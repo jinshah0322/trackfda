@@ -7,7 +7,7 @@ export async function GET(req) {
     const companyname = url.searchParams.get("companyname");
     const fei_number = url.searchParams.get("inspectioncitation");
     const { rows: inspectionCitationsResult } = await query(
-      `SELECT cd.legal_name,cd.fei_number,icd.act_cfr_number,icd.short_description,icd.long_description 
+      `SELECT cd.legal_name,cd.fei_number,cd.firm_address,icd.act_cfr_number,icd.short_description,icd.long_description 
         FROM company_details cd
         INNER JOIN inspections_citations_details icd on cd.fei_number=icd.fei_number
         WHERE cd.legal_name = $1 and icd.fei_number=$2`,
