@@ -66,7 +66,6 @@ export default function Form483({ data = [] }) {
           <tr>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Issue Date</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Company Name</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Product Type</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Inspection Duration</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Form 483</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Converted to Warning Letter</th>
@@ -79,7 +78,6 @@ export default function Form483({ data = [] }) {
               <tr key={index}>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.record_date}</td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.legal_name}</td>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>Drug</td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.inspection_duration}</td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                   <button
