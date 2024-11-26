@@ -22,6 +22,9 @@ export default function Page() {
   const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
   const [itemsPerPage, setItemsPerPage] = useState(10); // Items per page
 
+  const [sortField, setSortField] = useState(""); // Field to sort by
+  const [sortOrder, setSortOrder] = useState(""); // Sorting order
+
   async function getFrom483() {
     try {
       const response = await fetch(
@@ -101,12 +104,85 @@ export default function Page() {
     return () => clearTimeout(timeoutId);
   }, [filters, data]);
 
+  const toggleSort = (field, order) => {
+    setSortField(field);
+    setSortOrder(order);
+  };
+
+  const sortData = (data) => {
+    if (!sortField || !sortOrder) return data;
+
+    return [...data].sort((a, b) => {
+      const aValue = a[sortField];
+      const bValue = b[sortField];
+
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
+      }
+
+      if (Date.parse(aValue) && Date.parse(bValue)) {
+        return sortOrder === "asc"
+          ? new Date(aValue) - new Date(bValue)
+          : new Date(bValue) - new Date(aValue);
+      }
+
+      return sortOrder === "asc"
+        ? aValue.toString().localeCompare(bValue.toString())
+        : bValue.toString().localeCompare(aValue.toString());
+    });
+  };
+
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = sortData(filteredData).slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const renderSortableHeader = (label, field) => (
+    <th
+      style={{
+        padding: "8px",
+        width: "150px", // Fixed column width
+        textAlign: "left",
+        position: "relative",
+      }}
+    >
+      {label}
+      <div
+        style={{
+          position: "absolute",
+          right: "8px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          display: "inline-flex",
+          gap: "5px", // Space between arrows
+        }}
+      >
+        <span
+          onClick={() => toggleSort(field, "asc")}
+          style={{
+            cursor: "pointer",
+            opacity: sortField === field && sortOrder === "asc" ? 1 : 0.5,
+          }}
+        >
+          ▲
+        </span>
+        <span
+          onClick={() => toggleSort(field, "desc")}
+          style={{
+            cursor: "pointer",
+            opacity: sortField === field && sortOrder === "desc" ? 1 : 0.5,
+          }}
+        >
+          ▼
+        </span>
+      </div>
+    </th>
+  );
 
   return (
     <div>
@@ -209,20 +285,29 @@ export default function Page() {
         >
           <thead>
             <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
-              <th style={{ padding: "8px" }}>Issue Date</th>
-              <th style={{ padding: "8px" }}>Company Name</th>
-              <th style={{ padding: "8px" }}>483 Analysis</th>
-              <th style={{ padding: "8px" }}>Converted to Warning Letter</th>
-              <th style={{ padding: "8px" }}>Warning Letter Analysis</th>
+              {renderSortableHeader("Issue Date", "record_date")}
+              {renderSortableHeader("Company Name", "legal_name")}
+              <th style={{ padding: "8px", width: "150px" }}>483 Analysis</th>
+              {renderSortableHeader(
+                "Converted to Warning Letter",
+                "warningletterurl"
+              )}
+              <th style={{ padding: "8px", width: "150px" }}>
+                Warning Letter Analysis
+              </th>
             </tr>
           </thead>
           <tbody>
             {currentItems.length > 0 ? (
               currentItems.map((row, index) => (
                 <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
-                  <td style={{ padding: "8px" }}>{row.record_date}</td>
-                  <td style={{ padding: "8px" }}>{row.legal_name}</td>
-                  <td style={{ padding: "8px" }}>
+                  <td style={{ padding: "8px", width: "150px" }}>
+                    {row.record_date}
+                  </td>
+                  <td style={{ padding: "8px", width: "150px" }}>
+                    {row.legal_name}
+                  </td>
+                  <td style={{ padding: "8px", width: "150px" }}>
                     <button
                       style={{
                         padding: "8px 16px",
@@ -237,10 +322,10 @@ export default function Page() {
                       View
                     </button>
                   </td>
-                  <td style={{ padding: "8px" }}>
+                  <td style={{ padding: "8px", width: "150px" }}>
                     {row.warningletterurl === "" ? "---" : "✓"}
                   </td>
-                  <td style={{ padding: "8px" }}>
+                  <td style={{ padding: "8px", width: "150px" }}>
                     {row.warningletterurl === "" ? (
                       "---"
                     ) : (
