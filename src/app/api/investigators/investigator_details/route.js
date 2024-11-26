@@ -87,49 +87,57 @@ export async function GET(req) {
     const { rows: form483data } = await query(
       `
       WITH normalized_data AS (
+            SELECT 
+                p483s.record_date, 
+                p483s.legal_name, 
+                p483s.download_link,
+                p483s.fei_number,
+                p483s.inspection_start_date,
+                p483s.inspection_end_date,
+                p483s.report_recipient_name,
+                p483s.report_recipient_title,
+                emp.key AS employee_name, -- Extract employee name (key)
+                emp.value AS employee_role -- Extract role (value)
+            FROM 
+                published_483s p483s,
+                LATERAL jsonb_each_text(p483s.employees) AS emp(key, value) -- Extract key-value pairs from employees JSONB
+            WHERE 
+                p483s.fei_number IN (
+                    SELECT fei_number 
+                    FROM company_details
+                )
+        ),
+        warning_letter_matches AS (
+            SELECT 
+                w.fei_number,
+                w.warningletterurl,
+                w.form483_issue_date,
+                w.form483_response_date,
+                w.letterissuedate
+            FROM 
+                warninglettersdetails w
+        )
         SELECT 
             p483s.record_date, 
             p483s.legal_name, 
             p483s.download_link,
-            p483s.fei_number,
-            p483s.inspection_start_date,
-            p483s.inspection_end_date,
-            jsonb_object_keys(p483s.employees) AS employee_name -- Extract employee names
+            p483s.report_recipient_name,
+            p483s.report_recipient_title,
+            COALESCE(wl.warningletterurl, '') AS warningletterurl,
+            p483s.employee_name, -- Include employee name
+            p483s.employee_role, -- Include employee role
+            CASE 
+                WHEN p483s.inspection_start_date = '' OR p483s.inspection_end_date = '' THEN 'NA'
+                ELSE CONCAT(
+                    (TO_DATE(p483s.inspection_end_date, 'DD/MM/YYYY') - TO_DATE(p483s.inspection_start_date, 'DD/MM/YYYY')), ' days'
+                )
+            END AS inspection_duration
         FROM 
-            published_483s p483s
-        WHERE 
-            p483s.fei_number IN (
-                SELECT fei_number 
-                FROM company_details
-            )
-    ),
-    warning_letter_matches AS (
-        SELECT 
-            w.fei_number,
-            w.warningletterurl,
-            w.form483_issue_date,
-            w.form483_response_date,
-            w.letterissuedate
-        FROM 
-            warninglettersdetails w
-    )
-    SELECT 
-        p483s.record_date, 
-        p483s.legal_name, 
-        p483s.download_link,
-        COALESCE(wl.warningletterurl, '') AS warningletterurl,
-        CASE 
-            WHEN p483s.inspection_start_date = '' OR p483s.inspection_end_date = '' THEN 'NA'
-            ELSE CONCAT(
-                (TO_DATE(p483s.inspection_end_date, 'DD/MM/YYYY') - TO_DATE(p483s.inspection_start_date, 'DD/MM/YYYY')), ' days'
-            )
-        END AS inspection_duration
-    FROM 
-        normalized_data p483s
-    LEFT JOIN 
-        warning_letter_matches wl
-    ON 
-        p483s.fei_number = wl.fei_number
+            normalized_data p483s
+        LEFT JOIN 
+            warning_letter_matches wl
+        ON 
+            p483s.fei_number = wl.fei_number
         AND (
             -- Match FEI Number and date criteria
             TO_DATE(wl.form483_issue_date, 'DD-MM-YYYY') = TO_DATE(p483s.record_date, 'DD-MM-YYYY')
@@ -155,11 +163,10 @@ export async function GET(req) {
                     TO_DATE(p483s.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
             )
         )
-    WHERE 
-        p483s.employee_name = $1 -- Filter by employee name
-    ORDER BY 
-        p483s.record_date DESC;
-
+        WHERE 
+            p483s.employee_name = $1 -- Filter by employee name
+        ORDER BY 
+            p483s.record_date DESC;
       `,
       [investigator]
     );

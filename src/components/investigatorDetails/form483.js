@@ -67,6 +67,8 @@ export default function Form483({ data = [] }) {
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Issue Date</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Company Name</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Inspection Duration</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Inspector's Role</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Recipient</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Form 483</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Converted to Warning Letter</th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>Warning Letter</th>
@@ -79,6 +81,8 @@ export default function Form483({ data = [] }) {
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.record_date}</td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.legal_name}</td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.inspection_duration}</td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.employee_role}</td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.report_recipient_name}, {item.report_recipient_title}</td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                   <button
                     style={{
