@@ -141,7 +141,7 @@ export default function Page() {
             checked={selectedTypes.includes("RX")}
             onChange={() => handleTypeChange("RX")}
           />
-          RX
+          RX(Prescription)
         </label>
         <label>
           <input
@@ -149,7 +149,7 @@ export default function Page() {
             checked={selectedTypes.includes("OTC")}
             onChange={() => handleTypeChange("OTC")}
           />
-          OTC
+          Over the Counter
         </label>
         <label>
           <input
@@ -157,7 +157,7 @@ export default function Page() {
             checked={selectedTypes.includes("DISCN")}
             onChange={() => handleTypeChange("DISCN")}
           />
-          DISCN
+          Discontinued
         </label>
       </div>
 
@@ -240,7 +240,7 @@ export default function Page() {
         <thead>
           <tr>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Mkt. Status
+              Market Status
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Active Ingredient
@@ -252,7 +252,7 @@ export default function Page() {
               Applicant Name
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Patent No.
+              Patent Number
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Patent Expiry Date
