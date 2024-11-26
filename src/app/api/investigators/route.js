@@ -10,22 +10,22 @@ export async function GET(req) {
     let sqlQuery = `
       WITH normalized_data AS (
           SELECT 
-              unnest(investigators) AS investigator,
-              REGEXP_REPLACE(LOWER(unnest(investigators)), '\\s*\\.\\s*', ' ', 'g') AS normalized_investigator,
+              jsonb_object_keys(employees) AS employee_name,
+              REGEXP_REPLACE(LOWER(jsonb_object_keys(employees)), '\\s*\\.\\s*', ' ', 'g') AS normalized_employee_name,
               fei_number,
               record_date,
               published_483s_id
           FROM 
               published_483s
           WHERE 
-          fei_number IN (
-              SELECT fei_number 
-              FROM company_details
-        )
+              fei_number IN (
+                  SELECT fei_number 
+                  FROM company_details
+              )
       ),
       warning_letter_counts AS (
           SELECT 
-              LOWER(nd.investigator) AS investigator,
+              LOWER(nd.employee_name) AS employee_name,
               COUNT(*) AS total_warning_letters
           FROM 
               normalized_data nd
@@ -34,7 +34,6 @@ export async function GET(req) {
           ON 
               nd.fei_number = w.fei_number
               AND (
-                  -- Priority 1: Match form483_issue_date
                   (
                       TO_DATE(w.form483_issue_date, 'DD-MM-YYYY') = TO_DATE(nd.record_date, 'DD-MM-YYYY')
                       OR (
@@ -45,15 +44,13 @@ export async function GET(req) {
                               TO_DATE(nd.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
                       )
                   )
-                  -- Priority 2: Fallback to form483_response_date
                   OR (
                       TO_DATE(w.form483_response_date, 'DD-MM-YYYY') 
                       BETWEEN 
                           TO_DATE(nd.record_date, 'DD-MM-YYYY') 
-                      AND 
+                          AND 
                           TO_DATE(nd.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
                   )
-                  -- Priority 3: Fallback to letterissuedate
                   OR (
                       TO_DATE(w.letterissuedate, 'DD-MM-YYYY') 
                       BETWEEN 
@@ -63,10 +60,10 @@ export async function GET(req) {
                       )
               )
           GROUP BY 
-              LOWER(nd.investigator)
+              LOWER(nd.employee_name)
       )
       SELECT 
-          MIN(nd.investigator) AS investigator, 
+          MIN(nd.employee_name) AS employee_name, 
           array_agg(DISTINCT nd.fei_number) AS fei_numbers,
           COUNT(DISTINCT nd.published_483s_id) AS num_483s_issued,
           TO_CHAR(MAX(TO_DATE(nd.record_date, 'DD-MM-YYYY')), 'DD-MM-YYYY') AS latest_record_date,
@@ -76,14 +73,14 @@ export async function GET(req) {
       LEFT JOIN 
           warning_letter_counts wc
       ON 
-          LOWER(nd.investigator) = wc.investigator
+          LOWER(nd.employee_name) = wc.employee_name
     `;
 
     // Add WHERE clause dynamically if a search term is provided
     const params = [];
     if (search) {
       sqlQuery += `
-          WHERE normalized_investigator ILIKE '%' || $1 || '%'
+          WHERE normalized_employee_name ILIKE '%' || $1 || '%'
       `;
       params.push(search);
     }
@@ -91,20 +88,20 @@ export async function GET(req) {
     // Complete the query with GROUP BY and ORDER BY
     sqlQuery += `
       GROUP BY 
-          LOWER(nd.investigator), wc.total_warning_letters
+          LOWER(nd.employee_name), wc.total_warning_letters
       ORDER BY 
           warning_letter_count DESC, num_483s_issued DESC
     `;
 
     // Execute the query
-    const { rows: investigatorsData } = await query(sqlQuery, params);
+    const { rows: employeesData } = await query(sqlQuery, params);
 
     // Return results as JSON
-    return NextResponse.json({ investigatorsData }, { status: 200 });
+    return NextResponse.json({ employeesData }, { status: 200 });
   } catch (error) {
-    console.error("Error fetching Investigator Details:", error);
+    console.error("Error fetching Employee Details:", error);
     return NextResponse.json(
-      { error: "Failed to load Investigator Details" },
+      { error: "Failed to load Employee Details" },
       { status: 500 }
     );
   }
