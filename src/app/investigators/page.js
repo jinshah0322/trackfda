@@ -21,7 +21,7 @@ export default function Page() {
       setIsLoading(true);
       try {
         let response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/employees?search=${searchTerm}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/investigators`
         );
         response = await response.json();
         setData(response.employeesData);
@@ -98,7 +98,7 @@ export default function Page() {
             <tr key={index}>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 <Link
-                  href={`/employees/employee_details?name=${item.employee_name}`}
+                  href={`/investigators/investigator_details?name=${item.employee_name}`}
                   style={{
                     color: "blue",
                     textDecoration: "none",
