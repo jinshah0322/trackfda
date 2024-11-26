@@ -69,42 +69,6 @@ export default function FacilitiesTab({ data }) {
                     position: "relative",
                     cursor: "pointer", // Adds pointer cursor for interactivity
                   }}
-                  onClick={() => toggleSort("legal_name")}
-                >
-                  Facility Name
-                  <span
-                    style={{
-                      position: "absolute",
-                      right: "8px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        opacity: sortField === "legal_name" && sortOrder === "asc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▲
-                    </span>
-                    <span
-                      style={{
-                        opacity: sortField === "legal_name" && sortOrder === "desc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▼
-                    </span>
-                  </span>
-                </th>
-                <th
-                  style={{
-                    border: "1px solid #ddd",
-                    padding: "8px",
-                    textAlign: "left",
-                    position: "relative",
-                    cursor: "pointer", // Adds pointer cursor for interactivity
-                  }}
                   onClick={() => toggleSort("fei_number")}
                 >
                   Fei Number
@@ -264,9 +228,6 @@ export default function FacilitiesTab({ data }) {
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
-                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.legal_name}
-                  </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     <Link
                       className="linkDecoration"
