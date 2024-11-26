@@ -121,6 +121,33 @@ export default function Page() {
         <Link href="/">← Back to Dashboard</Link>
       </div>
       <h1>Orange Book Products</h1>
+      {/* Descriptions for TE Code, RLD, and RS */}
+      <div
+        style={{
+          backgroundColor: "#f9f9f9",
+          padding: "15px",
+          marginBottom: "20px",
+          borderRadius: "5px",
+          border: "1px solid #ddd",
+        }}
+      >
+        <h3 style={{ marginBottom: "10px" }}>Field Descriptions:</h3>
+        <ul style={{ paddingLeft: "20px" }}>
+          <li>
+            <strong>TE Code:</strong> Therapeutic Equivalence Code indicates
+            whether a drug is considered therapeutically equivalent to the
+            reference listed drug (RLD). It helps determine substitutability.
+          </li>
+          <li>
+            <strong>RLD (Reference Listed Drug):</strong> The drug product
+            identified by the FDA as a standard for comparing bioequivalence.
+          </li>
+          <li>
+            <strong>RS (Reference Standard):</strong> Indicates whether the
+            product is a reference standard used for generic drug testing.
+          </li>
+        </ul>
+      </div>
 
       {/* Type Filters */}
       <div style={{ marginBottom: "10px" }}>
@@ -130,7 +157,7 @@ export default function Page() {
             checked={selectedTypes.includes("RX")}
             onChange={() => handleTypeChange("RX")}
           />
-          RX
+          RX(Prescription)
         </label>
         <label>
           <input
@@ -138,7 +165,7 @@ export default function Page() {
             checked={selectedTypes.includes("OTC")}
             onChange={() => handleTypeChange("OTC")}
           />
-          OTC
+          Over the Counter
         </label>
         <label>
           <input
@@ -146,7 +173,7 @@ export default function Page() {
             checked={selectedTypes.includes("DISCN")}
             onChange={() => handleTypeChange("DISCN")}
           />
-          DISCN
+          Discontinued
         </label>
       </div>
 
@@ -212,7 +239,7 @@ export default function Page() {
         <thead>
           <tr>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Mkt. Status
+              Market Status
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Active Ingredient
@@ -221,7 +248,7 @@ export default function Page() {
               Proprietary Name
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Appl. No.
+              Application Number
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Dosage Form
