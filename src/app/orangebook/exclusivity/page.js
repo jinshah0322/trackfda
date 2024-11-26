@@ -130,7 +130,7 @@ export default function Page() {
             checked={selectedTypes.includes("RX")}
             onChange={() => handleTypeChange("RX")}
           />
-          RX
+          RX(Prescription)
         </label>
         <label>
           <input
@@ -138,7 +138,7 @@ export default function Page() {
             checked={selectedTypes.includes("OTC")}
             onChange={() => handleTypeChange("OTC")}
           />
-          OTC
+          Over the Counter
         </label>
         <label>
           <input
@@ -146,7 +146,7 @@ export default function Page() {
             checked={selectedTypes.includes("DISCN")}
             onChange={() => handleTypeChange("DISCN")}
           />
-          DISCN
+          Discontinued
         </label>
       </div>
 
@@ -250,7 +250,8 @@ export default function Page() {
                 {item.applicant_full_name}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.appl_type}{item.appl_no}
+                {item.appl_type}
+                {item.appl_no}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.exclusivity_code}
