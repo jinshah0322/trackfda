@@ -5,7 +5,6 @@ import { query } from "../../../../../lib/db";
 export async function GET(req) {
   try {
     const url = new URL(req.url);
-    console.log(url.searchParams);
     const ingredient = url.searchParams.get("ingredient");
     const tradename = url.searchParams.get("tradename");
     const applicant = url.searchParams.get("applicant");
