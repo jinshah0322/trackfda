@@ -307,6 +307,42 @@ export default function Page() {
                 </span>
               </span>
             </th>
+            <th
+              style={{
+                border: "1px solid #ddd",
+                padding: "8px",
+                textAlign: "left",
+                position: "relative",
+                cursor: "pointer",
+              }}
+              onClick={() => toggleSort("latest_warning_letter_date")}
+            >
+              Last Warning Letter Issued Date
+              <span
+                style={{
+                  position: "absolute",
+                  right: "8px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  fontSize: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    opacity: sortField === "latest_warning_letter_date" && sortOrder === "asc" ? 1 : 0.5,
+                  }}
+                >
+                  ▲
+                </span>
+                <span
+                  style={{
+                    opacity: sortField === "latest_warning_letter_date" && sortOrder === "desc" ? 1 : 0.5,
+                  }}
+                >
+                  ▼
+                </span>
+              </span>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -338,6 +374,9 @@ export default function Page() {
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.latest_record_date || "No Date Available"}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.latest_warning_letter_date || "---"}
               </td>
             </tr>
           ))}
