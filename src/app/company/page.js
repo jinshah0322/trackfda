@@ -70,7 +70,7 @@ export default function Page() {
               Company
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Number of facility
+              Total acility
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Total Inspections
@@ -79,10 +79,10 @@ export default function Page() {
               Total Inspection Citations
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Form 483 Issued
+              Total Form 483
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Warning letters Issued
+              Total Warning letters
             </th>
           </tr>
         </thead>
