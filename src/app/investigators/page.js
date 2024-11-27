@@ -56,7 +56,7 @@ export default function Page() {
       return sortOrder === "asc" ? bConversion - aConversion : aConversion - bConversion;
     }
   
-    if (sortField === "latest_record_date") {
+    if (sortField === "latest_record_date" || sortField === "latest_warning_letter_date") {
       const parseDate = (dateStr) => {
         const [day, month, year] = dateStr.split("-");
         return new Date(`${year}-${month}-${day}`);
