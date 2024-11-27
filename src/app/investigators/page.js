@@ -96,7 +96,7 @@ export default function Page() {
       <div className="breadcrumb">
         <Link href="/">← Back to Dashboard</Link>
       </div>
-      <h1>Employee List</h1>
+      <h1>Investigator List</h1>
 
       <Search
         searchTerm={searchTerm}
