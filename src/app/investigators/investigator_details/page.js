@@ -8,7 +8,7 @@ import Loading from "@/components/loading";
 import Coinvestigator from "@/components/investigatorDetails/coinvestigator";
 import Form483 from "@/components/investigatorDetails/form483";
 
-export default function Page({ searchParams }) {
+export default function Page({ searchParams = {} }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
   const [overview, setOverview] = useState(null);
@@ -18,26 +18,39 @@ export default function Page({ searchParams }) {
   const [page, setPage] = useState(1); // Pagination state
   const [limit, setLimit] = useState(10); // Items per page
 
+  // Extract the investigator name from searchParams
+  const investigatorName = searchParams.name;
+
   useEffect(() => {
+    if (!investigatorName) {
+      console.error("Search parameter `name` is missing.");
+      return;
+    }
+
     const fetchInvestigationsByYear = async () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/investigators/investigator_details?investigator=${searchParams.name}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/investigators/investigator_details?investigator=${investigatorName}`
         );
         const data = await response.json();
         setOverview(data.overview);
-        setInvestigatorData(data.overview.investigatorData[0]);
-        setForm483Details(data.form483data);
-        setCoinvestigator(data.coinvestigators);
+        setInvestigatorData(data.overview?.investigatorData[0] || {});
+        setForm483Details(data.form483data || {});
+        setCoinvestigator(data.coinvestigators || {});
       } catch (error) {
         console.error("Error fetching investigations by year:", error);
       } finally {
         setLoading(false); // Set loading to false after data is fetched
       }
     };
+
     fetchInvestigationsByYear();
-  }, [searchParams]);
+  }, [investigatorName]);
+
+  if (!investigatorName) {
+    return <div>Error: Investigator name is missing in the search params.</div>;
+  }
 
   if (loading) {
     return <Loading />;
@@ -51,7 +64,7 @@ export default function Page({ searchParams }) {
         <Link href="/investigators">← Back to Investigator List</Link>
       </div>
 
-      <h1>{searchParams.name}</h1>
+      <h1>{investigatorName}</h1>
 
       <div className="tabs">
         <a
@@ -103,7 +116,7 @@ export default function Page({ searchParams }) {
             onLimitChange={setLimit}
           />
         )}
-        {activeTab === "form483s" &&  <Form483 data={form483Details}/>}
+        {activeTab === "form483s" && <Form483 data={form483Details} />}
       </div>
     </div>
   );

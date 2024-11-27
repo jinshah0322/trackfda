@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { query } from "../../../../lib/db";
 
@@ -6,7 +7,6 @@ export async function GET(req) {
     const url = new URL(req.url);
     const search = url.searchParams.get("search") || "";
 
-    // Base SQL query
     let sqlQuery = `
       WITH normalized_data AS (
           SELECT 
@@ -75,16 +75,14 @@ export async function GET(req) {
           LOWER(nd.employee_name) = wc.employee_name
     `;
 
-    // Add WHERE clause dynamically if a search term is provided
     const params = [];
     if (search) {
       sqlQuery += `
           WHERE normalized_employee_name ILIKE '%' || $1 || '%'
       `;
-      params.push(search);
+      params.push(search.toLowerCase());
     }
 
-    // Complete the query with GROUP BY and ORDER BY
     sqlQuery += `
       GROUP BY 
           LOWER(nd.employee_name), wc.total_warning_letters
@@ -92,10 +90,8 @@ export async function GET(req) {
           warning_letter_count DESC, num_483s_issued DESC
     `;
 
-    // Execute the query
     const { rows: employeesData } = await query(sqlQuery, params);
 
-    // Return results as JSON
     return NextResponse.json({ employeesData }, { status: 200 });
   } catch (error) {
     console.error("Error fetching Employee Details:", error);

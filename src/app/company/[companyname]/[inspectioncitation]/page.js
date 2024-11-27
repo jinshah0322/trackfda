@@ -64,7 +64,7 @@ export default function Page({ params }) {
       {/* Header Section */}
       <div style={{ marginBottom: "16px" }}>
         <h1 style={{ fontSize: "24px", color: "#333", marginBottom: "8px" }}>
-          Inspection Citation of {companyName}
+          Inspection Citation
         </h1>
         <p
           style={{
@@ -78,6 +78,11 @@ export default function Page({ params }) {
             lineHeight: "1.6",
           }}
         >
+          <span style={{ fontWeight: "bold", display: "block" }}>
+            Company Name:
+          </span>
+          <span style={{ color: "#000" }}>{companyName || "N/A"}</span>
+          <br />
           <span style={{ fontWeight: "bold", display: "block" }}>
             Facility Number:
           </span>

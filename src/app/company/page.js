@@ -70,10 +70,19 @@ export default function Page() {
               Company
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Number of facility
+              Total acility
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Warning letters Issued
+              Total Inspections
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Total Inspection Citations
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Total Form 483
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Total Warning letters
             </th>
           </tr>
         </thead>
@@ -90,6 +99,15 @@ export default function Page() {
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.fei_number_count}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.inspection_details_count}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.inspections_citations_count}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.published_483_count}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.warning_letter_count}

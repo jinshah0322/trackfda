@@ -23,7 +23,7 @@ export default function Page() {
       setIsLoading(true);
       try {
         let response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/investigators`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/investigators?search=${encodeURIComponent(searchTerm)}`
         );
         response = await response.json();
         setData(response.employeesData);
@@ -105,7 +105,7 @@ export default function Page() {
       <div className="breadcrumb">
         <Link href="/">← Back to Dashboard</Link>
       </div>
-      <h1>Employee List</h1>
+      <h1>Investigator List</h1>
 
       <Search
         searchTerm={searchTerm}
