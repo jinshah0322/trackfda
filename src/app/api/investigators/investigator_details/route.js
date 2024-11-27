@@ -202,6 +202,16 @@ export async function GET(req) {
       [investigator]
     );
 
+    const { rows: warningletters } = await query(
+      `
+        SELECT w.letterissuedate,w.companyname,w.fei_number,w.issuingoffice,w.subject,w.warningletterurl
+        FROM warninglettersdetails w
+        WHERE EXISTS (SELECT 1 FROM published_483s p483s, jsonb_object_keys(p483s.employees) AS employee_name
+        WHERE employee_name = $1 AND p483s.fei_number = w.fei_number)
+        `,
+      [investigator]
+    );
+
     return NextResponse.json(
       {
         overview: {
@@ -211,6 +221,7 @@ export async function GET(req) {
         },
         form483data,
         coinvestigators,
+        warningletters,
       },
       { status: 200 }
     );

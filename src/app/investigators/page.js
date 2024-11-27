@@ -23,7 +23,9 @@ export default function Page() {
       setIsLoading(true);
       try {
         let response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/investigators?search=${encodeURIComponent(searchTerm)}`
+          `${
+            process.env.NEXT_PUBLIC_API_BASE_URL
+          }/investigators?search=${encodeURIComponent(searchTerm)}`
         );
         response = await response.json();
         setData(response.employeesData);
@@ -37,54 +39,59 @@ export default function Page() {
     fetchData();
   }, [searchTerm]);
 
- useEffect(() => {
-  const sortedData = [...data].sort((a, b) => {
-    if (!sortField) return 0;
-  
-    const aValue = a?.[sortField] ?? "";
-    const bValue = b?.[sortField] ?? "";
-  
-    if (sortField === "num_483s_issued" || sortField === "warning_letter_count") {
-      const aNum = parseFloat(bValue) || 0;
-      const bNum = parseFloat(aValue) || 0;
-      return sortOrder === "asc" ? aNum - bNum : bNum - aNum;
-    }
-    if (sortField === "conversion_rate") {
-      // Conversion rate sorting (percentage)
-      const aConversion = a.warning_letter_count / a.num_483s_issued || 0;
-      const bConversion = b.warning_letter_count / b.num_483s_issued || 0;
-      return sortOrder === "asc" ? bConversion - aConversion : aConversion - bConversion;
-    }
-  
-    if (sortField === "latest_record_date" || sortField === "latest_warning_letter_date") {
-      const parseDate = (dateStr) => {
-        const [day, month, year] = dateStr.split("-");
-        return new Date(`${year}-${month}-${day}`);
-      };
-  
-      const aDate = parseDate(bValue);
-      const bDate = parseDate(aValue);
-      return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
-    }
-  
- 
+  useEffect(() => {
+    const sortedData = [...data].sort((a, b) => {
+      if (!sortField) return 0;
+
+      const aValue = a?.[sortField] ?? "";
+      const bValue = b?.[sortField] ?? "";
+
+      if (
+        sortField === "num_483s_issued" ||
+        sortField === "warning_letter_count"
+      ) {
+        const aNum = parseFloat(bValue) || 0;
+        const bNum = parseFloat(aValue) || 0;
+        return sortOrder === "asc" ? aNum - bNum : bNum - aNum;
+      }
+      if (sortField === "conversion_rate") {
+        // Conversion rate sorting (percentage)
+        const aConversion = a.warning_letter_count / a.num_483s_issued || 0;
+        const bConversion = b.warning_letter_count / b.num_483s_issued || 0;
+        return sortOrder === "asc"
+          ? bConversion - aConversion
+          : aConversion - bConversion;
+      }
+
+      if (
+        sortField === "latest_record_date" ||
+        sortField === "latest_warning_letter_date"
+      ) {
+        const parseDate = (dateStr) => {
+          const [day, month, year] = dateStr.split("-");
+          return new Date(`${year}-${month}-${day}`);
+        };
+
+        const aDate = parseDate(bValue);
+        const bDate = parseDate(aValue);
+        return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
+      }
+
       const aStr = aValue.toLowerCase();
       const bStr = bValue.toLowerCase();
       return sortOrder === "asc"
         ? aStr.localeCompare(bStr)
         : bStr.localeCompare(aStr);
+    });
 
-  });
-  
+    // Paginate data
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    const paginatedData = sortedData.slice(start, end);
 
-  // Paginate data
-  const start = (page - 1) * limit;
-  const end = start + limit;
-  const paginatedData = sortedData.slice(start, end);
-
-  setFilteredData(paginatedData);
-  setTotalCount(data.length);
-}, [data, page, limit, sortField, sortOrder]);
+    setFilteredData(paginatedData);
+    setTotalCount(data.length);
+  }, [data, page, limit, sortField, sortOrder]);
   const totalPages = Math.ceil(totalCount / limit);
 
   const toggleSort = (field) => {
@@ -149,14 +156,20 @@ export default function Page() {
               >
                 <span
                   style={{
-                    opacity: sortField === "employee_name" && sortOrder === "asc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "employee_name" && sortOrder === "asc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▲
                 </span>
                 <span
                   style={{
-                    opacity: sortField === "employee_name" && sortOrder === "desc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "employee_name" && sortOrder === "desc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▼
@@ -185,14 +198,20 @@ export default function Page() {
               >
                 <span
                   style={{
-                    opacity: sortField === "num_483s_issued" && sortOrder === "asc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "num_483s_issued" && sortOrder === "asc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▲
                 </span>
                 <span
                   style={{
-                    opacity: sortField === "num_483s_issued" && sortOrder === "desc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "num_483s_issued" && sortOrder === "desc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▼
@@ -221,14 +240,22 @@ export default function Page() {
               >
                 <span
                   style={{
-                    opacity: sortField === "warning_letter_count" && sortOrder === "asc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "warning_letter_count" &&
+                      sortOrder === "asc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▲
                 </span>
                 <span
                   style={{
-                    opacity: sortField === "warning_letter_count" && sortOrder === "desc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "warning_letter_count" &&
+                      sortOrder === "desc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▼
@@ -257,14 +284,20 @@ export default function Page() {
               >
                 <span
                   style={{
-                    opacity: sortField === "conversion_rate" && sortOrder === "asc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "conversion_rate" && sortOrder === "asc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▲
                 </span>
                 <span
                   style={{
-                    opacity: sortField === "conversion_rate" && sortOrder === "desc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "conversion_rate" && sortOrder === "desc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▼
@@ -293,14 +326,20 @@ export default function Page() {
               >
                 <span
                   style={{
-                    opacity: sortField === "latest_record_date" && sortOrder === "asc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "latest_record_date" && sortOrder === "asc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▲
                 </span>
                 <span
                   style={{
-                    opacity: sortField === "latest_record_date" && sortOrder === "desc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "latest_record_date" && sortOrder === "desc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▼
@@ -329,14 +368,22 @@ export default function Page() {
               >
                 <span
                   style={{
-                    opacity: sortField === "latest_warning_letter_date" && sortOrder === "asc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "latest_warning_letter_date" &&
+                      sortOrder === "asc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▲
                 </span>
                 <span
                   style={{
-                    opacity: sortField === "latest_warning_letter_date" && sortOrder === "desc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "latest_warning_letter_date" &&
+                      sortOrder === "desc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▼
@@ -361,10 +408,28 @@ export default function Page() {
                 </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.num_483s_issued}
+                <Link
+                  href={`/investigators/investigator_details?name=${item.employee_name}&tab=form483s`}
+                  style={{
+                    color: "black",
+                    textDecoration: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  {item.num_483s_issued}
+                </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.warning_letter_count}
+                <Link
+                  href={`/investigators/investigator_details?name=${item.employee_name}&tab=warningletters`}
+                  style={{
+                    color: "black",
+                    textDecoration: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  {item.warning_letter_count}
+                </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {(

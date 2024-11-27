@@ -111,9 +111,9 @@ export default function WarningLettersTab({ data }) {
                     position: "relative",
                     cursor: "pointer",
                   }}
-                  onClick={() => toggleSort("firm_address")}
+                  onClick={() => toggleSort("issuingoffice")}
                 >
-                  Company Address
+                  Company Name
                   <span
                     style={{
                       position: "absolute",
@@ -126,7 +126,7 @@ export default function WarningLettersTab({ data }) {
                     <span
                       style={{
                         opacity:
-                          sortField === "firm_address" && sortOrder === "asc"
+                          sortField === "issuingoffice" && sortOrder === "asc"
                             ? 1
                             : 0.5,
                       }}
@@ -136,7 +136,7 @@ export default function WarningLettersTab({ data }) {
                     <span
                       style={{
                         opacity:
-                          sortField === "firm_address" && sortOrder === "desc"
+                          sortField === "issuingoffice" && sortOrder === "desc"
                             ? 1
                             : 0.5,
                       }}
@@ -272,7 +272,7 @@ export default function WarningLettersTab({ data }) {
                   </span>
                 </th>
                 <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-                  Warning Letter
+                  view
                 </th>
               </tr>
             </thead>
@@ -283,12 +283,12 @@ export default function WarningLettersTab({ data }) {
                     {item.letterissuedate}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.firm_address}
+                    {item.companyname}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     <Link
                       className="linkDecoration"
-                      href={`/company/${item.legal_name}/facility/${item.fei_number}`}
+                      href={`/company/${item.companyname}/facility/${item.fei_number}`}
                     >
                       {item.fei_number}
                     </Link>
@@ -313,7 +313,7 @@ export default function WarningLettersTab({ data }) {
                         window.open(item.warningletterurl, "_blank")
                       }
                     >
-                      View
+                      Warning Letter
                     </button>
                   </td>
                 </tr>
