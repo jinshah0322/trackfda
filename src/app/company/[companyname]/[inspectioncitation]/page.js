@@ -81,10 +81,8 @@ export default function Page({ params }) {
           <span style={{ fontWeight: "bold", display: "block" }}>
             Company Name:
           </span>
-          <span style={{ color: "#000" }}>
-            {{companyName} || "N/A"}
-          </span>
-          <br/>
+          <span style={{ color: "#000" }}>{companyName || "N/A"}</span>
+          <br />
           <span style={{ fontWeight: "bold", display: "block" }}>
             Facility Number:
           </span>
