@@ -53,9 +53,6 @@ export async function GET(req) {
     sqlQuery += ` ORDER BY TO_DATE(approval_date, 'Mon DD, YYYY') DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
     params.push(limit, offset);
 
-    console.log("SQL Query:", sqlQuery);
-    console.log("Query Parameters:", params);
-
     // Execute queries
     const { rows: ob_products } = await query(sqlQuery, params);
     const { rows: total_count } = await query(countQuery, params.slice(0, -2)); // Exclude limit/offset params for count query
