@@ -153,39 +153,8 @@ export default function WarningLettersTab({ data }) {
                     position: "relative",
                     cursor: "pointer",
                   }}
-                  onClick={() => toggleSort("fei_number")}
                 >
                   FEI Number
-                  <span
-                    style={{
-                      position: "absolute",
-                      right: "8px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        opacity:
-                          sortField === "fei_number" && sortOrder === "asc"
-                            ? 1
-                            : 0.5,
-                      }}
-                    >
-                      ▲
-                    </span>
-                    <span
-                      style={{
-                        opacity:
-                          sortField === "fei_number" && sortOrder === "desc"
-                            ? 1
-                            : 0.5,
-                      }}
-                    >
-                      ▼
-                    </span>
-                  </span>
                 </th>
                 <th
                   style={{
