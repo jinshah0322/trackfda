@@ -7,8 +7,6 @@ export async function GET(req) {
     const url = new URL(req.url);
     const search = url.searchParams.get("search") || "";
 
-    console.log("Search Term:", search); // Log the search parameter
-
     let sqlQuery = `
       WITH normalized_data AS (
           SELECT 
@@ -92,9 +90,6 @@ export async function GET(req) {
       ORDER BY 
           warning_letter_count DESC, num_483s_issued DESC
     `;
-
-    console.log("SQL Query:", sqlQuery); // Log SQL query
-    console.log("Query Parameters:", params); // Log query parameters
 
     const { rows: employeesData } = await query(sqlQuery, params);
 
