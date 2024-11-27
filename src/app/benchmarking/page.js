@@ -53,9 +53,17 @@ export default function Page() {
     getData();
   }, []);
 
-  const yearOptions = [2018, 2019, 2020, 2021, 2022, 2023, 2024].map(
-    (year) => ({ value: year, label: year.toString() })
-  );
+  // Generate all years
+  const allYears = [2018, 2019, 2020, 2021, 2022, 2023, 2024];
+
+  // Filtered year options based on selection
+  const fromYearOptions = allYears
+    .filter((year) => year <= parseInt(years.toYear))
+    .map((year) => ({ value: year, label: year.toString() }));
+
+  const toYearOptions = allYears
+    .filter((year) => year >= parseInt(years.fromYear))
+    .map((year) => ({ value: year, label: year.toString() }));
 
   const handleCompanyChange = (index, selectedOption) => {
     const newCompanies = [...companies];
@@ -68,7 +76,6 @@ export default function Page() {
       companyNames: companies.filter((name) => name),
       years: { fromYear: years.fromYear, toYear: years.toYear },
     };
-    const test = JSON.stringify(dataToSend);
 
     try {
       const response = await fetch(
@@ -90,7 +97,6 @@ export default function Page() {
       const result = await response.json();
       setInspectionMetricData(result.inspectionMetric);
       setform483sMetricData(result.form483sMetric);
-      console.log(result.form483sMetric);
       setInvestigatorsMetricData(result.investigatorsMetric);
     } catch (error) {
       console.error("Error sending request:", error);
@@ -98,9 +104,21 @@ export default function Page() {
   };
 
   const handleYearChange = (yearType, selectedOption) => {
+    const newYear = selectedOption.value;
+
+    if (yearType === "fromYear" && parseInt(newYear) > parseInt(years.toYear)) {
+      alert("From Year cannot be greater than To Year");
+      return;
+    }
+
+    if (yearType === "toYear" && parseInt(newYear) < parseInt(years.fromYear)) {
+      alert("To Year cannot be less than From Year");
+      return;
+    }
+
     setYears((prevYears) => ({
       ...prevYears,
-      [yearType]: selectedOption.value,
+      [yearType]: newYear,
     }));
   };
 
@@ -156,8 +174,8 @@ export default function Page() {
         <div className="year-selector">
           <label>From Year</label>
           <Select
-            options={yearOptions}
-            value={yearOptions.find(
+            options={fromYearOptions}
+            value={fromYearOptions.find(
               (option) => option.value.toString() === years.fromYear
             )}
             onChange={(selectedOption) =>
@@ -172,8 +190,8 @@ export default function Page() {
         <div className="year-selector">
           <label>To Year</label>
           <Select
-            options={yearOptions}
-            value={yearOptions.find(
+            options={toYearOptions}
+            value={toYearOptions.find(
               (option) => option.value.toString() === years.toYear
             )}
             onChange={(selectedOption) =>
@@ -231,10 +249,10 @@ export default function Page() {
           matricName={"Inspection"}
         />
       )}
-      {inspectionMetricData && (
+      {form483sMetricData && (
         <InspectionTable data={form483sMetricData} matricName={"Form483s"} />
       )}
-      {inspectionMetricData && (
+      {investigatorsMetricData && (
         <InspectionTable
           data={investigatorsMetricData}
           matricName={"Investigators"}
