@@ -37,45 +37,54 @@ export default function Page() {
     fetchData();
   }, [searchTerm]);
 
-  useEffect(() => {
-    // Sort and paginate data
-    const sortedData = [...data].sort((a, b) => {
-      if (!sortField) return 0;
-
-      const aValue = a[sortField];
-      const bValue = b[sortField];
-
-      if (sortField === "num_483s_issued" || sortField === "warning_letter_count") {
-        // Numerical sorting
-        return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
-      }
-
-      if (sortField === "conversion_rate") {
-        // Conversion rate sorting (percentage)
-        const aConversion = a.warning_letter_count / a.num_483s_issued || 0;
-        const bConversion = b.warning_letter_count / b.num_483s_issued || 0;
-        return sortOrder === "asc" ? aConversion - bConversion : bConversion - aConversion;
-      }
-
-      if (sortField === "latest_record_date") {
-        // Date sorting
-        return sortOrder === "asc"
-          ? new Date(aValue) - new Date(bValue)
-          : new Date(bValue) - new Date(aValue);
-      }
-
-      // Default string sorting
+ useEffect(() => {
+  const sortedData = [...data].sort((a, b) => {
+    if (!sortField) return 0;
+  
+    const aValue = a?.[sortField] ?? "";
+    const bValue = b?.[sortField] ?? "";
+  
+    if (sortField === "num_483s_issued" || sortField === "warning_letter_count") {
+      const aNum = parseFloat(bValue) || 0;
+      const bNum = parseFloat(aValue) || 0;
+      return sortOrder === "asc" ? aNum - bNum : bNum - aNum;
+    }
+    if (sortField === "conversion_rate") {
+      // Conversion rate sorting (percentage)
+      const aConversion = a.warning_letter_count / a.num_483s_issued || 0;
+      const bConversion = b.warning_letter_count / b.num_483s_issued || 0;
+      return sortOrder === "asc" ? bConversion - aConversion : aConversion - bConversion;
+    }
+  
+    if (sortField === "latest_record_date") {
+      const parseDate = (dateStr) => {
+        const [day, month, year] = dateStr.split("-");
+        return new Date(`${year}-${month}-${day}`);
+      };
+  
+      const aDate = parseDate(bValue);
+      const bDate = parseDate(aValue);
+      return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
+    }
+  
+ 
+      const aStr = aValue.toLowerCase();
+      const bStr = bValue.toLowerCase();
       return sortOrder === "asc"
-        ? aValue.toString().localeCompare(bValue.toString())
-        : bValue.toString().localeCompare(aValue.toString());
-    });
+        ? aStr.localeCompare(bStr)
+        : bStr.localeCompare(aStr);
 
-    const start = (page - 1) * limit;
-    const end = start + limit;
-    setFilteredData(sortedData.slice(start, end));
-    setTotalCount(data.length);
-  }, [data, page, limit, sortField, sortOrder]);
+  });
+  
 
+  // Paginate data
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const paginatedData = sortedData.slice(start, end);
+
+  setFilteredData(paginatedData);
+  setTotalCount(data.length);
+}, [data, page, limit, sortField, sortOrder]);
   const totalPages = Math.ceil(totalCount / limit);
 
   const toggleSort = (field) => {
@@ -126,7 +135,7 @@ export default function Page() {
                 position: "relative",
                 cursor: "pointer",
               }}
-              onClick={() => toggleSort("investigator")}
+              onClick={() => toggleSort("employee_name")}
             >
               Investigator Name
               <span
@@ -140,14 +149,14 @@ export default function Page() {
               >
                 <span
                   style={{
-                    opacity: sortField === "investigator" && sortOrder === "asc" ? 1 : 0.5,
+                    opacity: sortField === "employee_name" && sortOrder === "asc" ? 1 : 0.5,
                   }}
                 >
                   ▲
                 </span>
                 <span
                   style={{
-                    opacity: sortField === "investigator" && sortOrder === "desc" ? 1 : 0.5,
+                    opacity: sortField === "employee_name" && sortOrder === "desc" ? 1 : 0.5,
                   }}
                 >
                   ▼

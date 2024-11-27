@@ -26,10 +26,10 @@ export async function POST(req) {
         cd.legal_name;
     `;
     
-    const from483Query=`
+    const form483Query=`
     SELECT 
             cd.legal_name,
-            COALESCE(COUNT(fp.date_posted), 0) AS total_from483,
+            COALESCE(COUNT(fp.date_posted), 0) AS total_form483,
             MAX(fp.date_posted) AS last_date_posted
         FROM 
             company_details cd
@@ -141,11 +141,11 @@ try {
         "Voluntary Action Indicated (VAI)": item.vai_count,
         "Official Action Indicated (OAI)": item.oai_count
       }));
-    const { rows :from483s} = await query(from483Query, values);
-    const from483sMetric = from483s.map(item => ({
+    const { rows :form483s} = await query(form483Query, values);
+    const form483sMetric = form483s.map(item => ({
         legal_name: item.legal_name,
-        "Total Form 483s Issued": item.total_from483,
-        "Last from483 issued": item.last_date_posted
+        "Total form483s Issued": item.total_form483,
+        "Last form483 issued": item.last_date_posted
         ? new Date(item.last_date_posted).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',
@@ -155,7 +155,7 @@ try {
       }));
     const { rows :investigators} = await query(investigatorsQuery, values);
     const investigatorsMetric= processInvestigators(investigators,companyNames);
-    return NextResponse.json({inspectionMetric,from483sMetric,investigatorsMetric},{status:200});
+    return NextResponse.json({inspectionMetric,form483sMetric,investigatorsMetric},{status:200});
 } catch (error) {
     console.error('Error executing query', error);
     throw error;

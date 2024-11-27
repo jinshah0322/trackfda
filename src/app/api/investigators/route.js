@@ -64,7 +64,6 @@ export async function GET(req) {
       )
       SELECT 
           MIN(nd.employee_name) AS employee_name, 
-          array_agg(DISTINCT nd.fei_number) AS fei_numbers,
           COUNT(DISTINCT nd.published_483s_id) AS num_483s_issued,
           TO_CHAR(MAX(TO_DATE(nd.record_date, 'DD-MM-YYYY')), 'DD-MM-YYYY') AS latest_record_date,
           COALESCE(wc.total_warning_letters, 0) AS warning_letter_count

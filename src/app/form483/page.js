@@ -143,7 +143,7 @@ export default function Page() {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const renderSortableHeader = (label, field) => (
-    <th
+    <th onClick={() => toggleSort(field, "asc")}
       style={{
         padding: "8px",
         width: "150px", // Fixed column width
@@ -287,13 +287,13 @@ export default function Page() {
             <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
               {renderSortableHeader("Issue Date", "record_date")}
               {renderSortableHeader("Company Name", "legal_name")}
-              <th style={{ padding: "8px", width: "150px" }}>483 Analysis</th>
+              <th style={{ padding: "8px", width: "150px" }}>Form483</th>
               {renderSortableHeader(
                 "Converted to Warning Letter",
                 "warningletterurl"
               )}
               <th style={{ padding: "8px", width: "150px" }}>
-                Warning Letter Analysis
+                Warning Letter 
               </th>
             </tr>
           </thead>

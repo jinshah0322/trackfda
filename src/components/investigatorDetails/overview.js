@@ -2,6 +2,7 @@ import BarChart from "../countByYearBarChart";
 import Link from "next/link";
 import Limit from "@/components/limit";
 import Pagination from "@/components/pagination";
+import { useState, useEffect } from "react";
 
 export default function Overview({
   data,
@@ -10,13 +11,68 @@ export default function Overview({
   onPageChange,
   onLimitChange,
 }) {
+  const [totalCount, setTotalCount] = useState(0);
+  const [filteredData, setFilteredData] = useState([]);
+  const [sortField, setSortField] = useState(""); // No sorting initially
+  const [sortOrder, setSortOrder] = useState("asc");
+
   const { last_record_date, num_483s_issued, overview } = data;
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const paginatedData = overview.facilityDetails_issueDate.slice(
-    startIndex,
-    endIndex
-  );
+
+  useEffect(() => {
+    const overviewData = overview.facilityDetails_issueDate || [];
+    console.log("Original Data:", overviewData);
+
+    // Sorting logic
+    const sortedData = [...overviewData].sort((a, b) => {
+      if (!sortField) return 0;
+
+      const aValue = a?.[sortField] ?? "";
+      const bValue = b?.[sortField] ?? "";
+
+      // Sorting by date
+      if (sortField === "record_dates") {
+        const parseDate = (dateStr) => {
+          const [day, month, year] = dateStr.split("-");
+          return new Date(`${year}-${month}-${day}`);
+        };
+
+        const aDate = parseDate(aValue);
+        const bDate = parseDate(bValue);
+        return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
+      }
+
+      // Sorting by string (e.g., `legal_name`)
+      const aStr = aValue.toString().toLowerCase();
+      const bStr = bValue.toString().toLowerCase();
+      return sortOrder === "asc"
+        ? aStr.localeCompare(bStr)
+        : bStr.localeCompare(aStr);
+    });
+
+    console.log("Sorted Data:", sortedData);
+
+    // Pagination logic
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    const paginatedData = sortedData.slice(start, end);
+
+    console.log("Paginated Data:", paginatedData);
+
+    setFilteredData(paginatedData);
+    setTotalCount(overviewData.length);
+  }, [overview, page, limit, sortField, sortOrder]);
+
+  const totalPages = Math.ceil(totalCount / limit);
+
+  // Toggle sorting order and field
+  const toggleSort = (field) => {
+    if (sortField === field) {
+      setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
+  };
 
   return (
     <>
@@ -33,6 +89,7 @@ export default function Overview({
           <p className="card-number">{num_483s_issued}</p>
         </div>
       </div>
+
       <div
         className="chart-container"
         style={{
@@ -48,25 +105,99 @@ export default function Overview({
           <h1>No data available for investigations by year.</h1>
         )}
       </div>
+
       <Limit limit={limit} onLimitChange={onLimitChange} />
+
       <table
         style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}
       >
         <thead>
           <tr>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+            <th
+              style={{
+                border: "1px solid #ddd",
+                padding: "8px",
+                textAlign: "left",
+                position: "relative",
+                cursor: "pointer",
+              }}
+              onClick={() => toggleSort("legal_name")}
+            >
               Facility Name
+              <span
+                style={{
+                  position: "absolute",
+                  right: "8px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  fontSize: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    opacity: sortField === "legal_name" && sortOrder === "asc" ? 1 : 0.5,
+                  }}
+                >
+                  ▲
+                </span>
+                <span
+                  style={{
+                    opacity: sortField === "legal_name" && sortOrder === "desc" ? 1 : 0.5,
+                  }}
+                >
+                  ▼
+                </span>
+              </span>
             </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+            <th
+              style={{
+                border: "1px solid #ddd",
+                padding: "8px",
+                textAlign: "left",
+              }}
+            >
               Facility Location
             </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Issue Dates
+            <th
+              style={{
+                border: "1px solid #ddd",
+                padding: "8px",
+                textAlign: "left",
+                position: "relative",
+                cursor: "pointer",
+              }}
+              onClick={() => toggleSort("record_dates")}
+            >
+              Issue Date
+              <span
+                style={{
+                  position: "absolute",
+                  right: "8px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  fontSize: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    opacity: sortField === "record_dates" && sortOrder === "asc" ? 1 : 0.5,
+                  }}
+                >
+                  ▲
+                </span>
+                <span
+                  style={{
+                    opacity: sortField === "record_dates" && sortOrder === "desc" ? 1 : 0.5,
+                  }}
+                >
+                  ▼
+                </span>
+              </span>
             </th>
           </tr>
         </thead>
         <tbody>
-          {paginatedData.map((item, index) => (
+          {filteredData.map((item, index) => (
             <tr key={index}>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 <Link
@@ -86,11 +217,10 @@ export default function Overview({
           ))}
         </tbody>
       </table>
+
       <Pagination
         page={page}
-        totalPages={Math.ceil(
-          overview.facilityDetails_issueDate.length / limit
-        )}
+        totalPages={totalPages}
         onPageChange={onPageChange}
       />
     </>

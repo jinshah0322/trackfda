@@ -13,7 +13,7 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [inspectionMetricData, setInspectionMetricData] = useState(null);
-  const [from483sMetricData, setFrom483sMetricData] = useState(null);
+  const [form483sMetricData, setform483sMetricData] = useState(null);
   const [investigatorsMetricData, setInvestigatorsMetricData] = useState(null);
 
   async function getCompanyNameList() {
@@ -89,7 +89,8 @@ export default function Page() {
 
       const result = await response.json();
       setInspectionMetricData(result.inspectionMetric);
-      setFrom483sMetricData(result.from483sMetric);
+      setform483sMetricData(result.form483sMetric);
+      console.log(result.form483sMetric);
       setInvestigatorsMetricData(result.investigatorsMetric);
     } catch (error) {
       console.error("Error sending request:", error);
@@ -231,12 +232,12 @@ export default function Page() {
         />
       )}
       {inspectionMetricData && (
-        <InspectionTable data={from483sMetricData} matricName={"From483s"} />
+        <InspectionTable data={form483sMetricData} matricName={"Form483s"} />
       )}
       {inspectionMetricData && (
         <InspectionTable
           data={investigatorsMetricData}
-          matricName={"Invetigators"}
+          matricName={"Investigators"}
         />
       )}
     </div>
