@@ -8,7 +8,7 @@ import Pagination from "@/components/pagination";
 import Link from "next/link";
 
 async function getCompanies(page, limit, searchTerm = "") {
-  let response = await fetch(
+  const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/company?page=${page}&limit=${limit}&search=${searchTerm}`
   );
   return await response.json();
@@ -52,7 +52,7 @@ export default function Page() {
           setSearchTerm(term);
           setPage(1);
         }}
-        placeholder=" Search by company..."
+        placeholder="Search by company..."
       />
 
       <Limit
@@ -70,7 +70,7 @@ export default function Page() {
               Company
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Total acility
+              Number of Facility
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Total Inspections
@@ -79,10 +79,10 @@ export default function Page() {
               Total Inspection Citations
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Total Form 483
+              Form 483 Issued
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Total Warning letters
+              Warning Letters Issued
             </th>
           </tr>
         </thead>
@@ -98,19 +98,44 @@ export default function Page() {
                 </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.fei_number_count}
+                <Link
+                  href={`/company/${item.legal_name}?tab=facilities`}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  {item.fei_number_count}
+                </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.inspection_details_count}
+                <Link
+                  href={`/company/${item.legal_name}?tab=analysis`}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  {item.inspection_details_count}
+                </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.inspections_citations_count}
+                <Link
+                  href={`/company/${item.legal_name}?tab=analysis`}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  {item.inspections_citations_count}
+                </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.published_483_count}
+                <Link
+                  href={`/company/${item.legal_name}?tab=form483s`}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  {item.published_483_count}
+                </Link>
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.warning_letter_count}
+                <Link
+                  href={`/company/${item.legal_name}?tab=warningletters`}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  {item.warning_letter_count}
+                </Link>
               </td>
             </tr>
           ))}
@@ -118,7 +143,7 @@ export default function Page() {
       </table>
 
       <Pagination
-        page={totalPages == 0 ? 0 : page}
+        page={totalPages === 0 ? 0 : page}
         totalPages={totalPages}
         onPageChange={(newPage) => setPage(newPage)}
       />
