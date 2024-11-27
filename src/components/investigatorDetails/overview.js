@@ -20,7 +20,6 @@ export default function Overview({
 
   useEffect(() => {
     const overviewData = overview.facilityDetails_issueDate || [];
-    console.log("Original Data:", overviewData);
 
     // Sorting logic
     const sortedData = [...overviewData].sort((a, b) => {
@@ -49,14 +48,10 @@ export default function Overview({
         : bStr.localeCompare(aStr);
     });
 
-    console.log("Sorted Data:", sortedData);
-
     // Pagination logic
     const start = (page - 1) * limit;
     const end = start + limit;
     const paginatedData = sortedData.slice(start, end);
-
-    console.log("Paginated Data:", paginatedData);
 
     setFilteredData(paginatedData);
     setTotalCount(overviewData.length);

@@ -26,7 +26,8 @@ export async function GET(req) {
       warning_letter_counts AS (
           SELECT 
               LOWER(nd.employee_name) AS employee_name,
-              COUNT(*) AS total_warning_letters
+              COUNT(*) AS total_warning_letters,
+              MAX(TO_DATE(w.letterissuedate, 'DD-MM-YYYY')) AS latest_letterissuedate
           FROM 
               normalized_data nd
           INNER JOIN 
@@ -66,7 +67,8 @@ export async function GET(req) {
           MIN(nd.employee_name) AS employee_name, 
           COUNT(DISTINCT nd.published_483s_id) AS num_483s_issued,
           TO_CHAR(MAX(TO_DATE(nd.record_date, 'DD-MM-YYYY')), 'DD-MM-YYYY') AS latest_record_date,
-          COALESCE(wc.total_warning_letters, 0) AS warning_letter_count
+          COALESCE(wc.total_warning_letters, 0) AS warning_letter_count,
+          TO_CHAR(MAX(wc.latest_letterissuedate), 'DD-MM-YYYY') AS latest_warning_letter_date
       FROM 
           normalized_data nd
       LEFT JOIN 

@@ -7,12 +7,14 @@ import Overview from "@/components/investigatorDetails/overview";
 import Loading from "@/components/loading";
 import Coinvestigator from "@/components/investigatorDetails/coinvestigator";
 import Form483 from "@/components/investigatorDetails/form483";
+import WarningLettersTab from "@/components/investigatorDetails/warningletter";
 
 export default function Page({ searchParams = {} }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
   const [overview, setOverview] = useState(null);
   const [form483Details, setForm483Details] = useState({});
+  const [warningLettersDetails, setWarningLettersDetails] = useState({});
   const [coinvestigator, setCoinvestigator] = useState({});
   const [investigatorData, setInvestigatorData] = useState({});
   const [page, setPage] = useState(1); // Pagination state
@@ -20,6 +22,13 @@ export default function Page({ searchParams = {} }) {
 
   // Extract the investigator name from searchParams
   const investigatorName = searchParams.name;
+
+  useEffect(() => {
+    const tab = searchParams.tab;
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams.tab]);
 
   useEffect(() => {
     if (!investigatorName) {
@@ -37,6 +46,7 @@ export default function Page({ searchParams = {} }) {
         setOverview(data.overview);
         setInvestigatorData(data.overview?.investigatorData[0] || {});
         setForm483Details(data.form483data || {});
+        setWarningLettersDetails(data.warningletters);
         setCoinvestigator(data.coinvestigators || {});
       } catch (error) {
         console.error("Error fetching investigations by year:", error);
@@ -93,6 +103,14 @@ export default function Page({ searchParams = {} }) {
         >
           Form 483&apos;s
         </a>
+        <a
+          className={`tab ${
+            activeTab === "warningletters" ? "active-tab" : ""
+          }`}
+          onClick={() => setActiveTab("warningletters")}
+        >
+          Warning Letter
+        </a>
       </div>
 
       <div className="tab-content">
@@ -117,6 +135,9 @@ export default function Page({ searchParams = {} }) {
           />
         )}
         {activeTab === "form483s" && <Form483 data={form483Details} />}
+        {activeTab === "warningletters" && (
+          <WarningLettersTab data={warningLettersDetails} />
+        )}
       </div>
     </div>
   );

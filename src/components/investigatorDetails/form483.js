@@ -9,14 +9,6 @@ export default function Form483({ data = [] }) {
   const [sortField, setSortField] = useState(""); // No sorting initially
   const [sortOrder, setSortOrder] = useState("asc"); // Default ascending order
 
-  if (!Array.isArray(data) || data.length === 0) {
-    return (
-      <div style={{ textAlign: "center", padding: "16px" }}>
-        <h2>No Form 483s available for this company.</h2>
-      </div>
-    );
-  }
-
   // Synchronize filter with sorting
   useEffect(() => {
     if (sortField === "converted") {
@@ -27,6 +19,14 @@ export default function Form483({ data = [] }) {
       }
     }
   }, [sortField, sortOrder]);
+
+  if (!Array.isArray(data) || data.length === 0) {
+    return (
+      <div style={{ textAlign: "center", padding: "16px" }}>
+        <h2>No Form 483s available for this company.</h2>
+      </div>
+    );
+  }
 
   // Filter logic
   const filteredData = data.filter((item) => {
