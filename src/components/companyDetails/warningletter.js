@@ -17,7 +17,7 @@ export default function WarningLettersTab({ data }) {
   const handlePageChange = (newPage) => {
     setPage(newPage);
   };
-
+  console.log(data)
   const toggleSort = (field) => {
     if (sortField === field) {
       setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
@@ -28,15 +28,43 @@ export default function WarningLettersTab({ data }) {
     setPage(1);
   };
 
-  const sortedData = data.sort((a, b) => {
-    if (!sortField) return 0;
-    const aValue = a[sortField] || "";
-    const bValue = b[sortField] || "";
-    if (sortOrder === "asc") {
-      return aValue.toString().localeCompare(bValue.toString());
-    } else {
-      return bValue.toString().localeCompare(aValue.toString());
+  const parseDate = (dateStr) => {
+    if (!dateStr) return null;
+
+    // Check for standard ISO format (YYYY-MM-DD)
+    let parsedDate = new Date(dateStr);
+
+    if (isNaN(parsedDate)) {
+      // Try parsing custom formats (e.g., DD-MM-YYYY)
+      const parts = dateStr.split("-");
+      if (parts.length === 3) {
+        const [day, month, year] = parts.map((part) => parseInt(part, 10));
+        parsedDate = new Date(year, month - 1, day); // JS Date months are 0-based
+      }
     }
+
+    return !isNaN(parsedDate) ? parsedDate : null; // Return null if still invalid
+  };
+
+  const sortedData = [...data].sort((a, b) => {
+    if (!sortField) return 0;
+
+    const aValue = a?.[sortField] ?? "";
+    const bValue = b?.[sortField] ?? "";
+
+    if (sortField === "letterissuedate") {
+      const aDate = parseDate(aValue);
+      const bDate = parseDate(bValue);
+
+      if (!aDate || !bDate || isNaN(aDate) || isNaN(bDate)) return 0;
+
+      return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
+    
+    }
+
+    return sortOrder === "asc"
+      ? aValue.toString().localeCompare(bValue.toString())
+      : bValue.toString().localeCompare(aValue.toString());
   });
 
   const totalPages = Math.ceil(sortedData.length / limit);
@@ -96,77 +124,11 @@ export default function WarningLettersTab({ data }) {
                     </span>
                   </span>
                 </th>
-                <th
-                  style={{
-                    border: "1px solid #ddd",
-                    padding: "8px",
-                    textAlign: "left",
-                    position: "relative",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => toggleSort("firm_address")}
-                >
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
                   Company Address
-                  <span
-                    style={{
-                      position: "absolute",
-                      right: "8px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        opacity: sortField === "firm_address" && sortOrder === "asc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▲
-                    </span>
-                    <span
-                      style={{
-                        opacity: sortField === "firm_address" && sortOrder === "desc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▼
-                    </span>
-                  </span>
                 </th>
-                <th
-                  style={{
-                    border: "1px solid #ddd",
-                    padding: "8px",
-                    textAlign: "left",
-                    position: "relative",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => toggleSort("fei_number")}
-                >
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
                   FEI Number
-                  <span
-                    style={{
-                      position: "absolute",
-                      right: "8px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        opacity: sortField === "fei_number" && sortOrder === "asc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▲
-                    </span>
-                    <span
-                      style={{
-                        opacity: sortField === "fei_number" && sortOrder === "desc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▼
-                    </span>
-                  </span>
                 </th>
                 <th
                   style={{
@@ -240,7 +202,7 @@ export default function WarningLettersTab({ data }) {
                     </span>
                   </span>
                 </th>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>view</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>View</th>
               </tr>
             </thead>
             <tbody>

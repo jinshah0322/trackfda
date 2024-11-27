@@ -31,13 +31,17 @@ export default function FacilitiesTab({ data }) {
 
   const sortedData = data.sort((a, b) => {
     if (!sortField) return 0;
-    const aValue = a[sortField] || "";
-    const bValue = b[sortField] || "";
-    if (sortOrder === "asc") {
-      return aValue.toString().localeCompare(bValue.toString());
-    } else {
-      return bValue.toString().localeCompare(aValue.toString());
+
+    const aValue = a[sortField] ?? ""; // Default to empty string for null/undefined
+    const bValue = b[sortField] ?? ""; // Default to empty string for null/undefined
+
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
     }
+
+    return sortOrder === "asc"
+      ? aValue.toString().localeCompare(bValue.toString())
+      : bValue.toString().localeCompare(aValue.toString());
   });
 
   const totalPages = Math.ceil(sortedData.length / limit);
@@ -66,36 +70,9 @@ export default function FacilitiesTab({ data }) {
                     border: "1px solid #ddd",
                     padding: "8px",
                     textAlign: "left",
-                    position: "relative",
-                    cursor: "pointer", // Adds pointer cursor for interactivity
                   }}
-                  onClick={() => toggleSort("fei_number")}
                 >
                   Fei Number
-                  <span
-                    style={{
-                      position: "absolute",
-                      right: "8px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        opacity: sortField === "fei_number" && sortOrder === "asc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▲
-                    </span>
-                    <span
-                      style={{
-                        opacity: sortField === "fei_number" && sortOrder === "desc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▼
-                    </span>
-                  </span>
                 </th>
                 <th
                   style={{
@@ -103,7 +80,7 @@ export default function FacilitiesTab({ data }) {
                     padding: "8px",
                     textAlign: "left",
                     position: "relative",
-                    cursor: "pointer", // Adds pointer cursor for interactivity
+                    cursor: "pointer",
                   }}
                   onClick={() => toggleSort("city")}
                 >
@@ -139,7 +116,7 @@ export default function FacilitiesTab({ data }) {
                     padding: "8px",
                     textAlign: "left",
                     position: "relative",
-                    cursor: "pointer", // Adds pointer cursor for interactivity
+                    cursor: "pointer",
                   }}
                   onClick={() => toggleSort("state")}
                 >
@@ -175,7 +152,7 @@ export default function FacilitiesTab({ data }) {
                     padding: "8px",
                     textAlign: "left",
                     position: "relative",
-                    cursor: "pointer", // Adds pointer cursor for interactivity
+                    cursor: "pointer",
                   }}
                   onClick={() => toggleSort("country_area")}
                 >
@@ -191,14 +168,20 @@ export default function FacilitiesTab({ data }) {
                   >
                     <span
                       style={{
-                        opacity: sortField === "country_area" && sortOrder === "asc" ? 1 : 0.5,
+                        opacity:
+                          sortField === "country_area" && sortOrder === "asc"
+                            ? 1
+                            : 0.5,
                       }}
                     >
                       ▲
                     </span>
                     <span
                       style={{
-                        opacity: sortField === "country_area" && sortOrder === "desc" ? 1 : 0.5,
+                        opacity:
+                          sortField === "country_area" && sortOrder === "desc"
+                            ? 1
+                            : 0.5,
                       }}
                     >
                       ▼
@@ -210,18 +193,86 @@ export default function FacilitiesTab({ data }) {
                     border: "1px solid #ddd",
                     padding: "8px",
                     textAlign: "left",
+                    position: "relative",
+                    cursor: "pointer",
                   }}
+                  onClick={() => toggleSort("form483_count")}
                 >
                   Number Of 483s
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "8px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      fontSize: "12px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        opacity:
+                          sortField === "form483_count" && sortOrder === "asc"
+                            ? 1
+                            : 0.5,
+                      }}
+                    >
+                      ▲
+                    </span>
+                    <span
+                      style={{
+                        opacity:
+                          sortField === "form483_count" && sortOrder === "desc"
+                            ? 1
+                            : 0.5,
+                      }}
+                    >
+                      ▼
+                    </span>
+                  </span>
                 </th>
                 <th
                   style={{
                     border: "1px solid #ddd",
                     padding: "8px",
                     textAlign: "left",
+                    position: "relative",
+                    cursor: "pointer",
                   }}
+                  onClick={() => toggleSort("warning_letter_count")}
                 >
                   Number Of Warning Letters
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "8px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      fontSize: "12px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        opacity:
+                          sortField === "warning_letter_count" &&
+                          sortOrder === "asc"
+                            ? 1
+                            : 0.5,
+                      }}
+                    >
+                      ▲
+                    </span>
+                    <span
+                      style={{
+                        opacity:
+                          sortField === "warning_letter_count" &&
+                          sortOrder === "desc"
+                            ? 1
+                            : 0.5,
+                      }}
+                    >
+                      ▼
+                    </span>
+                  </span>
                 </th>
               </tr>
             </thead>

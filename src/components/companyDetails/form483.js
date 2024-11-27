@@ -9,7 +9,6 @@ export default function Form483sTab({ data = [] }) {
   const [sortField, setSortField] = useState(""); // No sorting initially
   const [sortOrder, setSortOrder] = useState("asc");
 
-  // Handle cases where data is not an array or is empty
   if (!Array.isArray(data) || data.length === 0) {
     return (
       <div style={{ textAlign: "center", padding: "16px" }}>
@@ -17,6 +16,18 @@ export default function Form483sTab({ data = [] }) {
       </div>
     );
   }
+
+  const parseDate = (dateStr) => {
+    if (!dateStr) return null;
+    const parsedDate = new Date(dateStr);
+
+    if (isNaN(parsedDate)) {
+      const [day, month, year] = dateStr.split("-");
+      return new Date(`${year}-${month}-${day}`);
+    }
+
+    return parsedDate;
+  };
 
   const toggleSort = (field) => {
     if (sortField === field) {
@@ -28,15 +39,24 @@ export default function Form483sTab({ data = [] }) {
     setPage(1);
   };
 
-  const sortedData = data.sort((a, b) => {
+  const sortedData = [...data].sort((a, b) => {
     if (!sortField) return 0;
-    const aValue = a[sortField] || "";
-    const bValue = b[sortField] || "";
-    if (sortOrder === "asc") {
-      return aValue.toString().localeCompare(bValue.toString());
-    } else {
-      return bValue.toString().localeCompare(aValue.toString());
+
+    const aValue = a?.[sortField] ?? "";
+    const bValue = b?.[sortField] ?? "";
+
+    if (sortField === "record_date") {
+      const aDate = parseDate(aValue);
+      const bDate = parseDate(bValue);
+
+      if (!aDate || !bDate || isNaN(aDate) || isNaN(bDate)) return 0;
+
+      return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
     }
+
+    return sortOrder === "asc"
+      ? aValue.toString().localeCompare(bValue.toString())
+      : bValue.toString().localeCompare(aValue.toString());
   });
 
   const totalPages = Math.ceil(sortedData.length / limit);
@@ -69,7 +89,7 @@ export default function Form483sTab({ data = [] }) {
                 padding: "8px",
                 textAlign: "left",
                 position: "relative",
-                cursor: "pointer", // Makes the header interactive
+                cursor: "pointer",
               }}
               onClick={() => toggleSort("record_date")}
             >
@@ -99,77 +119,11 @@ export default function Form483sTab({ data = [] }) {
                 </span>
               </span>
             </th>
-            <th
-              style={{
-                border: "1px solid #ddd",
-                padding: "8px",
-                textAlign: "left",
-                position: "relative",
-                cursor: "pointer",
-              }}
-              onClick={() => toggleSort("firm_address")}
-            >
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>
               Company Address
-              <span
-                style={{
-                  position: "absolute",
-                  right: "8px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  fontSize: "12px",
-                }}
-              >
-                <span
-                  style={{
-                    opacity: sortField === "firm_address" && sortOrder === "asc" ? 1 : 0.5,
-                  }}
-                >
-                  ▲
-                </span>
-                <span
-                  style={{
-                    opacity: sortField === "firm_address" && sortOrder === "desc" ? 1 : 0.5,
-                  }}
-                >
-                  ▼
-                </span>
-              </span>
             </th>
-            <th
-              style={{
-                border: "1px solid #ddd",
-                padding: "8px",
-                textAlign: "left",
-                position: "relative",
-                cursor: "pointer",
-              }}
-              onClick={() => toggleSort("fei_number")}
-            >
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>
               FEI Number
-              <span
-                style={{
-                  position: "absolute",
-                  right: "8px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  fontSize: "12px",
-                }}
-              >
-                <span
-                  style={{
-                    opacity: sortField === "fei_number" && sortOrder === "asc" ? 1 : 0.5,
-                  }}
-                >
-                  ▲
-                </span>
-                <span
-                  style={{
-                    opacity: sortField === "fei_number" && sortOrder === "desc" ? 1 : 0.5,
-                  }}
-                >
-                  ▼
-                </span>
-              </span>
             </th>
             <th
               style={{
