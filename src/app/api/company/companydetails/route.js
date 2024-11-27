@@ -19,7 +19,7 @@ export async function GET(req) {
     const { rows: inspectionResult } = await query(
       `
         SELECT cd.legal_name,cd.firm_address,cd.fei_number,i.project_area,i.product_type,i.classification,
-        i.posted_citations,i.fiscal_year,i.inspection_end_date FROM company_details cd
+        i.posted_citations,i.fiscal_year,i.inspection_end_date,i.inspection_id FROM company_details cd
         INNER JOIN inspection_details i ON cd.fei_number = i.fei_number
         WHERE cd.legal_name = $1
       `,
@@ -53,8 +53,7 @@ export async function GET(req) {
       `
         SELECT cd.legal_name,cd.fei_number,cd.firm_address,wl.letterissuedate, wl.issuingoffice, wl.subject, 
         wl.warningletterurl FROM company_details cd
-        INNER JOIN compliance_actions ca ON cd.fei_number = ca.fei_number
-        INNER JOIN warninglettersdetails wl ON ca.case_injunction_id = wl.marcscmsno
+        INNER JOIN warninglettersdetails wl ON cd.fei_number = wl.fei_number
         WHERE cd.legal_name = $1
       `,
       [companyname]

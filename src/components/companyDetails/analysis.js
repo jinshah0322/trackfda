@@ -330,7 +330,7 @@ export default function AnalysisTab({
                   <td>
                     {item.posted_citations.toLowerCase() === "yes" ? (
                       <Link
-                        href={`/company/${data.companyname}/${item.fei_number}`}
+                        href={`/company/${data.companyname}/${item.inspection_id}`}
                       >
                         <button
                           style={{

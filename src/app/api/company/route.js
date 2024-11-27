@@ -13,17 +13,18 @@ export async function GET(req) {
 
     // Use COUNT(*) OVER() for total count along with paginated results
     const { rows } = await query(`
-      SELECT cd.legal_name, 
-             COUNT(DISTINCT cd.fei_number) AS fei_number_count, 
-             COUNT(wld.marcscmsno) AS warning_letter_count,
-             COUNT(*) OVER() AS total_count
-      FROM company_details cd
-      LEFT JOIN compliance_actions ca ON cd.fei_number = ca.fei_number
-      LEFT JOIN warninglettersdetails wld ON ca.case_injunction_id = wld.marcscmsno
-      WHERE LOWER(cd.legal_name) LIKE LOWER($1)
-      GROUP BY cd.legal_name
-      ORDER BY cd.legal_name
-      LIMIT $2 OFFSET $3
+        SELECT cd.legal_name, COUNT(DISTINCT cd.fei_number) AS fei_number_count, COUNT(DISTINCT wld.marcscmsno) AS warning_letter_count,
+        COUNT(DISTINCT p483.published_483s_id) AS published_483_count,COUNT(DISTINCT ins.inspection_details_id) AS inspection_details_count,
+        COUNT(DISTINCT icd.inspections_citations_details_id) as inspections_citations_count,COUNT(*) OVER() AS total_count
+        FROM company_details cd
+        LEFT JOIN warninglettersdetails wld ON cd.fei_number = wld.fei_number
+        LEFT JOIN published_483s p483 ON cd.fei_number = p483.fei_number
+        LEFT JOIN inspection_details ins ON cd.fei_number = ins.fei_number
+        LEFT JOIN inspections_citations_details icd ON cd.fei_number = icd.fei_number
+        WHERE LOWER(cd.legal_name) LIKE LOWER($1)
+        GROUP BY cd.legal_name
+        ORDER BY published_483_count DESC
+        LIMIT $2 OFFSET $3;
     `, [`%${search}%`, limit, offset]);
 
     const totalCount = rows.length > 0 ? rows[0].total_count : 0;
