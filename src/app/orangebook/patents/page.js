@@ -320,6 +320,7 @@ export default function Page() {
         page={totalPages === 0 ? 0 : page}
         totalPages={totalPages}
         onPageChange={(newPage) => setPage(newPage)}
+        totalRecords={totalCount}
       />
     </div>
   );

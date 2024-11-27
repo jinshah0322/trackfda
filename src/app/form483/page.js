@@ -397,6 +397,7 @@ export default function Page() {
           page={currentPage}
           totalPages={totalPages}
           onPageChange={(newPage) => setCurrentPage(newPage)}
+          totalRecords={filteredData.length}
         />
       </div>
     </div>

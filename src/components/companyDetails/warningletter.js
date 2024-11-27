@@ -253,6 +253,7 @@ export default function WarningLettersTab({ data }) {
             page={page}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            totalRecords={sortedData.length}
           />
         </>
       )}

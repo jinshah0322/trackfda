@@ -147,6 +147,7 @@ export default function Coinvestigator({
         page={page}
         totalPages={Math.ceil(data.length / limit)}
         onPageChange={onPageChange}
+        totalRecords={sortedData.length}
       />
     </>
   );

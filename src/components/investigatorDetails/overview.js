@@ -234,6 +234,7 @@ export default function Overview({
         page={page}
         totalPages={totalPages}
         onPageChange={onPageChange}
+        totalRecords={totalCount}
       />
     </>
   );

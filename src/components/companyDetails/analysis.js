@@ -357,6 +357,7 @@ export default function AnalysisTab({
             totalPages={totalPages}
             page={page}
             onPageChange={setPage}
+            totalRecords={filteredData.length}
           />
         </>
       )}

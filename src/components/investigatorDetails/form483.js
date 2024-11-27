@@ -369,6 +369,7 @@ export default function Form483({ data = [] }) {
         page={page}
         totalPages={totalPages}
         onPageChange={handlePageChange}
+        totalRecords={sortedData.length}
       />
     </>
   );

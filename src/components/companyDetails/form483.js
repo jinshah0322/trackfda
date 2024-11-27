@@ -209,6 +209,7 @@ export default function Form483sTab({ data = [] }) {
         page={page}
         totalPages={totalPages}
         onPageChange={handlePageChange}
+        totalRecords={sortedData.length}
       />
     </div>
   );

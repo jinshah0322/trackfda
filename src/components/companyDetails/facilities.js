@@ -310,6 +310,7 @@ export default function FacilitiesTab({ data }) {
             page={page}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            totalRecords={sortedData.length}
           />
         </>
       )}
