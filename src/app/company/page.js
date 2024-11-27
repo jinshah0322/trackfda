@@ -73,6 +73,15 @@ export default function Page() {
               Number of facility
             </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Total Inspections
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Total Inspection Citations
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              Form 483 Issued
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Warning letters Issued
             </th>
           </tr>
@@ -90,6 +99,15 @@ export default function Page() {
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.fei_number_count}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.inspection_details_count}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.inspections_citations_count}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.published_483_count}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.warning_letter_count}
