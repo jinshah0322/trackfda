@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 export default function Overview({
   data,
+  setActiveTab,
   page,
   limit,
   onPageChange,
@@ -79,7 +80,11 @@ export default function Overview({
           <p className="card-title">Last Form 483 Issued Date</p>
           <p className="card-number">{last_record_date}</p>
         </div>
-        <div className="card">
+        <div
+          className="card"
+          onClick={() => setActiveTab("form483s")}
+          style={{ cursor: "pointer" }}
+        >
           <p className="card-title">Form 483s Issued</p>
           <p className="card-number">{num_483s_issued}</p>
         </div>
@@ -130,14 +135,20 @@ export default function Overview({
               >
                 <span
                   style={{
-                    opacity: sortField === "legal_name" && sortOrder === "asc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "legal_name" && sortOrder === "asc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▲
                 </span>
                 <span
                   style={{
-                    opacity: sortField === "legal_name" && sortOrder === "desc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "legal_name" && sortOrder === "desc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▼
@@ -175,14 +186,20 @@ export default function Overview({
               >
                 <span
                   style={{
-                    opacity: sortField === "record_dates" && sortOrder === "asc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "record_dates" && sortOrder === "asc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▲
                 </span>
                 <span
                   style={{
-                    opacity: sortField === "record_dates" && sortOrder === "desc" ? 1 : 0.5,
+                    opacity:
+                      sortField === "record_dates" && sortOrder === "desc"
+                        ? 1
+                        : 0.5,
                   }}
                 >
                   ▼
