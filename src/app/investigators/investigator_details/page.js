@@ -117,6 +117,7 @@ export default function Page({ searchParams = {} }) {
         {activeTab === "overview" && (
           <Overview
             data={{ num_483s_issued, last_record_date, overview }}
+            setActiveTab={setActiveTab}
             page={page}
             limit={limit}
             onPageChange={setPage}
