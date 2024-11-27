@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import Loading from "@/components/loading";
 import "@/app/style.css";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import FacilitiesTab from "@/components/companyDetails/facilities";
 import Form483sTab from "@/components/companyDetails/form483";
 import WarningLettersTab from "@/components/companyDetails/warningletter";
 
-export default function Page({ params }) {
+export default function Page({ params, searchParams }) {
   const [loading, setLoading] = useState(true);
   const [companyFacilityDetails, setCompanyFacilityDetails] = useState({});
   const [companyAnalysisDetails, setCompanyAnalysisDetails] = useState(null);
@@ -61,6 +61,13 @@ export default function Page({ params }) {
       return acc;
     }, {});
   }
+
+  useEffect(() => {
+    const tab = searchParams.tab;
+    if (tab) {
+        setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchCompanyFacilityDetails = async () => {
