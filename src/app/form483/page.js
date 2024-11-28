@@ -76,97 +76,96 @@ export default function Page() {
       ...prev,
       [key]: value,
     }));
-  
+
     if (key === "conversion") {
       setSortField("converted");
       setSortOrder(value === "Converted" ? "asc" : "desc");
     }
   };
-  
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       const searchTerm = filters.companyName.toLowerCase();
-  
+
       const filtered = data.filter((item) => {
         const yearMatches =
           filters.year === "All" ||
           new Date(item.record_date).getFullYear().toString() === filters.year;
-  
+
         const companyNameMatches =
           !searchTerm || item.legal_name.toLowerCase().includes(searchTerm);
-  
+
         const conversionMatches =
           filters.conversion === "All" ||
-          (filters.conversion === "Converted" && item.warningletterurl !== "") ||
-          (filters.conversion === "Not Converted" && item.warningletterurl === "");
-  
+          (filters.conversion === "Converted" &&
+            item.warningletterurl !== "") ||
+          (filters.conversion === "Not Converted" &&
+            item.warningletterurl === "");
+
         return yearMatches && companyNameMatches && conversionMatches;
       });
-  
+
       setFilteredData(filtered);
       setCurrentPage(1); // Reset to the first page
     }, 300);
-  
+
     return () => clearTimeout(timeoutId);
   }, [filters, data]);
-  
 
   const toggleSort = (field) => {
     setSortField(field);
-  
+
     if (field === "converted") {
       setSortOrder((prevOrder) => {
         const newOrder = prevOrder === "asc" ? "desc" : "asc";
-  
+
         // Update the dropdown to reflect the sorting
         setFilters((prevFilters) => ({
           ...prevFilters,
           conversion: newOrder === "asc" ? "Converted" : "Not Converted",
         }));
-  
+
         return newOrder;
       });
     } else {
       setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
     }
   };
-  
+
   const sortData = (data) => {
     if (!sortField || !sortOrder) return data;
-  
+
     return [...data].sort((a, b) => {
       const aValue = a[sortField];
       const bValue = b[sortField];
-  
+
       // Handle date sorting
       if (sortField === "record_date") {
         const aDate = new Date(aValue);
         const bDate = new Date(bValue);
-  
+
         if (!isNaN(aDate) && !isNaN(bDate)) {
           return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
         }
         if (isNaN(aDate)) return 1;
         if (isNaN(bDate)) return -1;
       }
-  
+
       // Handle conversion status sorting
       if (sortField === "converted") {
         const aConverted = a.warningletterurl !== "" ? 1 : 0;
         const bConverted = b.warningletterurl !== "" ? 1 : 0;
-        return sortOrder === "asc" ? aConverted - bConverted : bConverted - aConverted;
+        return sortOrder === "asc"
+          ? aConverted - bConverted
+          : bConverted - aConverted;
       }
-  
+
       // Handle string sorting
       return sortOrder === "asc"
         ? aValue.toString().localeCompare(bValue.toString())
         : bValue.toString().localeCompare(aValue.toString());
     });
   };
-  
-
-
 
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -217,8 +216,6 @@ export default function Page() {
       </span>
     </th>
   );
-
-
 
   return (
     <div>
@@ -275,25 +272,25 @@ export default function Page() {
           />
         </div>
         <div>
-  <label style={{ display: "block", marginBottom: "5px" }}>
-    Conversion Status:
-  </label>
-  <select
-    value={filters.conversion}
-    onChange={(e) => handleFilterChange("conversion", e.target.value)}
-    style={{
-      padding: "8px",
-      border: "1px solid #ddd",
-      borderRadius: "4px",
-      backgroundColor: "white",
-    }}
-  >
-    <option value="All">All</option>
-    <option value="Converted">Converted To Warning Letter</option>
-    <option value="Not Converted">Not Converted</option>
-  </select>
-</div>
-  </div>
+          <label style={{ display: "block", marginBottom: "5px" }}>
+            Conversion Status:
+          </label>
+          <select
+            value={filters.conversion}
+            onChange={(e) => handleFilterChange("conversion", e.target.value)}
+            style={{
+              padding: "8px",
+              border: "1px solid #ddd",
+              borderRadius: "4px",
+              backgroundColor: "white",
+            }}
+          >
+            <option value="All">All</option>
+            <option value="Converted">Converted To Warning Letter</option>
+            <option value="Not Converted">Not Converted</option>
+          </select>
+        </div>
+      </div>
 
       {/* Limit Component */}
       <div style={{ marginBottom: "20px" }}>
@@ -324,7 +321,10 @@ export default function Page() {
               {renderSortableHeader("Issue Date", "record_date")}
               {renderSortableHeader("Company Name", "legal_name")}
               <th style={{ padding: "8px", width: "150px" }}>Form483</th>
-              {renderSortableHeader("Converted to Warning Letter", "warningletterurl")}
+              {renderSortableHeader(
+                "Converted to Warning Letter",
+                "warningletterurl"
+              )}
               <th style={{ padding: "8px", width: "150px" }}>Warning Letter</th>
             </tr>
           </thead>

@@ -272,7 +272,13 @@ export default function Page() {
       </div>
 
       {/* Limit Component */}
-      <Limit onLimitChange={handleLimitChange} />
+      <Limit
+        limit={limit}
+        onLimitChange={(newLimit) => {
+          setItemsPerPage(newLimit);
+          setCurrentPage(1); // Reset to first page
+        }}
+      />
 
       {/* Table Section */}
       {filteredDataLocal.length === 0 ? (
