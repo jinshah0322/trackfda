@@ -54,9 +54,9 @@ export const GET = async (req) => {
 
     return NextResponse.json({ data: rows }, { status: 200 });
   } catch (error) {
-    console.error("Error fetching company data:", error);
+    console.error("Error fetching Form 483 data:", error);
     return NextResponse.json(
-      { error: "Failed to load company data" },
+      { error: "Failed to load From 483 data" },
       { status: 500 }
     );
   }
