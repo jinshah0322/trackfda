@@ -93,7 +93,7 @@ export default function WarningLettersTab({ data }) {
           <Limit limit={limit} onLimitChange={handleLimitChange} />
           <table
             style={{
-              width: "100%",
+              width: "55%",
               borderCollapse: "collapse",
               tableLayout: "fixed",
             }}

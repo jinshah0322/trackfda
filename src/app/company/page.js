@@ -63,7 +63,7 @@ export default function Page() {
         }}
       />
 
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table style={{ width: "55%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
