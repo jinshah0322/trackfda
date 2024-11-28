@@ -78,11 +78,11 @@ export default function Page() {
     }));
   
     if (key === "conversion") {
-      // Update sorting to match the dropdown
       setSortField("converted");
       setSortOrder(value === "Converted" ? "asc" : "desc");
     }
-  };  
+  };
+  
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -111,6 +111,7 @@ export default function Page() {
     return () => clearTimeout(timeoutId);
   }, [filters, data]);
   
+
   const toggleSort = (field) => {
     setSortField(field);
   
@@ -118,7 +119,7 @@ export default function Page() {
       setSortOrder((prevOrder) => {
         const newOrder = prevOrder === "asc" ? "desc" : "asc";
   
-        // Update the dropdown value based on sorting
+        // Update the dropdown to reflect the sorting
         setFilters((prevFilters) => ({
           ...prevFilters,
           conversion: newOrder === "asc" ? "Converted" : "Not Converted",
@@ -135,17 +136,14 @@ export default function Page() {
     if (!sortField || !sortOrder) return data;
   
     return [...data].sort((a, b) => {
-      // Handle conversion status sorting
-      if (sortField === "converted") {
-        const aConverted = a.warningletterurl !== "" ? 1 : 0;
-        const bConverted = b.warningletterurl !== "" ? 1 : 0;
-        return sortOrder === "asc" ? aConverted - bConverted : bConverted - aConverted;
-      }
+      const aValue = a[sortField];
+      const bValue = b[sortField];
   
       // Handle date sorting
       if (sortField === "record_date") {
-        const aDate = new Date(a[sortField]);
-        const bDate = new Date(b[sortField]);
+        const aDate = new Date(aValue);
+        const bDate = new Date(bValue);
+  
         if (!isNaN(aDate) && !isNaN(bDate)) {
           return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
         }
@@ -153,13 +151,23 @@ export default function Page() {
         if (isNaN(bDate)) return -1;
       }
   
+      // Handle conversion status sorting
+      if (sortField === "converted") {
+        const aConverted = a.warningletterurl !== "" ? 1 : 0;
+        const bConverted = b.warningletterurl !== "" ? 1 : 0;
+        return sortOrder === "asc" ? aConverted - bConverted : bConverted - aConverted;
+      }
+  
       // Handle string sorting
       return sortOrder === "asc"
-        ? a[sortField].toString().localeCompare(b[sortField].toString())
-        : b[sortField].toString().localeCompare(a[sortField].toString());
+        ? aValue.toString().localeCompare(bValue.toString())
+        : bValue.toString().localeCompare(aValue.toString());
     });
   };
   
+
+
+
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -285,7 +293,7 @@ export default function Page() {
     <option value="Not Converted">Not Converted</option>
   </select>
 </div>
-      </div>
+  </div>
 
       {/* Limit Component */}
       <div style={{ marginBottom: "20px" }}>
@@ -396,7 +404,6 @@ export default function Page() {
           page={currentPage}
           totalPages={totalPages}
           onPageChange={(newPage) => setCurrentPage(newPage)}
-          totalRecords={filteredData.length}
         />
       </div>
     </div>

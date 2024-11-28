@@ -27,16 +27,15 @@ export default function WarningLettersTab({ data }) {
     }
     setPage(1);
   };
-
   const parseDate = (dateStr) => {
     if (!dateStr) return null; // Handle empty or null strings
   
-    // Try parsing as ISO format (YYYY-MM-DD)
+    // Try parsing as standard ISO format (YYYY-MM-DD)
     let parsedDate = new Date(dateStr);
   
     if (isNaN(parsedDate.getTime())) {
-      // Attempt parsing as custom format DD-MM-YYYY
-      const parts = dateStr.split("-");
+      // Attempt parsing as custom format DD/MM/YYYY
+      const parts = dateStr.split("/");
       if (parts.length === 3) {
         const [day, month, year] = parts.map((part) => parseInt(part, 10));
         if (day && month && year) {
@@ -45,9 +44,10 @@ export default function WarningLettersTab({ data }) {
       }
     }
   
-    // Validate final parsed date
+    // Return the final parsed date or null if invalid
     return isNaN(parsedDate.getTime()) ? null : parsedDate;
   };
+  
   
 
   const sortedData = [...data].sort((a, b) => {
@@ -75,6 +75,7 @@ export default function WarningLettersTab({ data }) {
       ? aValue.toString().localeCompare(bValue.toString())
       : bValue.toString().localeCompare(aValue.toString());
   });
+  
   
 
   console.log(sortedData)

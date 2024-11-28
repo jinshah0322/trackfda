@@ -15,6 +15,7 @@ export default function Page() {
   const [inspectionMetricData, setInspectionMetricData] = useState(null);
   const [form483sMetricData, setform483sMetricData] = useState(null);
   const [investigatorsMetricData, setInvestigatorsMetricData] = useState(null);
+  const [warninglettersMetricData,setwarninglettersMetricData]= useState(null);
 
   async function getCompanyNameList() {
     try {
@@ -98,6 +99,7 @@ export default function Page() {
       setInspectionMetricData(result.inspectionMetric);
       setform483sMetricData(result.form483sMetric);
       setInvestigatorsMetricData(result.investigatorsMetric);
+      setwarninglettersMetricData(result.warninglettersMetric);
     } catch (error) {
       console.error("Error sending request:", error);
     }
@@ -257,6 +259,9 @@ export default function Page() {
           data={investigatorsMetricData}
           matricName={"Investigators"}
         />
+      )}
+      {warninglettersMetricData && (
+        <InspectionTable data={warninglettersMetricData} matricName={"Warning Letters"}/>
       )}
     </div>
   );

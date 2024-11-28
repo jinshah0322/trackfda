@@ -24,32 +24,70 @@ export async function POST(req) {
         cd.legal_name IN (${placeholders})
     GROUP BY 
         cd.legal_name;
-    `;
-    
-    const form483Query=`
+  `;
+  
+  const form483Query = `
     SELECT 
-            cd.legal_name,
-            COALESCE(COUNT(fp.date_posted), 0) AS total_form483,
-            MAX(fp.date_posted) AS last_date_posted
-        FROM 
-            company_details cd
-        LEFT JOIN
-            published_483s fp
-        ON 
-            cd.fei_number = fp.fei_number
-        WHERE 
-            cd.legal_name IN (${placeholders})
-            AND (fp.date_posted BETWEEN $${companyNames.length + 1} AND $${companyNames.length + 2} OR fp.date_posted IS NULL)
-        GROUP BY 
-            cd.legal_name;
+        cd.legal_name,
+        COALESCE(COUNT(fp.date_posted), 0) AS total_form483,
+        MAX(fp.date_posted) AS last_date_posted
+    FROM 
+        company_details cd
+    LEFT JOIN
+        published_483s fp
+    ON 
+        cd.fei_number = fp.fei_number
+    WHERE 
+        cd.legal_name IN (${placeholders})
+        AND (fp.date_posted BETWEEN $${companyNames.length + 1} AND $${companyNames.length + 2} OR fp.date_posted IS NULL)
+    GROUP BY 
+        cd.legal_name;
+  `;
+  
+  const investigatorsQuery = `
+    SELECT 
+        legal_name, investigators, record_date
+    FROM 
+        published_483s
+    WHERE 
+        legal_name IN (${placeholders})
+        AND (TO_DATE(record_date, 'DD-MM-YYYY') BETWEEN $${companyNames.length + 1} AND $${companyNames.length + 2} OR record_date IS NULL);
+  `;
+  
+  const warningletterQuery = `
+ WITH fei_numbers AS (
+    SELECT DISTINCT legal_name, fei_number
+    FROM public.published_483s
+    WHERE legal_name IN (${placeholders})
+      AND (
+        TO_DATE(record_date, 'DD-MM-YYYY') BETWEEN $${companyNames.length + 1} AND $${companyNames.length + 2}
+        OR record_date IS NULL
+      )
+),
+warning_letter_count AS (
+    SELECT 
+        f.legal_name,
+        COUNT(w.fei_number) AS total_warning_letters,
+        COALESCE(MAX(w.letterissuedate), NULL) AS latest_warning_letter_date
+    FROM 
+        fei_numbers f
+    LEFT JOIN 
+        public.warninglettersdetails w
+    ON 
+        f.fei_number = w.fei_number
+    GROUP BY 
+        f.legal_name
+)
+SELECT 
+    legal_name,
+    COALESCE(total_warning_letters, 0) AS warning_letter_count,
+    latest_warning_letter_date
+FROM 
+    warning_letter_count;
 
-`;
-   const investigatorsQuery=`
-     SELECT legal_name,investigators from published_483s where legal_name IN (${placeholders})
-     AND (record_date BETWEEN $${companyNames.length+1} AND $${companyNames.length+2} OR record_date IS NULL)
-   `;
-//    const warningletterQuery =`
-//    `;
+  `;
+  
+  
    function processInvestigators(data, companyNames) {
     // Initialize an empty object to hold the grouped data
     const groupedData = {};
@@ -154,8 +192,26 @@ try {
         : ''
       }));
     const { rows :investigators} = await query(investigatorsQuery, values);
+    const { rows: warningletters }= await query(warningletterQuery,values);
+    const parseDate = (dateStr) => {
+      if (!dateStr) return null; // Handle null or undefined dates
+      const [day, month, year] = dateStr.split('/').map(Number);
+      return new Date(year, month - 1, day); // Month is 0-indexed in JS
+    };
+    const warninglettersMetric = warningletters.map((item) => ({
+      legal_name: item.legal_name,
+      "Total Warning Letters": item.warning_letter_count ?? 0, // Default to 0 if undefined
+      "Last Warning Letter Date": item.latest_warning_letter_date
+      ? parseDate(item.latest_warning_letter_date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+    : "N/A", // Handle null or undefined
+    }));    
+    console.log(warninglettersMetric,warningletters)
     const investigatorsMetric= processInvestigators(investigators,companyNames);
-    return NextResponse.json({inspectionMetric,form483sMetric,investigatorsMetric},{status:200});
+    return NextResponse.json({inspectionMetric,form483sMetric,investigatorsMetric,warninglettersMetric},{status:200});
 } catch (error) {
     console.error('Error executing query', error);
     throw error;
