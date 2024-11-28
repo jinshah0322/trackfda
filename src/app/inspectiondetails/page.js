@@ -13,7 +13,7 @@ export default function Page() {
   const [searchTerm, setSearchTerm] = useState(""); // Search term
   const [selectedClassification, setSelectedClassification] = useState("All");
   const [selectedProductType, setSelectedProductType] = useState("All");
-  const [selectedProjectArea, setSelectedProjectArea] =useState("All");
+  const [selectedProjectArea, setSelectedProjectArea] = useState("All");
   const [selectedPostedCitation, setSelectedPostedCitation] = useState("All");
   const [limit, setLimit] = useState(10); // Items per page
   const [page, setPage] = useState(1); // Current page
@@ -87,6 +87,12 @@ export default function Page() {
 
   const sortedData = [...filteredData].sort((a, b) => {
     if (!sortField) return 0;
+
+    if (sortField === "inspection_end_date") {
+      const aDate = new Date(a[sortField]);
+      const bDate = new Date(b[sortField]);
+      return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
+    }
 
     const aValue = a[sortField]?.toString().toLowerCase() || "";
     const bValue = b[sortField]?.toString().toLowerCase() || "";
@@ -272,13 +278,7 @@ export default function Page() {
       </div>
 
       {/* Limit Component */}
-      <Limit
-        limit={limit}
-        onLimitChange={(newLimit) => {
-          setItemsPerPage(newLimit);
-          setCurrentPage(1); // Reset to first page
-        }}
-      />
+      <Limit limit={limit} onLimitChange={handleLimitChange} />
 
       {/* Table Section */}
       {filteredDataLocal.length === 0 ? (
@@ -297,7 +297,10 @@ export default function Page() {
                 <th>Product Type</th>
                 <th>Project Area</th>
                 {renderSortableHeader("Fiscal Year", "fiscal_year")}
-                {renderSortableHeader("Inspection End Date", "inspection_end_date")}
+                {renderSortableHeader(
+                  "Inspection End Date",
+                  "inspection_end_date"
+                )}
                 <th>Inspection Citations</th>
               </tr>
             </thead>
@@ -308,7 +311,9 @@ export default function Page() {
                   <td>{item.firm_address}</td>
                   <td>
                     <Link
-                      href={`/company/${item.legal_name}/facility/${item.fei_number}`}
+                      href={`/company/${encodeURIComponent(
+                        item.legal_name
+                      )}/facility/${item.fei_number}`}
                       style={{
                         textDecoration: "none",
                         color: "blue",
@@ -329,7 +334,9 @@ export default function Page() {
                   <td>
                     {item.posted_citations.toLowerCase() === "yes" ? (
                       <Link
-                        href={`/company/${item.legal_name}/${item.inspection_id}`}
+                        href={`/company/${encodeURIComponent(
+                          item.legal_name
+                        )}/${item.inspection_id}`}
                       >
                         <button
                           style={{

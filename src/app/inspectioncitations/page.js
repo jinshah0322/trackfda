@@ -116,10 +116,10 @@ export default function Page() {
       <div className="breadcrumb">
         <Link href="/">← Back to Dashboard</Link>
       </div>
-      <h1>Inspection Details</h1>
+      <h1>Inspection Citations</h1>
 
       {/* Limit Component */}
-      <Limit onLimitChange={handleLimitChange} />
+      <Limit limit={limit} onLimitChange={handleLimitChange} />
 
       {/* Table Section */}
       {filteredData.length === 0 ? (
