@@ -12,7 +12,6 @@ export default function Page() {
     companyName: "",
     conversion: "All", // Conversion filter
   });
-  const [filter, setFilter] = useState("All");
   const [data, setData] = useState([]); // State to store fetched data
   const [filteredData, setFilteredData] = useState([]); // State for filtered data
   const [loading, setLoading] = useState(true); // State to track loading status
@@ -226,7 +225,7 @@ export default function Page() {
       <div className="breadcrumb">
         <Link href="/">← Back to Dashboard</Link>
       </div>
-      <h1>Recent Form 483s</h1>
+      <h1>Form 483s</h1>
 
       {/* Filters */}
       <div
@@ -315,7 +314,7 @@ export default function Page() {
       ) : (
         <table
           style={{
-            width: "100%",
+            width: "65%",
             borderCollapse: "collapse",
             marginBottom: "20px",
           }}
