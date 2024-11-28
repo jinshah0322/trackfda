@@ -29,43 +29,55 @@ export default function WarningLettersTab({ data }) {
   };
 
   const parseDate = (dateStr) => {
-    if (!dateStr) return null;
-
-    // Check for standard ISO format (YYYY-MM-DD)
+    if (!dateStr) return null; // Handle empty or null strings
+  
+    // Try parsing as ISO format (YYYY-MM-DD)
     let parsedDate = new Date(dateStr);
-
-    if (isNaN(parsedDate)) {
-      // Try parsing custom formats (e.g., DD-MM-YYYY)
+  
+    if (isNaN(parsedDate.getTime())) {
+      // Attempt parsing as custom format DD-MM-YYYY
       const parts = dateStr.split("-");
       if (parts.length === 3) {
         const [day, month, year] = parts.map((part) => parseInt(part, 10));
-        parsedDate = new Date(year, month - 1, day); // JS Date months are 0-based
+        if (day && month && year) {
+          parsedDate = new Date(year, month - 1, day); // JavaScript months are 0-based
+        }
       }
     }
-
-    return !isNaN(parsedDate) ? parsedDate : null; // Return null if still invalid
+  
+    // Validate final parsed date
+    return isNaN(parsedDate.getTime()) ? null : parsedDate;
   };
+  
 
   const sortedData = [...data].sort((a, b) => {
-    if (!sortField) return 0;
-
+    if (!sortField) return 0; // No sorting if sortField is not provided
+  
     const aValue = a?.[sortField] ?? "";
     const bValue = b?.[sortField] ?? "";
-
+  
+    // Special handling for date field
     if (sortField === "letterissuedate") {
       const aDate = parseDate(aValue);
       const bDate = parseDate(bValue);
-
-      if (!aDate || !bDate || isNaN(aDate) || isNaN(bDate)) return 0;
-
+  
+      // Handle cases where either date is invalid
+      if (!aDate && !bDate) return 0; // Both invalid, keep original order
+      if (!aDate) return sortOrder === "asc" ? 1 : -1; // Invalid dates come last
+      if (!bDate) return sortOrder === "asc" ? -1 : 1;
+  
+      // Compare valid dates
       return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
-    
     }
-
+  
+    // Default string comparison for non-date fields
     return sortOrder === "asc"
       ? aValue.toString().localeCompare(bValue.toString())
       : bValue.toString().localeCompare(aValue.toString());
   });
+  
+
+  console.log(sortedData)
 
   const totalPages = Math.ceil(sortedData.length / limit);
   const paginatedData = sortedData.slice((page - 1) * limit, page * limit);
