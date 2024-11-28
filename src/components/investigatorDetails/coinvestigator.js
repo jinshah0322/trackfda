@@ -53,7 +53,7 @@ export default function Coinvestigator({
       <Limit limit={limit} onLimitChange={onLimitChange} />
       <table
         style={{
-          width: "100%",
+          width: "35%",
           borderCollapse: "collapse",
           marginTop: "20px",
         }}
