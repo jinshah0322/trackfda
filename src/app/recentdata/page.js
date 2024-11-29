@@ -402,9 +402,7 @@ export default function Page() {
               <th>Recall Date</th>
               <th>Reason for Recall</th>
               <th>Product Description</th>
-              <th>Event ID</th>
               <th>Event Classification</th>
-              <th>Product ID</th>
               <th>Recall Details</th>
             </tr>
           </thead>
@@ -436,9 +434,7 @@ export default function Page() {
                 </td>
                 <td>{item.reason_for_recall}</td>
                 <td>{item.product_description}</td>
-                <td>{item.event_id}</td>
                 <td>{item.event_classification}</td>
-                <td>{item.product_id}</td>
                 <td>
                   <a
                     href={item.recall_details}
