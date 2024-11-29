@@ -321,9 +321,9 @@ export default function Page() {
   const renderImportRefusals = () => {
     return (
       <>
-        {/* <div className="breadcrumb">
-          <Link href="/">View More</Link>
-        </div> */}
+        <div className="breadcrumb">
+          <Link href="/importrefusals">View More</Link>
+        </div>
         <table
           style={{
             width: "100%",
