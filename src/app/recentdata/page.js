@@ -13,7 +13,7 @@ export default function Page() {
     async function fetchData() {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/recent`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/recentdata`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -378,6 +378,88 @@ export default function Page() {
     );
   };
 
+  const renderImportRecalls = () => {
+    return (
+      <>
+        <div className="breadcrumb">
+          <Link href="/importrecalls">View More</Link>
+        </div>
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            marginBottom: "20px",
+          }}
+        >
+          <thead>
+            <tr>
+              <th>Company Name</th>
+              <th>Firm Address</th>
+              <th>FEI Number</th>
+              <th>Classification</th>
+              <th>Status</th>
+              <th>Distribution Pattern</th>
+              <th>Recall Date</th>
+              <th>Reason for Recall</th>
+              <th>Product Description</th>
+              <th>Event ID</th>
+              <th>Event Classification</th>
+              <th>Product ID</th>
+              <th>Recall Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.recentImportRecalls.map((item, index) => (
+              <tr key={index}>
+                <td>{item.recalling_firm_name}</td>
+                <td>{item.firm_address}</td>
+                <td style={{ textDecoration: "none", color: "blue" }}>
+                  <Link
+                    href={`/company/${encodeURIComponent(
+                      item.recalling_firm_name
+                    )}/facility/${item.fei_number}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "blue",
+                    }}
+                  >
+                    {item.fei_number}
+                  </Link>
+                </td>
+                <td>{item.product_classification}</td>
+                <td>{item.status}</td>
+                <td>{item.distribution_pattern}</td>
+                <td>
+                  {new Date(item.center_classification_date).toLocaleDateString(
+                    "en-GB"
+                  )}
+                </td>
+                <td>{item.reason_for_recall}</td>
+                <td>{item.product_description}</td>
+                <td>{item.event_id}</td>
+                <td>{item.event_classification}</td>
+                <td>{item.product_id}</td>
+                <td>
+                  <a
+                    href={item.recall_details}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: "blue",
+                      textDecoration: "none",
+                    }}
+                  >
+                    View Details
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    );
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "inspectiondetails":
@@ -390,6 +472,8 @@ export default function Page() {
         return renderWarningLetters();
       case "importrefusals":
         return renderImportRefusals();
+      case "importrecalls":
+        return renderImportRecalls();
     }
   };
 
@@ -455,6 +539,12 @@ export default function Page() {
           onClick={() => setActiveTab("importrefusals")}
         >
           Import Refusals
+        </a>
+        <a
+          className={`tab ${activeTab === "importrecalls" ? "active-tab" : ""}`}
+          onClick={() => setActiveTab("importrecalls")}
+        >
+          Import Recalls
         </a>
       </div>
 
