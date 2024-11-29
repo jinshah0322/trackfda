@@ -37,10 +37,11 @@ export default function Home() {
             </div>
           )}
           {/* <Link href="/subsystem">Sub Systems</Link> */}
-          <Link href="/inspectiondetails">Inspection Details</Link>
+          <Link href='/recentdata'>Recent Data</Link>
+          {/* <Link href="/inspectiondetails">Inspection Details</Link>
           <Link href="/inspectioncitations">Inspection Citations</Link>
           <Link href="/form483">Form 483</Link>
-          <Link href='/warningletters'>Warning Letters</Link>
+          <Link href='/warningletters'>Warning Letters</Link> */}
         </nav>
       </aside>
       <main className={styles.content}>
