@@ -6,7 +6,7 @@ import Pagination from "../pagination"; // Import the Pagination component
 import Link from "next/link";
 
 export default function AnalysisTab({
-  data,
+  data, 
   setActiveTab,
   handleScrollToInspections,
   inspectionRef,
