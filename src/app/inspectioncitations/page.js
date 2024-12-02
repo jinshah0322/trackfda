@@ -114,7 +114,7 @@ export default function Page() {
   return (
     <div>
       <div className="breadcrumb">
-        <Link href="/">← Back to Dashboard</Link>
+        <Link href="/recentdata">← Back to Dashboard</Link>
       </div>
       <h1>Inspection Citations</h1>
 
@@ -140,7 +140,10 @@ export default function Page() {
                 {renderSortableHeader("Company Name", "legal_name")}
                 {renderSortableHeader("Company Address", "firm_address")}
                 <th>FEI Number</th>
-                {renderSortableHeader("Inspection End Date", "inspection_end_date")}
+                {renderSortableHeader(
+                  "Inspection End Date",
+                  "inspection_end_date"
+                )}
                 <th>Act/CFR Number</th>
                 <th>Short Description</th>
                 <th>Long Description</th>
@@ -152,7 +155,17 @@ export default function Page() {
                   <td>{item.legal_name}</td>
                   <td>{item.firm_address}</td>
                   <td style={{ textDecoration: "none", color: "blue" }}>
-                    {item.fei_number}
+                    <Link
+                      href={`/company/${encodeURIComponent(
+                        item.legal_name
+                      )}/facility/${item.fei_number}`}
+                      style={{
+                        textDecoration: "none",
+                        color: "blue",
+                      }}
+                    >
+                      {item.fei_number}
+                    </Link>
                   </td>
                   <td>
                     {new Date(item.inspection_end_date).toLocaleDateString(
