@@ -8,6 +8,7 @@ import AnalysisTab from "@/components/companyDetails/analysis";
 import FacilitiesTab from "@/components/companyDetails/facilities";
 import Form483sTab from "@/components/companyDetails/form483";
 import WarningLettersTab from "@/components/companyDetails/warningletter";
+import InspectionDetails from "@/components/companyDetails/inspectionDetails";
 
 export default function Page({ params, searchParams }) {
   const [loading, setLoading] = useState(true);
@@ -103,12 +104,6 @@ export default function Page({ params, searchParams }) {
     fetchCompanyFacilityDetails();
   }, [params.companyname]);
 
-  const handleScrollToInspections = () => {
-    if (inspectionRef.current) {
-      inspectionRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   if (loading) {
     return <Loading />;
   }
@@ -137,6 +132,14 @@ export default function Page({ params, searchParams }) {
           Facilities
         </a>
         <a
+          className={`tab ${
+            activeTab === "inspectiondetails" ? "active-tab" : ""
+          }`}
+          onClick={() => setActiveTab("inspectiondetails")}
+        >
+          Inspection Details
+        </a>
+        <a
           className={`tab ${activeTab === "form483s" ? "active-tab" : ""}`}
           onClick={() => setActiveTab("form483s")}
         >
@@ -163,8 +166,6 @@ export default function Page({ params, searchParams }) {
               companyname: params.companyname,
             }}
             setActiveTab={setActiveTab}
-            handleScrollToInspections={handleScrollToInspections}
-            inspectionRef={inspectionRef} // Pass the ref
           />
         )}
         {activeTab === "facilities" && (
@@ -173,6 +174,12 @@ export default function Page({ params, searchParams }) {
         {activeTab === "form483s" && <Form483sTab data={form483Details} />}
         {activeTab === "warningletters" && (
           <WarningLettersTab data={warningLettersDetails} />
+        )}
+        {activeTab === "inspectiondetails" && (
+          <InspectionDetails
+            inspectionDetails={inspectionDetails}
+            inspectionClassification={inspectionClassification}
+          />
         )}
       </div>
     </div>
