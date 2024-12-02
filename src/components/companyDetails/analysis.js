@@ -10,6 +10,7 @@ export default function AnalysisTab({
   setActiveTab,
   handleScrollToInspections,
   inspectionRef,
+
 }) {
   const [selectedClassification, setSelectedClassification] = useState("All");
   const [selectedProductType, setSelectedProductType] = useState("All");
@@ -17,12 +18,16 @@ export default function AnalysisTab({
   const [selectedPostedCitation, setSelectedPostedCitation] = useState("All");
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(1);
-
   const handleFilterChange = (event) => {
     setSelectedClassification(event.target.value);
     setPage(1);
   };
-
+  const companyName=data.companyname;
+  const handleDownload = (companyName) => {
+    const url = `/api/company/companydetails/companyreportPDF?companyname=${encodeURIComponent(companyName)}`;
+    window.open(url, "_blank");
+  };
+  
   const handleProductTypeChange = (event) => {
     setSelectedProductType(event.target.value);
     setPage(1);
@@ -72,7 +77,6 @@ export default function AnalysisTab({
       isPostedCitationMatch
     );
   });
-
   function countOccurrences(array, key) {
     return array.reduce((acc, item) => {
       const feiNumber = item[key] || Unkown;
@@ -194,6 +198,10 @@ export default function AnalysisTab({
         </div>
       </div>
       {/* Pass the data to the Pie Chart component */}
+      <button onClick={() => handleDownload(companyName)}>
+       Download Company Report
+      </button>
+
       <div
         style={{
           display: "flex",
@@ -206,7 +214,6 @@ export default function AnalysisTab({
         <InspectionBarChart chartData={barChartData} />
       </div>
       {/* Filter section */}
-
       <div
         className="filter-container"
         style={{
@@ -357,7 +364,6 @@ export default function AnalysisTab({
             totalPages={totalPages}
             page={page}
             onPageChange={setPage}
-            totalRecords={filteredData.length}
           />
         </>
       )}

@@ -65,8 +65,7 @@ export async function GET(req) {
       totalWarningLetters: warningLetterResult.length,
       totalPublished483s: published483Result.length,
     };
-
-    // Return the combined data
+  // Return the combined data
     return NextResponse.json(
       {
         analysis,
