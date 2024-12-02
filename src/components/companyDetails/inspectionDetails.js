@@ -6,7 +6,6 @@ import Link from "next/link";
 export default function InspectionDetails({ 
   inspectionDetails, 
   inspectionClassification, 
-  inspectionRef 
 }) {
   const [selectedClassification, setSelectedClassification] = useState("All");
   const [selectedProductType, setSelectedProductType] = useState("All");
@@ -161,12 +160,12 @@ export default function InspectionDetails({
 
       {/* Table Section */}
       {filteredData.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "16px" }} ref={inspectionRef}>
+        <div style={{ textAlign: "center", padding: "16px" }}>
           <h2>No Inspections available for this company.</h2>
         </div>
       ) : (
         <>
-          <table className="data-table" ref={inspectionRef}>
+          <table className="data-table" >
             <thead>
               <tr>
                 <th>Company Address</th>

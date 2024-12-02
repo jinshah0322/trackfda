@@ -115,7 +115,7 @@ export default function Page() {
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 <Link
-                  href={`/company/${item.legal_name}?tab=analysis`}
+                  href={`/company/${item.legal_name}?tab=inspectioncitations`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   {item.inspections_citations_count}

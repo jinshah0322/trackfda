@@ -104,6 +104,16 @@ export default function AnalysisTab({
         </div>
         <div
           className="card"
+          style={{ cursor: "pointer" }}
+          onClick={() => setActiveTab("inspectioncitations")}
+        >
+          <p className="card-title">Total Inspection Citations</p>
+          <p className="card-number">
+            {data.companyAnalysisDetails.totalCitations}
+          </p>
+        </div>
+        <div
+          className="card"
           onClick={() => setActiveTab("form483s")}
           style={{ cursor: "pointer" }}
         >

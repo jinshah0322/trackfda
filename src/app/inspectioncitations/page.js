@@ -172,7 +172,19 @@ export default function Page() {
                       "en-GB"
                     )}
                   </td>
-                  <td>{item.act_cfr_number}</td>
+                  <td>
+                    <Link
+                      href={`https://www.ecfr.gov/current/title-21/chapter-I/subchapter-C/part-211/subpart-C/section-${
+                        item.act_cfr_number.includes("(")
+                          ? item.act_cfr_number.split("(")[0]
+                          : item.act_cfr_number
+                      }#p-${item.act_cfr_number}`}
+                      target="_blank"
+                      style={{ color: "blue", textDecoration: "none" }}
+                    >
+                      {item.act_cfr_number}
+                    </Link>
+                  </td>
                   <td>{item.short_description}</td>
                   <td>{item.long_description}</td>
                 </tr>

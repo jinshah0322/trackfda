@@ -26,6 +26,16 @@ export async function GET(req) {
       [companyname]
     );
 
+    const { rows: inspectionCitationResult } = await query(
+      `
+        SELECT cd.legal_name,cd.fei_number,cd.firm_address,icd.act_cfr_number,icd.short_description,icd.long_description 
+        FROM company_details cd
+        INNER JOIN inspections_citations_details icd on cd.fei_number=icd.fei_number
+        WHERE cd.legal_name = $1
+      `,
+      [companyname]
+    );
+
     const { rows: inspectionClassification } = await query(
       `select classification,abbrevation from insd_masterclassification`
     );
@@ -64,6 +74,7 @@ export async function GET(req) {
       totalInspections: inspectionResult.length,
       totalWarningLetters: warningLetterResult.length,
       totalPublished483s: published483Result.length,
+      totalCitations: inspectionCitationResult.length,
     };
 
     // Return the combined data
@@ -74,7 +85,8 @@ export async function GET(req) {
         form483Details: published483Result,
         warningLetters: warningLetterResult,
         inspections: inspectionResult,
-        inspectionClassification
+        citations: inspectionCitationResult,
+        inspectionClassification,
       },
       { status: 200 }
     );

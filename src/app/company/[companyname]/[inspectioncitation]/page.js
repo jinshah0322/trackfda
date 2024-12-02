@@ -60,44 +60,29 @@ export default function Page({ params }) {
           ← Back to Company Details
         </Link>
       </div>
+      <h1>Inspection Citations</h1>
 
       {/* Header Section */}
-      <div style={{ marginBottom: "16px" }}>
-        <h1 style={{ fontSize: "24px", color: "#333", marginBottom: "8px" }}>
-          Inspection Citation
-        </h1>
-        <p
-          style={{
-            fontSize: "18px",
-            color: "#555",
-            backgroundColor: "#f9f9f9",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            display: "inline-block",
-            margin: 0,
-            lineHeight: "1.6",
-          }}
-        >
-          <span style={{ fontWeight: "bold", display: "block" }}>
-            Company Name:
-          </span>
-          <span style={{ color: "#000" }}>{companyName || "N/A"}</span>
-          <br />
-          <span style={{ fontWeight: "bold", display: "block" }}>
-            Facility Number:
-          </span>
-          <span style={{ color: "#000" }}>
-            {citationDetails[0]?.fei_number || "N/A"}
-          </span>
-          <br />
-          <span style={{ fontWeight: "bold", display: "block" }}>
-            Firm Address:
-          </span>
-          <span style={{ color: "#000" }}>
-            {citationDetails[0]?.firm_address || "N/A"}
-          </span>
-        </p>
-      </div>
+      <div style={{ marginBottom: "16px", padding: "12px", backgroundColor: "#f9f9f9", borderRadius: "8px" }}>
+        <div style={{ fontSize: "18px", color: "#555", lineHeight: "1.8" }}>
+          <p>
+            <strong>Company Name: </strong>
+            <span style={{ color: "#000" }}>{companyName || "N/A"}</span>
+          </p>
+          <p>
+            <strong>Facility Number: </strong>
+            <span style={{ color: "#000" }}>
+              {citationDetails[0]?.fei_number || "N/A"}
+            </span>
+          </p>
+          <p>
+            <strong>Firm Address: </strong>
+            <span style={{ color: "#000" }}>
+              {citationDetails[0]?.firm_address || "N/A"}
+            </span>
+          </p>
+        </div>
+      </div>  
 
       {/* Table Section */}
       {paginatedData.length ? (
