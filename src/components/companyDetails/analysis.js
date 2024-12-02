@@ -133,6 +133,11 @@ export default function AnalysisTab({
           </p>
         </div>
       </div>
+      {/* Pass the data to the Pie Chart component */}
+      <button onClick={() => handleDownload(companyName)}>
+       Download Company Report
+      </button>
+
 
       {/* Charts Section */}
       <div

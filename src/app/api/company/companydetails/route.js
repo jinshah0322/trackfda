@@ -76,8 +76,7 @@ export async function GET(req) {
       totalPublished483s: published483Result.length,
       totalCitations: inspectionCitationResult.length,
     };
-
-    // Return the combined data
+  // Return the combined data
     return NextResponse.json(
       {
         analysis,

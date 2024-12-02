@@ -170,10 +170,10 @@ export default function Page({ params, searchParams }) {
         {activeTab === "analysis" && (
           <AnalysisTab
             data={{
+              companyname: params.companyname,
               companyAnalysisDetails,
               inspectionDetails,
               inspectionClassification,
-              companyname: params.companyname,
             }}
             setActiveTab={setActiveTab}
           />

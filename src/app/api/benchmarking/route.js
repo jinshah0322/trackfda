@@ -209,7 +209,6 @@ try {
       })
     : "N/A", // Handle null or undefined
     }));    
-    console.log(warninglettersMetric,warningletters)
     const investigatorsMetric= processInvestigators(investigators,companyNames);
     return NextResponse.json({inspectionMetric,form483sMetric,investigatorsMetric,warninglettersMetric},{status:200});
 } catch (error) {

@@ -169,6 +169,13 @@ export async function GET(req) {
       ({ subSystemSubpartData, subSystemSectionData } = await fetchSubSystemData(conditions));
     }
 
+
+
+
+// Define table styles
+
+
+
     // Return the combined response
     return NextResponse.json({
       facilityDetails,
