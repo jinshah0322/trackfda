@@ -8,8 +8,7 @@ export default function Investigator({ investigators }) {
   const [page, setPage] = useState(1);
   const [sortField, setSortField] = useState(""); // Field to sort by
   const [sortOrder, setSortOrder] = useState("asc"); // Sort order
-
-  const totalPages = Math.ceil(investigators.length / limit);
+  const [searchTerm, setSearchTerm] = useState(""); // Search term
 
   const handleLimitChange = (newLimit) => {
     setLimit(newLimit);
@@ -21,18 +20,21 @@ export default function Investigator({ investigators }) {
     setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
   };
 
-  const sortedData = [...investigators].sort((a, b) => {
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setPage(1); // Reset to the first page when searching
+  };
+
+  // Filter investigators based on the search term
+  const filteredInvestigators = investigators.filter((item) =>
+    item.employee_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const sortedData = [...filteredInvestigators].sort((a, b) => {
     if (!sortField) return 0;
 
     const aValue = a[sortField] ?? "";
     const bValue = b[sortField] ?? "";
-
-    // Handle date sorting
-    if (sortField === "center_classification_date") {
-      const aDate = new Date(aValue);
-      const bDate = new Date(bValue);
-      return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
-    }
 
     // Handle string sorting
     if (typeof aValue === "string" && typeof bValue === "string") {
@@ -41,16 +43,12 @@ export default function Investigator({ investigators }) {
         : bValue.localeCompare(aValue);
     }
 
-    // Handle numeric sorting
-    if (typeof aValue === "number" && typeof bValue === "number") {
-      return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
-    }
-
     return 0; // Fallback to no sorting if types are inconsistent
   });
 
   // Paginate data
   const paginatedData = sortedData.slice((page - 1) * limit, page * limit);
+  const totalPages = Math.ceil(sortedData.length / limit);
 
   const renderSortableHeader = (label, field, isSortable = true) =>
     isSortable ? (
@@ -94,8 +92,31 @@ export default function Investigator({ investigators }) {
     ) : (
       <th>{label}</th>
     );
-    return(
-        <div>
+
+  return (
+    <div>
+      {/* Search */}
+      <div
+        style={{
+          marginBottom: "10px",
+          display: "flex",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ marginRight: "15px" }}>
+          <label htmlFor="search-filter">Search: </label>
+          <input
+            id="search-filter"
+            type="text"
+            placeholder="Search investigators"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            style={{ padding: "5px", width: "300px" }}
+          />
+        </div>
+      </div>
+
       {/* Limit Component */}
       <Limit limit={limit} onLimitChange={handleLimitChange} />
 
@@ -108,7 +129,7 @@ export default function Investigator({ investigators }) {
         <>
           <table
             style={{
-              width: "30%",
+              width: "50%",
               borderCollapse: "collapse",
               marginBottom: "20px",
             }}
@@ -122,7 +143,7 @@ export default function Investigator({ investigators }) {
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
-                  <td style={{width:"70%"}}>{item.employee_name}</td>
+                  <td style={{ width: "70%" }}>{item.employee_name}</td>
                   <td>
                     <Link
                       href={`/company/${encodeURIComponent(
@@ -151,5 +172,5 @@ export default function Investigator({ investigators }) {
         </>
       )}
     </div>
-    )
+  );
 }

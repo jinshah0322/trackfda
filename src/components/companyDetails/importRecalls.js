@@ -8,8 +8,7 @@ export default function ImportRecall({ importrecalls }) {
   const [page, setPage] = useState(1);
   const [sortField, setSortField] = useState(""); // Field to sort by
   const [sortOrder, setSortOrder] = useState("asc"); // Sort order
-
-  const totalPages = Math.ceil(importrecalls.length / limit);
+  const [selectedStatus, setSelectedStatus] = useState("All"); // Filter for status
 
   const handleLimitChange = (newLimit) => {
     setLimit(newLimit);
@@ -21,7 +20,17 @@ export default function ImportRecall({ importrecalls }) {
     setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
   };
 
-  const sortedData = [...importrecalls].sort((a, b) => {
+  const handleStatusChange = (event) => {
+    setSelectedStatus(event.target.value);
+    setPage(1); // Reset to the first page when filtering
+  };
+
+  // Filter data based on selected status
+  const filteredData = importrecalls.filter((item) => {
+    return selectedStatus === "All" || item.status === selectedStatus;
+  });
+
+  const sortedData = [...filteredData].sort((a, b) => {
     if (!sortField) return 0;
 
     const aValue = a[sortField] ?? "";
@@ -51,6 +60,7 @@ export default function ImportRecall({ importrecalls }) {
 
   // Paginate data
   const paginatedData = sortedData.slice((page - 1) * limit, page * limit);
+  const totalPages = Math.ceil(filteredData.length / limit);
 
   const renderSortableHeader = (label, field, isSortable = true) =>
     isSortable ? (
@@ -97,11 +107,40 @@ export default function ImportRecall({ importrecalls }) {
 
   return (
     <div>
+      {/* Filters */}
+      <div
+        style={{
+          marginBottom: "20px",
+          display: "flex",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ marginRight: "15px" }}>
+          <label htmlFor="status-filter">Status: </label>
+          <select
+            id="status-filter"
+            value={selectedStatus}
+            onChange={handleStatusChange}
+            style={{ padding: "5px", width: "200px" }}
+          >
+            <option value="All">All Status</option>
+            {[...new Set(importrecalls.map((item) => item.status))].map(
+              (status, index) => (
+                <option key={index} value={status}>
+                  {status}
+                </option>
+              )
+            )}
+          </select>
+        </div>
+      </div>
+
       {/* Limit Component */}
       <Limit limit={limit} onLimitChange={handleLimitChange} />
 
       {/* Table Section */}
-      {sortedData.length === 0 ? (
+      {filteredData.length === 0 ? (
         <div style={{ textAlign: "center", padding: "16px" }}>
           <h2>No Import Recalls available.</h2>
         </div>
@@ -117,16 +156,9 @@ export default function ImportRecall({ importrecalls }) {
             <thead>
               <tr>
                 {renderSortableHeader("Firm Address", "firm_address")}
-                {renderSortableHeader("FEI Number", "fei_number", false)}
-                {renderSortableHeader(
-                  "Classification",
-                  "product_classification"
-                )}
-                {renderSortableHeader("Status", "status")}
-                {renderSortableHeader(
-                  "Distribution Pattern",
-                  "distribution_pattern"
-                )}
+                <th>FEI Number</th>
+                <th>Status</th>
+                <th>Distribution Pattern</th>
                 {renderSortableHeader(
                   "Recall Date",
                   "center_classification_date"
@@ -140,6 +172,10 @@ export default function ImportRecall({ importrecalls }) {
                   "Product Description",
                   "product_description",
                   false
+                )}
+                {renderSortableHeader(
+                  "Product Classification",
+                  "product_classification"
                 )}
                 {renderSortableHeader(
                   "Event Classification",
@@ -169,7 +205,6 @@ export default function ImportRecall({ importrecalls }) {
                       {item.fei_number}
                     </Link>
                   </td>
-                  <td>{item.product_classification}</td>
                   <td>{item.status}</td>
                   <td>{item.distribution_pattern}</td>
                   <td>
@@ -179,6 +214,7 @@ export default function ImportRecall({ importrecalls }) {
                   </td>
                   <td>{item.reason_for_recall}</td>
                   <td>{item.product_description}</td>
+                  <td>{item.product_classification}</td>
                   <td>{item.event_classification}</td>
                   <td>
                     <a
@@ -203,7 +239,7 @@ export default function ImportRecall({ importrecalls }) {
             totalPages={totalPages}
             page={page}
             onPageChange={setPage}
-            totalRecords={sortedData.length}
+            totalRecords={filteredData.length}
           />
         </>
       )}
