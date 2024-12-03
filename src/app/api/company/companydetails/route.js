@@ -69,14 +69,53 @@ export async function GET(req) {
       [companyname]
     );
 
+    const { rows: importRefusalResult } = await query(
+      `
+        SELECT fei_number,firm_legal_name,firm_address,product_code_description,refused_date,import_division,
+        fda_sample_analysis,private_lab_analysis,refusal_charges 
+        FROM import_refusals WHERE firm_legal_name = $1 ORDER BY refused_date DESC
+      `,
+      [companyname]
+    );
+
+    const { rows: importRecallResult } = await query(
+      `
+        SELECT ir.*,cd.firm_address FROM import_recalls ir 
+        LEFT JOIN company_details cd ON ir.fei_number=cd.fei_number
+        WHERE cd.legal_name = $1
+        ORDER BY center_classification_date DESC
+      `,
+      [companyname]
+    );
+
+    const { rows: investgatorResult } = await query(
+      `
+      WITH employee_fei_pairs AS (
+          SELECT jsonb_object_keys(p483.employees) AS employee_name,p483.fei_number
+          FROM published_483s p483
+          INNER JOIN company_details cd 
+          ON p483.fei_number = cd.fei_number
+          WHERE cd.legal_name = $1
+      )
+      SELECT employee_name,STRING_AGG(fei_number::TEXT, ', ') AS fei_number
+      FROM employee_fei_pairs
+      GROUP BY employee_name
+      ORDER BY employee_name;
+      `,
+      [companyname]
+    );
+
     const analysis = {
       totalFacilities: companyDetailsResult.length,
       totalInspections: inspectionResult.length,
       totalWarningLetters: warningLetterResult.length,
       totalPublished483s: published483Result.length,
       totalCitations: inspectionCitationResult.length,
+      totalRefusals: importRefusalResult.length,
+      totalRecalls: importRecallResult.length,
+      totalInvestigators: investgatorResult.length,
     };
-  // Return the combined data
+    // Return the combined data
     return NextResponse.json(
       {
         analysis,
@@ -85,6 +124,9 @@ export async function GET(req) {
         warningLetters: warningLetterResult,
         inspections: inspectionResult,
         citations: inspectionCitationResult,
+        refusals: importRefusalResult,
+        recalls: importRecallResult,
+        investigators: investgatorResult,
         inspectionClassification,
       },
       { status: 200 }

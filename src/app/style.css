@@ -77,8 +77,9 @@
 .cards-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 30px;
-    /* Space between cards and table */
+    gap: 20px; /* Add spacing between the cards */
+    flex-wrap: wrap; /* Ensure cards wrap on smaller screens */
+    margin-bottom: 30px; /* Space between cards and table */
 }
 
 .card {
@@ -86,9 +87,9 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    padding: 16px;
+    padding: 12px; /* Reduced padding for smaller cards */
     text-align: center;
-    width: 20%;
+    width: calc(10% - 20px); /* Reduce card width */
     transition: transform 0.2s ease-in-out;
 }
 
@@ -97,15 +98,29 @@
 }
 
 .card-title {
-    font-size: 16px;
+    font-size: 14px; /* Smaller font size for title */
     color: #555;
     margin-bottom: 8px;
 }
 
 .card-number {
-    font-size: 24px;
+    font-size: 20px; /* Slightly smaller number size */
     font-weight: bold;
     color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cards-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px; /* Smaller gap for smaller screens */
+    }
+
+    .card {
+        width: 90%; /* Full-width cards on smaller screens */
+        padding: 10px; /* Adjust padding for smaller screens */
+    }
 }
 
 /* Inspection Table */
