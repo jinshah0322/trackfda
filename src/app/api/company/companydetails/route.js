@@ -10,7 +10,7 @@ export async function GET(req) {
     // Fetch distinct FEI numbers and related details in a single query
     const { rows: companyDetailsResult } = await query(
       `
-      SELECT legal_name,fei_number,city,state,country_area,firm_address FROM company_details WHERE legal_name = $1
+      SELECT legal_name,fei_number,firm_address FROM company_details WHERE legal_name = $1
     `,
       [companyname]
     );

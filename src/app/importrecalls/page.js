@@ -194,9 +194,9 @@ export default function Page() {
           <table>
             <thead>
               <tr>
-                {renderSortableHeader("Company Name", "recalling_firm_name")}
-                {renderSortableHeader("Firm Address", "firm_address")}
                 {renderSortableHeader("FEI Number", "fei_number", false)}
+                {renderSortableHeader("Firm Address", "firm_address",false)}
+                {renderSortableHeader("Company Name", "recalling_firm_name")}
                 {renderSortableHeader(
                   "Classification",
                   "product_classification"
@@ -234,8 +234,6 @@ export default function Page() {
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.recalling_firm_name}</td>
-                  <td>{item.firm_address}</td>
                   <td>
                     <Link
                       href={`/company/${encodeURIComponent(
@@ -249,6 +247,8 @@ export default function Page() {
                       {item.fei_number}
                     </Link>
                   </td>
+                  <td>{item.firm_address}</td>
+                  <td>{item.recalling_firm_name}</td>
                   <td>{item.product_classification}</td>
                   <td>{item.status}</td>
                   <td>{item.distribution_pattern}</td>

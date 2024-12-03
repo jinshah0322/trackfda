@@ -14,6 +14,7 @@ export const GET = async (req) => {
 SELECT 
     w.letterissuedate,
     w.companyname,
+    w.fei_number,
     w.issuingoffice,
     w.subject,
     w.warningletterurl,
@@ -46,7 +47,7 @@ ON
                 AND 
                 TO_DATE(p483m.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
         )
-    )
+    ) WHERE w.fei_number !=''
 ORDER BY 
     TO_DATE(w.letterissuedate, 'DD-MM-YYYY') DESC;`);
     return NextResponse.json({ data: rows }, { status: 200 });

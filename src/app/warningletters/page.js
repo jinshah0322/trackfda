@@ -265,8 +265,9 @@ export default function Page() {
         >
           <thead>
             <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
-              {renderSortableHeader("Issue Date", "letterissuedate")}
+              <th style={{ padding: "8px", width: "150px" }}>FEI Number</th>
               {renderSortableHeader("Company Name", "companyname")}
+              {renderSortableHeader("Issue Date", "letterissuedate")}
               {renderSortableHeader("Issuing Office", "issuingoffice")}
               <th style={{ padding: "8px", width: "150px" }}>Subject</th>
               <th style={{ padding: "8px", width: "150px" }}>Warning Letter</th>
@@ -276,9 +277,22 @@ export default function Page() {
           <tbody>
             {currentItems.length > 0 ? (
               currentItems.map((item, index) => (
-                <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
-                  <td style={{ padding: "8px" }}>{item.letterissuedate}</td>
+                <tr key={index} style={{ padding: "8px" }}>
+                  <td>
+                    <Link
+                      href={`/company/${encodeURIComponent(
+                        item.recalling_firm_name
+                      )}/facility/${item.fei_number}`}
+                      style={{
+                        textDecoration: "none",
+                        color: "blue",
+                      }}
+                    >
+                      {item.fei_number}
+                    </Link>
+                  </td>
                   <td style={{ padding: "8px" }}>{item.companyname}</td>
+                  <td style={{ padding: "8px" }}>{item.letterissuedate}</td>
                   <td style={{ padding: "8px" }}>{item.issuingoffice}</td>
                   <td style={{ padding: "8px" }}>{item.subject}</td>
                   <td style={{ padding: "8px" }}>

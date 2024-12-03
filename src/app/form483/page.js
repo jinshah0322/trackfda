@@ -318,8 +318,9 @@ export default function Page() {
         >
           <thead>
             <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
-              {renderSortableHeader("Issue Date", "record_date")}
+              <th>FEI Number</th>
               {renderSortableHeader("Company Name", "legal_name")}
+              {renderSortableHeader("Issue Date", "record_date")}
               <th style={{ padding: "8px", width: "150px" }}>Form483</th>
               {renderSortableHeader(
                 "Converted to Warning Letter",
@@ -333,11 +334,24 @@ export default function Page() {
             {currentItems.length > 0 ? (
               currentItems.map((row, index) => (
                 <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
-                  <td style={{ padding: "8px", width: "150px" }}>
-                    {row.record_date}
+                   <td style={{ textDecoration: "none", color: "blue" ,padding: "8px", width: "150px" }}>
+                    <Link
+                      href={`/company/${encodeURIComponent(
+                        row.legal_name
+                      )}/facility/${row.fei_number}`}
+                      style={{
+                        textDecoration: "none",
+                        color: "blue",
+                      }}
+                    >
+                      {row.fei_number}
+                    </Link>
+                  </td>
+                   <td style={{ padding: "8px", width: "150px" }}>
+                    {row.legal_name}
                   </td>
                   <td style={{ padding: "8px", width: "150px" }}>
-                    {row.legal_name}
+                    {row.record_date}
                   </td>
                   <td style={{ padding: "8px", width: "150px" }}>
                     <button

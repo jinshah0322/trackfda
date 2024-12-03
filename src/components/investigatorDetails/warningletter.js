@@ -60,49 +60,7 @@ export default function WarningLettersTab({ data }) {
           >
             <thead>
               <tr>
-                <th
-                  style={{
-                    border: "1px solid #ddd",
-                    padding: "8px",
-                    textAlign: "left",
-                    position: "relative",
-                    cursor: "pointer", // Makes the header interactive
-                  }}
-                  onClick={() => toggleSort("letterissuedate")}
-                >
-                  Issue Date
-                  <span
-                    style={{
-                      position: "absolute",
-                      right: "8px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        opacity:
-                          sortField === "letterissuedate" && sortOrder === "asc"
-                            ? 1
-                            : 0.5,
-                      }}
-                    >
-                      ▲
-                    </span>
-                    <span
-                      style={{
-                        opacity:
-                          sortField === "letterissuedate" &&
-                          sortOrder === "desc"
-                            ? 1
-                            : 0.5,
-                      }}
-                    >
-                      ▼
-                    </span>
-                  </span>
-                </th>
+                <th>FEI Number</th>
                 <th
                   style={{
                     border: "1px solid #ddd",
@@ -151,10 +109,42 @@ export default function WarningLettersTab({ data }) {
                     padding: "8px",
                     textAlign: "left",
                     position: "relative",
-                    cursor: "pointer",
+                    cursor: "pointer", // Makes the header interactive
                   }}
+                  onClick={() => toggleSort("letterissuedate")}
                 >
-                  FEI Number
+                  Issue Date
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "8px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      fontSize: "12px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        opacity:
+                          sortField === "letterissuedate" && sortOrder === "asc"
+                            ? 1
+                            : 0.5,
+                      }}
+                    >
+                      ▲
+                    </span>
+                    <span
+                      style={{
+                        opacity:
+                          sortField === "letterissuedate" &&
+                            sortOrder === "desc"
+                            ? 1
+                            : 0.5,
+                      }}
+                    >
+                      ▼
+                    </span>
+                  </span>
                 </th>
                 <th
                   style={{
@@ -249,18 +239,18 @@ export default function WarningLettersTab({ data }) {
               {paginatedData.map((item, index) => (
                 <tr key={index}>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.letterissuedate}
+                    <Link
+                      className="linkDecoration"
+                      href={`/company/${item.legal_name}/facility/${item.fei_number}`}
+                    >
+                      {item.fei_number}
+                    </Link>
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     {item.companyname}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    <Link
-                      className="linkDecoration"
-                      href={`/company/${item.companyname}/facility/${item.fei_number}`}
-                    >
-                      {item.fei_number}
-                    </Link>
+                    {item.letterissuedate}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     {item.issuingoffice}

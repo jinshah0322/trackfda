@@ -83,6 +83,12 @@ export default function Form483sTab({ data = [] }) {
       >
         <thead>
           <tr>
+          <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>
+              FEI Number
+            </th>
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>
+              Firm Address
+            </th>
             <th
               style={{
                 border: "1px solid #ddd",
@@ -118,12 +124,6 @@ export default function Form483sTab({ data = [] }) {
                   ▼
                 </span>
               </span>
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>
-              Company Address
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>
-              FEI Number
             </th>
             <th
               style={{
@@ -170,18 +170,18 @@ export default function Form483sTab({ data = [] }) {
           {paginatedData.map((item, index) => (
             <tr key={index}>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.record_date}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {item.firm_address}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 <Link
                   className="linkDecoration"
                   href={`/company/${item.legal_name}/facility/${item.fei_number}`}
                 >
                   {item.fei_number}
                 </Link>
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.firm_address}
+              </td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                {item.record_date}
               </td>
               <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                 {item.inspection_duration}

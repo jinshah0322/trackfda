@@ -1,7 +1,7 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import Limit from "../limit";
 import Pagination from "../pagination";
-
+import Link from "next/link";
 export default function Form483({ data = [] }) {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -147,41 +147,7 @@ export default function Form483({ data = [] }) {
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
-            <th
-              style={{
-                border: "1px solid #ddd",
-                padding: "8px",
-                cursor: "pointer",
-                position: "relative",
-              }}
-              onClick={() => toggleSort("record_date")}
-            >
-              Issue Date
-              <span
-                style={{
-                  position: "absolute",
-                  right: "8px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  fontSize: "12px",
-                }}
-              >
-                <span
-                  style={{
-                    opacity: sortField === "record_date" && sortOrder === "asc" ? 1 : 0.5,
-                  }}
-                >
-                  ▲
-                </span>
-                <span
-                  style={{
-                    opacity: sortField === "record_date" && sortOrder === "desc" ? 1 : 0.5,
-                  }}
-                >
-                  ▼
-                </span>
-              </span>
-            </th>
+            <th>FEI Number</th>
             <th
               style={{
                 border: "1px solid #ddd",
@@ -211,6 +177,41 @@ export default function Form483({ data = [] }) {
                 <span
                   style={{
                     opacity: sortField === "legal_name" && sortOrder === "desc" ? 1 : 0.5,
+                  }}
+                >
+                  ▼
+                </span>
+              </span>
+            </th>
+            <th
+              style={{
+                border: "1px solid #ddd",
+                padding: "8px",
+                cursor: "pointer",
+                position: "relative",
+              }}
+              onClick={() => toggleSort("record_date")}
+            >
+              Issue Date
+              <span
+                style={{
+                  position: "absolute",
+                  right: "8px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  fontSize: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    opacity: sortField === "record_date" && sortOrder === "asc" ? 1 : 0.5,
+                  }}
+                >
+                  ▲
+                </span>
+                <span
+                  style={{
+                    opacity: sortField === "record_date" && sortOrder === "desc" ? 1 : 0.5,
                   }}
                 >
                   ▼
@@ -262,40 +263,40 @@ export default function Form483({ data = [] }) {
               Form 483
             </th>
             <th
-  style={{
-    border: "1px solid #ddd",
-    padding: "8px",
-    cursor: "pointer",
-    position: "relative",
-  }}
-  onClick={() => toggleSort("converted")}
->
-  Converted to Warning Letter
-  <span
-    style={{
-      position: "absolute",
-      right: "8px",
-      top: "50%",
-      transform: "translateY(-50%)",
-      fontSize: "12px",
-    }}
-  >
-    <span
-      style={{
-        opacity: sortField === "converted" && sortOrder === "asc" ? 1 : 0.5,
-      }}
-    >
-      ▲
-    </span>
-    <span
-      style={{
-        opacity: sortField === "converted" && sortOrder === "desc" ? 1 : 0.5,
-      }}
-    >
-      ▼
-    </span>
-  </span>
-</th>
+              style={{
+                border: "1px solid #ddd",
+                padding: "8px",
+                cursor: "pointer",
+                position: "relative",
+              }}
+              onClick={() => toggleSort("converted")}
+            >
+              Converted to Warning Letter
+              <span
+                style={{
+                  position: "absolute",
+                  right: "8px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  fontSize: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    opacity: sortField === "converted" && sortOrder === "asc" ? 1 : 0.5,
+                  }}
+                >
+                  ▲
+                </span>
+                <span
+                  style={{
+                    opacity: sortField === "converted" && sortOrder === "desc" ? 1 : 0.5,
+                  }}
+                >
+                  ▼
+                </span>
+              </span>
+            </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               Warning Letter
             </th>
@@ -306,10 +307,18 @@ export default function Form483({ data = [] }) {
             return (
               <tr key={index}>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                  {item.record_date}
+                <Link
+                  className="linkDecoration"
+                  href={`/company/${item.legal_name}/facility/${item.fei_number}`}
+                >
+                  {item.fei_number}
+                </Link>
                 </td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                   {item.legal_name}
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {item.record_date}
                 </td>
                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                   {item.inspection_duration}

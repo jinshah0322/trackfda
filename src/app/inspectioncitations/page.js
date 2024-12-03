@@ -137,9 +137,9 @@ export default function Page() {
           >
             <thead>
               <tr>
-                {renderSortableHeader("Company Name", "legal_name")}
-                {renderSortableHeader("Company Address", "firm_address")}
                 <th>FEI Number</th>
+                <th>Firm Address</th>
+                {renderSortableHeader("Company Name", "legal_name")}
                 {renderSortableHeader(
                   "Inspection End Date",
                   "inspection_end_date"
@@ -152,9 +152,7 @@ export default function Page() {
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.legal_name}</td>
-                  <td>{item.firm_address}</td>
-                  <td style={{ textDecoration: "none", color: "blue" }}>
+                    <td style={{ textDecoration: "none", color: "blue" }}>
                     <Link
                       href={`/company/${encodeURIComponent(
                         item.legal_name
@@ -167,6 +165,8 @@ export default function Page() {
                       {item.fei_number}
                     </Link>
                   </td>
+                  <td>{item.firm_address}</td>
+                  <td>{item.legal_name}</td>
                   <td>
                     {new Date(item.inspection_end_date).toLocaleDateString(
                       "en-GB"

@@ -42,9 +42,9 @@ export default function Page() {
         >
           <thead>
             <tr>
-              <th>Company Name</th>
-              <th>Company Address</th>
               <th>FEI Number</th>
+              <th>Firm Address</th>
+              <th>Company Name</th>
               <th>Classification</th>
               <th>Product Type</th>
               <th>Project Area</th>
@@ -56,8 +56,7 @@ export default function Page() {
           <tbody>
             {data.recentInspectionDetails.map((item, index) => (
               <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
-                <td>{item.legal_name}</td>
-                <td>{item.firm_address}</td>
+               
                 <td>
                   <Link
                     href={`/company/${encodeURIComponent(
@@ -71,6 +70,8 @@ export default function Page() {
                     {item.fei_number}
                   </Link>
                 </td>
+                <td>{item.firm_address}</td> 
+                <td>{item.legal_name}</td>
                 <td>{item.classification}</td>
                 <td>{item.product_type}</td>
                 <td>{item.project_area}</td>
@@ -125,9 +126,9 @@ export default function Page() {
         >
           <thead>
             <tr>
-              <th>Company Name</th>
-              <th>Company Address</th>
               <th>FEI Number</th>
+              <th>Firm Address</th>
+              <th>Company Name</th>
               <th>Inspection End Date</th>
               <th>Act/CFR Number</th>
               <th>Short Description</th>
@@ -137,8 +138,6 @@ export default function Page() {
           <tbody>
             {data.recentInspectionCitations.map((item, index) => (
               <tr key={index}>
-                <td>{item.legal_name}</td>
-                <td>{item.firm_address}</td>
                 <td style={{ textDecoration: "none", color: "blue" }}>
                   <Link
                     href={`/company/${encodeURIComponent(
@@ -152,6 +151,9 @@ export default function Page() {
                     {item.fei_number}
                   </Link>
                 </td>
+                <td>{item.firm_address}</td>
+               
+                <td>{item.legal_name}</td>
                 <td>
                   {new Date(item.inspection_end_date).toLocaleDateString(
                     "en-GB"
@@ -183,8 +185,9 @@ export default function Page() {
         >
           <thead>
             <tr>
-              <th>Issue Date</th>
+              <th>FEI Number</th>
               <th>Company Name</th>
+              <th>Issue Date</th>
               <th>Form483</th>
               <th>Converted to Warning Letter</th>
               <th>Warning Letter</th>
@@ -193,8 +196,21 @@ export default function Page() {
           <tbody>
             {data.recentForm483.map((row, index) => (
               <tr key={index}>
-                <td>{row.record_date}</td>
+                <td style={{ textDecoration: "none", color: "blue" }}>
+                  <Link
+                    href={`/company/${encodeURIComponent(
+                      row.legal_name
+                    )}/facility/${row.fei_number}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "blue",
+                    }}
+                  >
+                    {row.fei_number}
+                  </Link>
+                </td>
                 <td>{row.legal_name}</td>
+                <td>{row.record_date}</td>
                 <td>
                   <button
                     style={{
@@ -255,8 +271,9 @@ export default function Page() {
         >
           <thead>
             <tr style={{ borderBottom: "2px solid #ddd", textAlign: "left" }}>
-              <th>Issue Date</th>
+              <th>FEI Number</th>
               <th>Company Name</th>
+              <th>Issue Date</th>
               <th>Issuing Office</th>
               <th style={{ padding: "8px", width: "150px" }}>Subject</th>
               <th style={{ padding: "8px", width: "150px" }}>Warning Letter</th>
@@ -265,9 +282,22 @@ export default function Page() {
           </thead>
           <tbody>
             {data.recentWarningLetters.map((item, index) => (
-              <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
-                <td style={{ padding: "8px" }}>{item.letterissuedate}</td>
+              <tr key={index} style={{  padding: "8px" }}>
+                <td>
+                  <Link
+                    href={`/company/${encodeURIComponent(
+                      item.legal_name
+                    )}/facility/${item.fei_number}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "blue",
+                    }}
+                  >
+                    {item.fei_number}
+                  </Link>
+                </td>
                 <td style={{ padding: "8px" }}>{item.companyname}</td>
+                <td style={{ padding: "8px" }}>{item.letterissuedate}</td>
                 <td style={{ padding: "8px" }}>{item.issuingoffice}</td>
                 <td style={{ padding: "8px" }}>{item.subject}</td>
                 <td style={{ padding: "8px" }}>
@@ -333,9 +363,9 @@ export default function Page() {
         >
           <thead>
             <tr>
-              <th>Company Name</th>
-              <th>Company Address</th>
               <th>FEI Number</th>
+              <th>Firm Address</th>
+              <th>Company Name</th>
               <th>Product Code Description</th>
               <th>Refusal Date</th>
               <th>Import Division</th>
@@ -347,8 +377,6 @@ export default function Page() {
           <tbody>
             {data.recentImportRefusals.map((item, index) => (
               <tr key={index}>
-                <td>{item.firm_legal_name}</td>
-                <td>{item.firm_address}</td>
                 <td style={{ textDecoration: "none", color: "blue" }}>
                   <Link
                     href={`/company/${encodeURIComponent(
@@ -362,6 +390,8 @@ export default function Page() {
                     {item.fei_number}
                   </Link>
                 </td>
+                <td>{item.firm_address}</td>
+                <td>{item.firm_legal_name}</td>
                 <td>{item.product_code_description}</td>
                 <td>
                   {new Date(item.refused_date).toLocaleDateString("en-GB")}
@@ -393,9 +423,9 @@ export default function Page() {
         >
           <thead>
             <tr>
-              <th>Company Name</th>
-              <th>Firm Address</th>
               <th>FEI Number</th>
+              <th>Firm Address</th>
+              <th>Company Name</th>
               <th>Classification</th>
               <th>Status</th>
               <th>Distribution Pattern</th>
@@ -409,8 +439,6 @@ export default function Page() {
           <tbody>
             {data.recentImportRecalls.map((item, index) => (
               <tr key={index}>
-                <td>{item.recalling_firm_name}</td>
-                <td>{item.firm_address}</td>
                 <td style={{ textDecoration: "none", color: "blue" }}>
                   <Link
                     href={`/company/${encodeURIComponent(
@@ -424,6 +452,8 @@ export default function Page() {
                     {item.fei_number}
                   </Link>
                 </td>
+                <td>{item.firm_address}</td>
+                <td>{item.recalling_firm_name}</td>
                 <td>{item.product_classification}</td>
                 <td>{item.status}</td>
                 <td>{item.distribution_pattern}</td>

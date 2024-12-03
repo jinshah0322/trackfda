@@ -36,8 +36,8 @@ export default function InspectionCitation({ inspectionCitation }) {
           >
             <thead>
               <tr>
-                <th>Firm Address</th>
                 <th>FEI Number</th>
+                <th>Firm Address</th>
                 <th>Act/CFR Number</th>
                 <th>Short Description</th>
                 <th>Long Description</th>
@@ -46,7 +46,6 @@ export default function InspectionCitation({ inspectionCitation }) {
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.firm_address}</td>
                   <td>
                     <Link
                       href={`/company/${encodeURIComponent(
@@ -60,6 +59,7 @@ export default function InspectionCitation({ inspectionCitation }) {
                       {item.fei_number}
                     </Link>
                   </td>
+                  <td>{item.firm_address}</td>
                   <td>
                     <Link
                       href={`https://www.ecfr.gov/current/title-21/chapter-I/subchapter-C/part-211/subpart-C/section-${

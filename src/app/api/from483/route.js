@@ -16,6 +16,7 @@ export const GET = async (req) => {
       )
       SELECT 
           p483s.record_date,
+          p483s.fei_number,
           p483s.legal_name,
           p483s.download_link,
           COALESCE(wl.warningletterurl, '') AS warningletterurl

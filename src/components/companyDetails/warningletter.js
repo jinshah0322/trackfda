@@ -101,6 +101,13 @@ export default function WarningLettersTab({ data }) {
           >
             <thead>
               <tr>
+              <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  FEI Number
+                </th>
+              
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  Firm Address
+                </th>
                 <th
                   style={{
                     border: "1px solid #ddd",
@@ -136,12 +143,6 @@ export default function WarningLettersTab({ data }) {
                       ▼
                     </span>
                   </span>
-                </th>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-                  Company Address
-                </th>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-                  FEI Number
                 </th>
                 <th
                   style={{
@@ -221,19 +222,19 @@ export default function WarningLettersTab({ data }) {
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
-                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.letterissuedate}
-                  </td>
-                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.firm_address}
-                  </td>
-                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     <Link
                       className="linkDecoration"
                       href={`/company/${item.legal_name}/facility/${item.fei_number}`}
                     >
                       {item.fei_number}
                     </Link>
+                  </td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    {item.firm_address}
+                  </td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    {item.letterissuedate}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     {item.issuingoffice}

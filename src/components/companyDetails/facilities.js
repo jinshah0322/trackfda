@@ -35,13 +35,7 @@ export default function FacilitiesTab({ data }) {
     const aValue = a[sortField] ?? ""; // Default to empty string for null/undefined
     const bValue = b[sortField] ?? ""; // Default to empty string for null/undefined
 
-    if (typeof aValue === "number" && typeof bValue === "number") {
       return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
-    }
-
-    return sortOrder === "asc"
-      ? aValue.toString().localeCompare(bValue.toString())
-      : bValue.toString().localeCompare(aValue.toString());
   });
 
   const totalPages = Math.ceil(sortedData.length / limit);
@@ -75,118 +69,8 @@ export default function FacilitiesTab({ data }) {
                   Fei Number
                 </th>
                 <th
-                  style={{
-                    border: "1px solid #ddd",
-                    padding: "8px",
-                    textAlign: "left",
-                    position: "relative",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => toggleSort("city")}
                 >
-                  City
-                  <span
-                    style={{
-                      position: "absolute",
-                      right: "8px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        opacity: sortField === "city" && sortOrder === "asc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▲
-                    </span>
-                    <span
-                      style={{
-                        opacity: sortField === "city" && sortOrder === "desc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▼
-                    </span>
-                  </span>
-                </th>
-                <th
-                  style={{
-                    border: "1px solid #ddd",
-                    padding: "8px",
-                    textAlign: "left",
-                    position: "relative",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => toggleSort("state")}
-                >
-                  State
-                  <span
-                    style={{
-                      position: "absolute",
-                      right: "8px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        opacity: sortField === "state" && sortOrder === "asc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▲
-                    </span>
-                    <span
-                      style={{
-                        opacity: sortField === "state" && sortOrder === "desc" ? 1 : 0.5,
-                      }}
-                    >
-                      ▼
-                    </span>
-                  </span>
-                </th>
-                <th
-                  style={{
-                    border: "1px solid #ddd",
-                    padding: "8px",
-                    textAlign: "left",
-                    position: "relative",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => toggleSort("country_area")}
-                >
-                  Country
-                  <span
-                    style={{
-                      position: "absolute",
-                      right: "8px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        opacity:
-                          sortField === "country_area" && sortOrder === "asc"
-                            ? 1
-                            : 0.5,
-                      }}
-                    >
-                      ▲
-                    </span>
-                    <span
-                      style={{
-                        opacity:
-                          sortField === "country_area" && sortOrder === "desc"
-                            ? 1
-                            : 0.5,
-                      }}
-                    >
-                      ▼
-                    </span>
-                  </span>
+                  Firm Address
                 </th>
                 <th
                   style={{
@@ -288,13 +172,7 @@ export default function FacilitiesTab({ data }) {
                     </Link>
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.city || "N/A"} {/* Default value for null */}
-                  </td>
-                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.state || "N/A"} {/* Default value for null */}
-                  </td>
-                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                    {item.country_area || "N/A"} {/* Default value for null */}
+                    {item.firm_address || "N/A"} {/* Default value for null */}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     {item.form483_count}

@@ -290,9 +290,9 @@ export default function Page() {
           <table className="data-table">
             <thead>
               <tr>
-                {renderSortableHeader("Company Name", "legal_name")}
-                {renderSortableHeader("Company Address", "firm_address")}
                 <th>FEI Number</th>
+                <th>Firm Address</th>
+                {renderSortableHeader("Company Name", "legal_name")}
                 <th>Classification</th>
                 <th>Product Type</th>
                 <th>Project Area</th>
@@ -307,9 +307,7 @@ export default function Page() {
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.legal_name}</td>
-                  <td>{item.firm_address}</td>
-                  <td>
+                   <td>
                     <Link
                       href={`/company/${encodeURIComponent(
                         item.legal_name
@@ -322,6 +320,8 @@ export default function Page() {
                       {item.fei_number}
                     </Link>
                   </td>
+                  <td>{item.firm_address}</td>
+                  <td>{item.legal_name}</td>
                   <td>{item.classification}</td>
                   <td>{item.product_type}</td>
                   <td>{item.project_area}</td>

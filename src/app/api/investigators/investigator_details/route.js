@@ -120,6 +120,7 @@ export async function GET(req) {
         SELECT 
             p483s.record_date, 
             p483s.legal_name, 
+            p483s.fei_number,
             p483s.download_link,
             p483s.report_recipient_name,
             p483s.report_recipient_title,

@@ -168,8 +168,8 @@ export default function InspectionDetails({
           <table className="data-table" >
             <thead>
               <tr>
-                <th>Company Address</th>
                 <th>FEI Number</th>
+                <th>Firm Address</th>
                 <th>Classification</th>
                 <th>Product Type</th>
                 <th>Project Area</th>
@@ -182,7 +182,6 @@ export default function InspectionDetails({
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.firm_address}</td>
                   <td>
                     <Link
                       className="linkDecoration"
@@ -190,7 +189,7 @@ export default function InspectionDetails({
                     >
                       {item.fei_number}
                     </Link>
-                  </td>
+                  </td> <td>{item.firm_address}</td>
                   <td>{item.classification}</td>
                   <td>{item.product_type}</td>
                   <td>{item.project_area}</td>

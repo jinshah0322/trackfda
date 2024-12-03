@@ -34,6 +34,7 @@ export const GET = async (req) => {
         )
         SELECT 
             p483s.record_date,
+            p483s.fei_number,
             p483s.legal_name,
             p483s.download_link,
             COALESCE(wl.warningletterurl, '') AS warningletterurl
@@ -83,6 +84,7 @@ export const GET = async (req) => {
         SELECT 
             w.letterissuedate,
             w.companyname,
+            w.fei_number,
             w.issuingoffice,
             w.subject,
             w.warningletterurl,
@@ -115,7 +117,7 @@ export const GET = async (req) => {
                         AND 
                         TO_DATE(p483m.record_date, 'DD-MM-YYYY') + INTERVAL '6 months'
                 )
-            )
+            ) where w.fei_number !=''
         ORDER BY 
             TO_DATE(w.letterissuedate, 'DD-MM-YYYY') DESC
         LIMIT 10;
