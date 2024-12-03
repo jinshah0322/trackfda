@@ -12,6 +12,7 @@ import InspectionDetails from "@/components/companyDetails/inspectionDetails";
 import InspectionCitation from "@/components/companyDetails/inspctionCitations";
 import ImportRefusal from "@/components/companyDetails/importRefusals";
 import ImportRecall from "@/components/companyDetails/importRecalls";
+import Investigator from "@/components/companyDetails/investigator";
 
 export default function Page({ params, searchParams }) {
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,8 @@ export default function Page({ params, searchParams }) {
   const [inspectionDetails, setInspectionDetails] = useState({});
   const [inspectionClassification, setInspectionClassification] = useState({});
   const [importRefusal, setImportRefusal] = useState({});
-  const [importRecall,setImportRecall] = useState({});
+  const [importRecall, setImportRecall] = useState({});
+  const [investigatorData, setInvestigatorData] = useState({});
   const [activeTab, setActiveTab] = useState("analysis");
   const [inspectionCitation,setInspectionCitation] = useState({})
 
@@ -44,6 +46,7 @@ export default function Page({ params, searchParams }) {
       setInspectionCitation(response.citations);
       setImportRefusal(response.refusals);
       setImportRecall(response.recalls);
+      setInvestigatorData(response.investigators);
       return response;
     } catch (error) {
       console.error("Error fetching company details:", error);
@@ -185,6 +188,14 @@ export default function Page({ params, searchParams }) {
         >
           Import Recalls
         </a>
+        <a
+          className={`tab ${
+            activeTab === "investigators" ? "active-tab" : ""
+          }`}
+          onClick={() => setActiveTab("investigators")}
+        >
+          Investigators
+        </a>
       </div>
 
       {/* Tab Content */}
@@ -216,6 +227,7 @@ export default function Page({ params, searchParams }) {
         {activeTab === 'inspectioncitations' && <InspectionCitation inspectionCitation={inspectionCitation}/>}
         {activeTab === 'importrefusals' && <ImportRefusal importrefusals={importRefusal}/>}
         {activeTab === 'importrecalls' && <ImportRecall importrecalls={importRecall}/>}
+        {activeTab === 'investigators' && <Investigator investigators={investigatorData}/>}
       </div>
     </div>
   );

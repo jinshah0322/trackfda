@@ -152,6 +152,16 @@ export default function AnalysisTab({
             {data.companyAnalysisDetails.totalRecalls}
           </p>
         </div>
+        <div
+          className="card"
+          onClick={() => setActiveTab("investigators")}
+          style={{ cursor: "pointer" }}
+        >
+          <p className="card-title">Total Investigators</p>
+          <p className="card-number">
+            {data.companyAnalysisDetails.totalInvestigators}
+          </p>
+        </div>
       </div>
       {/* Pass the data to the Pie Chart component */}
       <button onClick={() => handleDownload(companyName)}>

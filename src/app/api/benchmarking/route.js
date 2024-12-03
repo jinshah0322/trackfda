@@ -46,7 +46,7 @@ export async function POST(req) {
   
   const investigatorsQuery = `
     SELECT 
-        legal_name, investigators, record_date
+        legal_name, jsonb_object_keys(published_483s.employees), record_date
     FROM 
         published_483s
     WHERE 
