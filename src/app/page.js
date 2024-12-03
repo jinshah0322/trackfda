@@ -21,7 +21,7 @@ export default function Home() {
           <Link href="/company">Companies</Link>
           <Link href="/investigators">Investigators</Link>
           <Link href="/demo">Demo</Link>
-          <Link href="/benchmarking">Benchmarking</Link>
+          {/* <Link href="/benchmarking">Benchmarking</Link> */}
           <div
             className={styles.orangeBookLink}
             onClick={() =>
