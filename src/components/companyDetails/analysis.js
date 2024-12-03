@@ -132,6 +132,26 @@ export default function AnalysisTab({
             {data.companyAnalysisDetails.totalWarningLetters}
           </p>
         </div>
+        <div
+          className="card"
+          onClick={() => setActiveTab("importrefusals")}
+          style={{ cursor: "pointer" }}
+        >
+          <p className="card-title">Total Import Refusals</p>
+          <p className="card-number">
+            {data.companyAnalysisDetails.totalRefusals}
+          </p>
+        </div>
+        <div
+          className="card"
+          onClick={() => setActiveTab("importrecalls")}
+          style={{ cursor: "pointer" }}
+        >
+          <p className="card-title">Total Import Recalls</p>
+          <p className="card-number">
+            {data.companyAnalysisDetails.totalRecalls}
+          </p>
+        </div>
       </div>
       {/* Pass the data to the Pie Chart component */}
       <button onClick={() => handleDownload(companyName)}>

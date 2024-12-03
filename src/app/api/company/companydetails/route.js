@@ -69,12 +69,29 @@ export async function GET(req) {
       [companyname]
     );
 
+    const { rows: importRefusalResult} = await query(`
+        SELECT fei_number,firm_legal_name,firm_address,product_code_description,refused_date,import_division,
+        fda_sample_analysis,private_lab_analysis,refusal_charges 
+        FROM import_refusals WHERE firm_legal_name = $1 ORDER BY refused_date DESC
+      `,
+    [companyname])
+
+    const { rows: importRecallResult} = await query(`
+        SELECT ir.*,cd.firm_address FROM import_recalls ir 
+        LEFT JOIN company_details cd ON ir.fei_number=cd.fei_number
+        WHERE cd.legal_name = $1
+        ORDER BY center_classification_date DESC
+      `,
+    [companyname])
+
     const analysis = {
       totalFacilities: companyDetailsResult.length,
       totalInspections: inspectionResult.length,
       totalWarningLetters: warningLetterResult.length,
       totalPublished483s: published483Result.length,
       totalCitations: inspectionCitationResult.length,
+      totalRefusals: importRefusalResult.length,
+      totalRecalls: importRecallResult.length
     };
   // Return the combined data
     return NextResponse.json(
@@ -85,6 +102,8 @@ export async function GET(req) {
         warningLetters: warningLetterResult,
         inspections: inspectionResult,
         citations: inspectionCitationResult,
+        refusals: importRefusalResult,
+        recalls: importRecallResult,
         inspectionClassification,
       },
       { status: 200 }

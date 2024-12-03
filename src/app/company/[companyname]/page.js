@@ -10,6 +10,8 @@ import Form483sTab from "@/components/companyDetails/form483";
 import WarningLettersTab from "@/components/companyDetails/warningletter";
 import InspectionDetails from "@/components/companyDetails/inspectionDetails";
 import InspectionCitation from "@/components/companyDetails/inspctionCitations";
+import ImportRefusal from "@/components/companyDetails/importRefusals";
+import ImportRecall from "@/components/companyDetails/importRecalls";
 
 export default function Page({ params, searchParams }) {
   const [loading, setLoading] = useState(true);
@@ -19,6 +21,8 @@ export default function Page({ params, searchParams }) {
   const [warningLettersDetails, setWarningLetters] = useState({});
   const [inspectionDetails, setInspectionDetails] = useState({});
   const [inspectionClassification, setInspectionClassification] = useState({});
+  const [importRefusal, setImportRefusal] = useState({});
+  const [importRecall,setImportRecall] = useState({});
   const [activeTab, setActiveTab] = useState("analysis");
   const [inspectionCitation,setInspectionCitation] = useState({})
 
@@ -38,6 +42,8 @@ export default function Page({ params, searchParams }) {
       setInspectionDetails(response.inspections);
       setInspectionClassification(response.inspectionClassification);
       setInspectionCitation(response.citations);
+      setImportRefusal(response.refusals);
+      setImportRecall(response.recalls);
       return response;
     } catch (error) {
       console.error("Error fetching company details:", error);
@@ -163,6 +169,22 @@ export default function Page({ params, searchParams }) {
         >
           Warning Letters
         </a>
+        <a
+          className={`tab ${
+            activeTab === "importrefusals" ? "active-tab" : ""
+          }`}
+          onClick={() => setActiveTab("importrefusals")}
+        >
+          Import Refusals
+        </a>
+        <a
+          className={`tab ${
+            activeTab === "importrecalls" ? "active-tab" : ""
+          }`}
+          onClick={() => setActiveTab("importrecalls")}
+        >
+          Import Recalls
+        </a>
       </div>
 
       {/* Tab Content */}
@@ -192,6 +214,8 @@ export default function Page({ params, searchParams }) {
           />
         )}
         {activeTab === 'inspectioncitations' && <InspectionCitation inspectionCitation={inspectionCitation}/>}
+        {activeTab === 'importrefusals' && <ImportRefusal importrefusals={importRefusal}/>}
+        {activeTab === 'importrecalls' && <ImportRecall importrecalls={importRecall}/>}
       </div>
     </div>
   );
